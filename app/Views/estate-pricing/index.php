@@ -8,8 +8,8 @@
 <div class="row">
     <div class="col d-flex justify-content-end">
         <div class="btn-group" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pricing-update-phase-modal">Update Pricing</button>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#rates-update-phase-modal">Update Rates</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pricing-update-estate-modal">Update Pricing</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#rates-update-estate-modal">Update Rates</button>
         </div>
     </div>
 </div>
@@ -89,8 +89,8 @@
 </div>
 
 <?php include_once VIEW_PATH . "/templates/dataTables-scripts.php" ?>
-<?php include_once VIEW_PATH . "/modals/modal-update-phase-pricing.php" ?>
-<?php include_once VIEW_PATH . "/modals/modal-update-phase-rates.php" ?>
+<?php include_once VIEW_PATH . "/modals/modal-update-estate-pricing.php" ?>
+<?php include_once VIEW_PATH . "/modals/modal-update-estate-rates.php" ?>
 
 <script src="<?= BASE_URL . "/js/form-validation.js" ?>"></script>
 

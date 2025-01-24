@@ -36,4 +36,12 @@ class Formatter {
     public static function formatPercentage(float $decimal, int $decimals = 2): string {
         return number_format($decimal * 100, $decimals) . '%';
     }
+
+    public static function formatPercentageWithoutSymbol(float $decimal, int $decimals = 2): string {
+        return number_format($decimal * 100, $decimals);
+    }
+
+    public static function formatDecimal(float $percentage, int $decimals = 2): string {
+        return number_format($percentage / 100, $decimals);
+    }
 }

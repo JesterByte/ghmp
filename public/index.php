@@ -12,6 +12,9 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute('POST', '/phase-pricing', ['App\Controllers\PhasePricingController', 'setPrice']);
     $r->addRoute('POST', '/phase-rates', ['App\Controllers\PhasePricingController', 'setRates']);
     $r->addRoute('GET', '/estate-pricing', ['App\Controllers\EstatePricingController', 'index']);
+    $r->addRoute('POST', '/estate-pricing', ['App\Controllers\EstatePricingController', 'setPrice']);
+    $r->addRoute('POST', '/estate-rates', ['App\Controllers\EstatePricingController', 'setRates']);
+
 });
 
 $httpMethod = $_SERVER['REQUEST_METHOD'];

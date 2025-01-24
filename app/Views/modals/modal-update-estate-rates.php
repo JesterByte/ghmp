@@ -2,16 +2,16 @@
 
 use App\Utils\Formatter;
 ?>
-<!-- Update Phase Price Modal -->
-<div class="modal fade" id="rates-update-phase-modal" tabindex="-1" aria-labelledby="rates-update-phase-modal-label" aria-hidden="true">
+<!-- Update Estate Price Modal -->
+<div class="modal fade" id="rates-update-estate-modal" tabindex="-1" aria-labelledby="rates-update-estate-modal-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
         <div class="modal-header">
-            <h1 class="modal-title fs-5" id="rates-update-phase-modal-label">Update Phase Rates</h1>
+            <h1 class="modal-title fs-5" id="rates-update-estate-modal-label">Update Estate Rates</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <form action="phase-rates" method="post" class="needs-validation" novalidate>
+            <form action="estate-rates" method="post" class="needs-validation" novalidate>
                 <label for="vat" class="form-label">VAT</label>
                 <div class="input-group mb-3">
                     <input required type="number" step="0.01" class="form-control" id="vat" name="vat" aria-label="Amount (to the nearest peso)" value="<?= Formatter::formatPercentageWithoutSymbol($firstRow["vat"]) ?>" placeholder="0.00">

@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\PhasePricingModel;
 use App\Utils\Calculator;
+use App\Utils\Formatter;
 use App\Core\View;
 
 class PhasePricingController extends BaseController {
@@ -58,20 +59,20 @@ class PhasePricingController extends BaseController {
 
     public function setRates() {
         if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["update-rates-submit"])) {
-            $vat = $_POST["vat"];
+            $vat = Formatter::formatDecimal($_POST["vat"]);
             $mcf = $_POST["mcf"];
-            $downPaymentRate = $_POST["down-payment-rate"];
+            $downPaymentRate = Formatter::formatDecimal($_POST["down-payment-rate"]);
             $discounts = [
-                "cash_sale" => $_POST["cash-sale-discount"],
-                "six_months" => $_POST["six-months-discount"]
+                "cash_sale" => Formatter::formatDecimal($_POST["cash-sale-discount"]),
+                "six_months" => Formatter::formatDecimal($_POST["six-months-discount"])
             ];
 
             $amortizationRates = [
-                "one_year" => $_POST["one-year-interest-rate"],
-                "two_years" => $_POST["two-years-interest-rate"],
-                "three_years" => $_POST["three-years-interest-rate"],
-                "four_years" => $_POST["four-years-interest-rate"],
-                "five_years" => $_POST["five-years-interest-rate"]
+                "one_year" => Formatter::formatDecimal($_POST["one-year-interest-rate"]),
+                "two_years" => Formatter::formatDecimal($_POST["two-years-interest-rate"]),
+                "three_years" => Formatter::formatDecimal($_POST["three-years-interest-rate"]),
+                "four_years" => Formatter::formatDecimal($_POST["four-years-interest-rate"]),
+                "five_years" => Formatter::formatDecimal($_POST["five-years-interest-rate"])
             ];
 
             $phasePricingModel = new PhasePricingModel();
