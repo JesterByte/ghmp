@@ -14,6 +14,11 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/estate-pricing', ['App\Controllers\EstatePricingController', 'index']);
     $r->addRoute('POST', '/estate-pricing', ['App\Controllers\EstatePricingController', 'setPrice']);
     $r->addRoute('POST', '/estate-rates', ['App\Controllers\EstatePricingController', 'setRates']);
+    $r->addRoute("GET", "/map", ['App\Controllers\MapController', 'index']);
+    $r->addRoute("GET", "/fetch-lots", ['App\Controllers\MapController', 'fetchLots']);
+    $r->addRoute("GET", "/reservation-requests", ['App\Controllers\ReservationRequestsController', 'index']);
+    $r->addRoute("GET", "/lot-reservations", ['App\Controllers\LotReservationsController', 'index']);
+    $r->addRoute('POST', '/add-reservation', ['App\Controllers\LotReservationsController', 'setReservation']);
 
 });
 

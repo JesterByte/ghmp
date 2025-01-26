@@ -49,8 +49,16 @@ class LotMap {
             { color: color, weight: 1, fillOpacity: 0.5 }
         ).addTo(this.map);
 
+        const lotId = this.extractLotIdComponents(lot.lot_id);
+
         // Add a popup to the rectangle
-        rectangle.bindPopup(`<b>Status:</b> ${lot.status}`);
+        rectangle.bindPopup(`
+            <b>Status:</b> ${lot.status}<br>
+            <b>Phase:</b> ${lotId.phase}<br>
+            <b>Lawn:</b> ${lotId.lawn}<br>
+            <b>Row:</b> ${lotId.row}<br>
+            <b>Lot:</b> ${lotId.lot}
+        `);    
     }
 
     addLegend() {
@@ -66,9 +74,23 @@ class LotMap {
         };
         legend.addTo(this.map);
     }
-}
 
-// Initialize the map
-document.addEventListener('DOMContentLoaded', () => {
-    const lotMap = new LotMap('map', 'LotController.php');
-});
+    extractLotIdComponents(lotIdentifier) {
+        // Regular expression to match the components
+        const pattern = /^(\d+)([A-Za-z])(\d+)-(\d+)$/;
+
+        // Match the pattern
+        const matches = lotIdentifier.match(pattern);
+        if (matches) {
+            return {
+                phase: matches[1], // Phase Number
+                lawn: matches[2],  // Lawn Letter
+                row: matches[3],   // Row Number
+                lot: matches[4],   // Lot Number
+            };
+        }
+
+        // Return null if the format is invalid
+        return null;
+    }
+}

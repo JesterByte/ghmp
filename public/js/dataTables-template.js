@@ -1,18 +1,22 @@
-function createDataTable(tableId) {
+function createDataTable(tableId, exportName) {
     new DataTable(tableId, {
         // responsive: true,
         dom: 'Bfrtip',
         buttons: [
             'copy', {
                 extend: 'csvHtml5',
-                title: '<?= $pageTitle ?>'
+                title: exportName,
+                exportOptions: {
+                    // Exclude the last column (Action column in this case)
+                    columns: ':not(:last-child)'
+                }
             }, {
             extend: 'pdfHtml5',
-            title: '<?= $pageTitle ?>',
+            title: exportName,
             orientation: 'landscape',
             pageSize: 'A4',
             exportOptions: {
-                columns: ':visible',
+                columns: ':not(:last-child)',
                 modifier: {
                 page: 'current'
                 }

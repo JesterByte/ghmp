@@ -4,3 +4,8 @@
 <div class="rounded shadow" id="map"></div>
 
 <script src="<?= BASE_URL . "/js/leaflet.js" ?>"></script>
+<script src="<?= BASE_URL . "/js/map.js" ?>"></script>
+
+<script>
+    const lotMap = new LotMap("map", "fetch-lots");
+</script>
