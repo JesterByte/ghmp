@@ -21,7 +21,7 @@
 ?>
 <div class="row">
     <div class="col d-flex justify-content-end">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-reservation-modal"><i class="bi bi-plus"></i> Add new reservation</button>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-lot-reservation-modal"><i class="bi bi-plus"></i> Add new reservation</button>
     </div>
 </div>
 
@@ -34,6 +34,7 @@
                 <th>Reservee</th>
                 <th>Lot Type</th>
                 <th>Payment Option</th>
+                <th>Payment Status</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -49,6 +50,7 @@
                         TableHelper::cell($reservee);
                         TableHelper::cell($lotReservationsRow["lot_type"]);
                         TableHelper::cell($lotReservationsRow["payment_option"]);
+                        TableHelper::cell($lotReservationsRow["payment_status"]);
                         TableHelper::cell('');
                         TableHelper::endRow();
                     }
@@ -59,7 +61,7 @@
 </div>
 
 <?php include_once VIEW_PATH . "/templates/dataTables-scripts.php" ?>
-<?php include_once VIEW_PATH . "/modals/modal-add-reservation.php" ?>
+<?php include_once VIEW_PATH . "/modals/modal-add-lot-reservation.php" ?>
 
 <script src="<?= BASE_URL . "/js/form-validation.js" ?>"></script>
 

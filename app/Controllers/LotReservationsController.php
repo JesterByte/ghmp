@@ -26,16 +26,22 @@ class LotReservationsController extends BaseController {
     }
 
     public function setReservation() {
-        $lotReservationsModel = new LotReservationsModel();
-        $lotId = $_POST['lot'];
-        $lotIdComponents = Formatter::extractComponents($lotId);
-        $reserveeId = $_POST['customer'];
-        $lotType = $_POST['lot-type'];
-        $paymentOption = $_POST['payment-option'];
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            $lotReservationsModel = new LotReservationsModel();
+            $lotId = $_POST['lot'];
+            $reserveeId = $_POST['customer'];
+            $phase = $_POST['phase'];
+            $lotType = $_POST['lot-type'];
+            $paymentOption = $_POST['payment-option'];
+            
+            $pricing = $lotReservationsModel->getPricing($phase, $lotType);
+            $paymentAmount = $pricing['cash_sale'];
 
-        $lotReservationsModel->setReservation($lotId, $reserveeId, $lotType, $paymentOption);
-
-        $this->redirectBack();
+            $lotReservationsModel->setReservation($lotId, $reserveeId, $lotType, $paymentOption);
+            $lotReservationsModel->setCashSalePayment($lotId, $paymentAmount);
+    
+            $this->redirectBack();    
+        }
     }
 
 

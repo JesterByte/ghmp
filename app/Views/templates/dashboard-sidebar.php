@@ -21,15 +21,26 @@
                     Map
                 </a>
             </li>
-            <?php $lotPricingList = ["Reservation Requests", "Lot Reservations"]; ?>
+            <?php $reservationsList = ["Reservation Requests", "Lot Reservations"]; ?>
             <li class="nav-item">
-                <a class="nav-link d-flex align-items-center gap-2" data-bs-toggle="collapse" href="#reservationsSubmenu" role="button" aria-expanded="<?= DisplayHelper::isPageInList($pageTitle, $lotPricingList, "true", "false") ?>" aria-controls="reservationsSubmenu">
-                    <i class="bi bi-calendar<?= DisplayHelper::isPageInList($pageTitle, $lotPricingList, "-fill") ?>"></i> Reservations <i class="bi bi-caret-down<?= DisplayHelper::isPageInList($pageTitle, $lotPricingList, "-fill") ?>"></i>
+                <a class="nav-link d-flex align-items-center gap-2" data-bs-toggle="collapse" href="#reservationsSubmenu" role="button" aria-expanded="<?= DisplayHelper::isPageInList($pageTitle, $reservationsList, "true", "false") ?>" aria-controls="reservationsSubmenu">
+                    <i class="bi bi-calendar<?= DisplayHelper::isPageInList($pageTitle, $reservationsList, "-fill") ?>"></i> Reservations <i class="bi bi-caret-down<?= DisplayHelper::isPageInList($pageTitle, $reservationsList, "-fill") ?>"></i>
                 </a>
-                <div class="collapse <?= DisplayHelper::isPageInList($pageTitle, $lotPricingList, "show") ?>" id="reservationsSubmenu">
+                <div class="collapse <?= DisplayHelper::isPageInList($pageTitle, $reservationsList, "show") ?>" id="reservationsSubmenu">
                     <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                         <li><a href="reservation-requests" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isActivePage($pageTitle, "Reservation Requests", "-fill text-bg-primary") ?>" <?= DisplayHelper::isActivePage($pageTitle, "Reservation Requests", "aria-current='page'") ?>><i class="bi bi-caret-right<?= DisplayHelper::isActivePage($pageTitle, "Reservation Requests", "-fill") ?>"></i> Reservation Requests</a></li>
                         <li><a href="lot-reservations" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isActivePage($pageTitle, "Lot Reservations", "-fill text-bg-primary") ?>" <?= DisplayHelper::isActivePage($pageTitle, "Lot Reservations", "aria-current='page'") ?>><i class="bi bi-caret-right<?= DisplayHelper::isActivePage($pageTitle, "Lot Reservations", "-fill") ?>"></i> Lot Reservations</a></li>
+                    </ul>
+                </div>
+            </li>
+            <?php $paymentsList = ["Cash Sales"]; ?>
+            <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2" data-bs-toggle="collapse" href="#paymentsSubmenu" role="button" aria-expanded="<?= DisplayHelper::isPageInList($pageTitle, $paymentsList, "true", "false") ?>" aria-controls="paymentsSubmenu">
+                    <i class="bi bi-credit-card<?= DisplayHelper::isPageInList($pageTitle, $paymentsList, "-fill") ?>"></i> Payments <i class="bi bi-caret-down<?= DisplayHelper::isPageInList($pageTitle, $paymentsList, "-fill") ?>"></i>
+                </a>
+                <div class="collapse <?= DisplayHelper::isPageInList($pageTitle, $paymentsList, "show") ?>" id="paymentsSubmenu">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                        <li><a href="cash-sales" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isActivePage($pageTitle, "Cash Sales", "-fill text-bg-primary") ?>" <?= DisplayHelper::isActivePage($pageTitle, "Cash Sales", "aria-current='page'") ?>><i class="bi bi-caret-right<?= DisplayHelper::isActivePage($pageTitle, "Cash Sales", "-fill") ?>"></i> Cash Sales</a></li>
                     </ul>
                 </div>
             </li>

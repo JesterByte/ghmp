@@ -7,7 +7,11 @@ use PDO;
 
 class LotReservationsModel extends Model {
     public function getLotReservations() {
-        $stmt = $this->db->prepare("SELECT * FROM lot_reservations AS lr INNER JOIN customers AS c ON lr.reservee_id = c.id WHERE reservation_status = :reservation_status");
+        $stmt = $this->db->prepare("SELECT lr.lot_id, lr.lot_type, lr.payment_option, c.first_name, c.middle_name, c.last_name, c.suffix_name, cs.payment_status
+        FROM lot_reservations AS lr 
+        INNER JOIN customers AS c ON lr.reservee_id = c.id 
+        INNER JOIN cash_sales AS cs ON lr.lot_id = cs.lot_id
+        WHERE lr.reservation_status = :reservation_status");
         $stmt->execute([':reservation_status' => 'Confirmed']);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -24,10 +28,17 @@ class LotReservationsModel extends Model {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getCashSalePrice($phase, $lotType) {
-        $stmt = $this->db->prepare("SELECT * FROM phase_pricing WHERE phase = :phase AND lot_type = :lot_type");
-        $stmt->execute([':lot_type' => $lotType]);
+    public function getPricing($phase, $lotType) {
+        $stmt = $this->db->prepare("SELECT * FROM phase_pricing WHERE phase = :phase AND lot_type = :lot_type LIMIT 1");
+        $stmt->execute([':phase' => $phase, ':lot_type' => $lotType]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function setCashSalePayment($lotId, $paymentAmount) {
+        $stmt = $this->db->prepare("INSERT INTO cash_sales (lot_id, payment_amount) VALUES (:lot_id, :payment_amount)");
+        $stmt->bindParam(':lot_id', $lotId);
+        $stmt->bindParam(':payment_amount', $paymentAmount);
+        return $stmt->execute();
     }
 
     public function setReservation($lotId, $reserveeId, $lotType, $paymentOption) {

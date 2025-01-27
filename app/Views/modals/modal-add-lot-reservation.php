@@ -1,9 +1,9 @@
-<!-- Update Add Reservation Modal -->
-<div class="modal fade" id="add-reservation-modal" tabindex="-1" aria-labelledby="add-reservation-modal-label" aria-hidden="true">
+<!-- Update Add Lot Reservation Modal -->
+<div class="modal fade" id="add-lot-reservation-modal" tabindex="-1" aria-labelledby="add-lot-reservation-modal-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
         <div class="modal-header">
-            <h1 class="modal-title fs-5" id="add-reservation-modal-label">Add New Reservation</h1>
+            <h1 class="modal-title fs-5" id="add-lot-reservation-modal-label">Add New Lot Reservation</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -31,6 +31,16 @@
                     <label for="customer">Customers</label>          
                 </div>
                 <div class="form-floating mb-3">
+                    <select class="form-select" id="phase" name="phase" aria-label="Floating label select example" required>
+                        <option selected disabled></option>
+                        <option value="Phase 1">1</option>
+                        <option value="Phase 2">2</option>
+                        <option value="Phase 3">3</option>
+                        <option value="Phase 4">4</option>
+                    </select>
+                    <label for="phase">Phase</label>          
+                </div>
+                <div class="form-floating mb-3">
                     <select class="form-select" id="lot-type" name="lot-type" aria-label="Floating label select example" required>
                         <option selected disabled></option>
                         <option value="Supreme">Supreme</option>
@@ -55,7 +65,7 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-primary" name="add-reservation-submit">Add</button>
+            <button type="submit" class="btn btn-primary" name="add-lot-reservation-submit">Add</button>
             </form>
         </div>
         </div>
