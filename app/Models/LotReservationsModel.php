@@ -24,6 +24,12 @@ class LotReservationsModel extends Model {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getCashSalePrice($phase, $lotType) {
+        $stmt = $this->db->prepare("SELECT * FROM phase_pricing WHERE phase = :phase AND lot_type = :lot_type");
+        $stmt->execute([':lot_type' => $lotType]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function setReservation($lotId, $reserveeId, $lotType, $paymentOption) {
         $stmt = $this->db->prepare("INSERT INTO lot_reservations (lot_id, reservee_id, lot_type, payment_option, reservation_status) VALUES (:lot_id, :reservee_id, :lot_type, :payment_option, :reservation_status)");
         $stmt->bindParam(':lot_id', $lotId);
@@ -33,6 +39,13 @@ class LotReservationsModel extends Model {
         $reservationStatus = 'Confirmed'; // Set the default reservation status to 'Pending' later 
         $stmt->bindParam(':reservation_status', $reservationStatus);
         
+        return $stmt->execute();
+    }
+
+    public function setCashSale($lotId) {
+        $stmt = $this->db->prepare('INSERT INTO cash_sales (lot_reservation_id, payment_amount) VALUES (:lot_reservation_id, :payment_amount)');
+        $stmt->bindParam(':lot_reservation_id', $lotId);
+        $stmt->bindParam(':payment_amount', $paymentAmount);
         return $stmt->execute();
     }
 }
