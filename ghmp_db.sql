@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 26, 2025 at 02:13 PM
+-- Generation Time: Jan 27, 2025 at 01:12 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -58,13 +58,20 @@ INSERT INTO `beneficiaries` (`id`, `customer_id`, `first_name`, `middle_name`, `
 
 CREATE TABLE `cash_sales` (
   `id` int(11) NOT NULL,
-  `lot_reservation_id` int(11) NOT NULL,
+  `lot_id` varchar(255) NOT NULL,
   `payment_amount` decimal(10,2) NOT NULL,
-  `payment_date` timestamp NOT NULL DEFAULT current_timestamp(),
-  `payment_status` enum('Pending','Completed','Refunded') NOT NULL,
+  `payment_date` timestamp NULL DEFAULT NULL,
+  `payment_status` enum('Pending','Paid') NOT NULL DEFAULT 'Pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `cash_sales`
+--
+
+INSERT INTO `cash_sales` (`id`, `lot_id`, `payment_amount`, `payment_date`, `payment_status`, `created_at`, `updated_at`) VALUES
+(0, '1C1-3', 76988.02, NULL, 'Paid', '2025-01-27 06:15:56', '2025-01-27 06:50:54');
 
 -- --------------------------------------------------------
 
@@ -623,7 +630,7 @@ CREATE TABLE `lot_reservations` (
   `reservee_id` int(11) NOT NULL,
   `lot_type` enum('Supreme','Special','Standard','Pending') NOT NULL,
   `payment_option` enum('Cash Sale','6 Months','Installment: 1 Year','Installment: 2 Years','Installment: 3 Years','Installment: 4 Years','Installment: 5 Years','Pending') NOT NULL,
-  `reservation_status` enum('Pending','Confirmed','Cancelled') NOT NULL,
+  `reservation_status` enum('Pending','Confirmed','Cancelled','Completed') NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -633,7 +640,6 @@ CREATE TABLE `lot_reservations` (
 --
 
 INSERT INTO `lot_reservations` (`id`, `lot_id`, `reservee_id`, `lot_type`, `payment_option`, `reservation_status`, `created_at`, `updated_at`) VALUES
-(1, '1C1-3', 1, 'Pending', 'Pending', 'Pending', '2025-01-26 09:58:38', '2025-01-26 10:01:38'),
 (2, '1C1-5', 2, 'Special', '6 Months', 'Confirmed', '2025-01-26 09:58:38', '2025-01-26 09:58:38'),
 (3, '1C6-2', 1, 'Pending', 'Pending', 'Pending', '2025-01-26 09:58:38', '2025-01-26 10:01:38'),
 (4, '1C6-3', 2, 'Supreme', 'Installment: 3 Years', 'Cancelled', '2025-01-26 09:58:38', '2025-01-26 09:58:38'),
@@ -642,7 +648,7 @@ INSERT INTO `lot_reservations` (`id`, `lot_id`, `reservee_id`, `lot_type`, `paym
 (7, '1C3-8', 1, 'Supreme', '6 Months', 'Confirmed', '2025-01-26 09:58:38', '2025-01-26 09:58:38'),
 (8, '1C3-13', 2, 'Special', 'Installment: 2 Years', 'Cancelled', '2025-01-26 09:58:38', '2025-01-26 09:58:38'),
 (9, '1C4-3', 1, 'Pending', 'Pending', 'Pending', '2025-01-26 09:58:38', '2025-01-26 10:01:38'),
-(10, '1C5-1', 2, 'Supreme', 'Cash Sale', 'Confirmed', '2025-01-26 09:58:38', '2025-01-26 09:58:38');
+(12, '1C1-3', 1, 'Supreme', 'Cash Sale', 'Completed', '2025-01-27 06:15:56', '2025-01-27 06:51:47');
 
 -- --------------------------------------------------------
 
@@ -732,7 +738,7 @@ ALTER TABLE `beneficiaries`
 --
 ALTER TABLE `cash_sales`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `lot_reservation_id` (`lot_reservation_id`);
+  ADD KEY `lot_id` (`lot_id`);
 
 --
 -- Indexes for table `customers`
@@ -786,12 +792,6 @@ ALTER TABLE `beneficiaries`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `cash_sales`
---
-ALTER TABLE `cash_sales`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
@@ -813,7 +813,7 @@ ALTER TABLE `lots`
 -- AUTO_INCREMENT for table `lot_reservations`
 --
 ALTER TABLE `lot_reservations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `phase_pricing`
@@ -841,7 +841,7 @@ ALTER TABLE `beneficiaries`
 -- Constraints for table `cash_sales`
 --
 ALTER TABLE `cash_sales`
-  ADD CONSTRAINT `cash_sales_ibfk_1` FOREIGN KEY (`lot_reservation_id`) REFERENCES `lot_reservations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `cash_sales_ibfk_1` FOREIGN KEY (`lot_id`) REFERENCES `lot_reservations` (`lot_id`);
 
 --
 -- Constraints for table `lot_reservations`

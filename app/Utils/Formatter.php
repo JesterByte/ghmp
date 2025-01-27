@@ -101,4 +101,8 @@ class Formatter {
             return "Invalid Lot ID";
         }
     }
+
+    public static function formatDateTime($dateTime) {
+        return date("d/m/Y h:i:s A", strtotime($dateTime));
+    }
 }

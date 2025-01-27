@@ -14,7 +14,7 @@
     </div>
 </div>
 
-<div class="table-responsive-sm shadow">
+<div class="table-responsive shadow">
     <table class="table table-striped table-hover table-bordered" id="table">
         <thead>
             <tr>
