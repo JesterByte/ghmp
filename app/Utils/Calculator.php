@@ -24,6 +24,10 @@ class Calculator {
         return $balance;
     }    
 
+    public function getFinalBalance($monthlyPayment, $termYears) {
+        return $monthlyPayment * ($termYears * 12);
+    }
+
     public function getMonthlyAmortization($balance, $interestRate, $duration) {
         if ($duration > 0) {
             $months = $duration * 12;  // Convert years to months

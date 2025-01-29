@@ -4,18 +4,76 @@ namespace App\Controllers;
 
 use App\Models\LotReservationsModel;
 use App\Utils\Formatter;
+use App\Utils\Calculator;
 use App\Core\View;
 
 class LotReservationsController extends BaseController {
-    public function index() {
+    // public function index() {
+    //     $lotReservationsModel = new LotReservationsModel();
+    //     $lotReservationsTable = $lotReservationsModel->getLotReservations();
+    //     $availableLots = $lotReservationsModel->getAvailableLots();
+    //     $customers = $lotReservationsModel->getCustomers();
+
+    //     $data = [
+    //         "pageTitle" => "Lot Reservations",
+    //         "usesDataTables" => true,
+    //         "lotReservationsTable" => $lotReservationsTable,
+    //         "availableLots" => $availableLots,
+    //         "customers" => $customers,
+    //         "view" => "lot-reservations/index"
+    //     ];
+
+    //     View::render("templates/layout", $data);
+    // }
+
+    public function indexCashSale() {
         $lotReservationsModel = new LotReservationsModel();
-        $lotReservationsTable = $lotReservationsModel->getLotReservations();
+        $lotReservationsTable = $lotReservationsModel->getCashSaleLotReservations();
         $availableLots = $lotReservationsModel->getAvailableLots();
         $customers = $lotReservationsModel->getCustomers();
 
         $data = [
             "pageTitle" => "Lot Reservations",
             "usesDataTables" => true,
+            "currentTable" => "Cash Sale",
+            "lotReservationsTable" => $lotReservationsTable,
+            "availableLots" => $availableLots,
+            "customers" => $customers,
+            "view" => "lot-reservations/index"
+        ];
+
+        View::render("templates/layout", $data);
+    }
+
+    public function indexSixMonths() {
+        $lotReservationsModel = new LotReservationsModel();
+        $lotReservationsTable = $lotReservationsModel->getSixMonthsLotReservations();
+        $availableLots = $lotReservationsModel->getAvailableLots();
+        $customers = $lotReservationsModel->getCustomers();
+
+        $data = [
+            "pageTitle" => "Lot Reservations",
+            "usesDataTables" => true,
+            "currentTable" => "6 Months",
+            "lotReservationsTable" => $lotReservationsTable,
+            "availableLots" => $availableLots,
+            "customers" => $customers,
+            "view" => "lot-reservations/index"
+        ];
+
+        View::render("templates/layout", $data);
+    }
+
+    public function indexInstallments() {
+        $lotReservationsModel = new LotReservationsModel();
+        $lotReservationsTable = $lotReservationsModel->getInstallmentLotReservations();
+        $availableLots = $lotReservationsModel->getAvailableLots();
+        $customers = $lotReservationsModel->getCustomers();
+
+        $data = [
+            "pageTitle" => "Lot Reservations",
+            "usesDataTables" => true,
+            "currentTable" => "Installment",
             "lotReservationsTable" => $lotReservationsTable,
             "availableLots" => $availableLots,
             "customers" => $customers,
@@ -35,14 +93,65 @@ class LotReservationsController extends BaseController {
             $paymentOption = $_POST['payment-option'];
             
             $pricing = $lotReservationsModel->getPricing($phase, $lotType);
-            $paymentAmount = $pricing['cash_sale'];
 
             $lotReservationsModel->setReservation($lotId, $reserveeId, $lotType, $paymentOption);
-            $lotReservationsModel->setCashSalePayment($lotId, $paymentAmount);
+            $calculator = new Calculator();
+            $downPaymentDueDate = $this->setDownPaymentDueDate();
+            switch ($paymentOption) {
+                case "Cash Sale":
+                    $paymentAmount = $pricing['cash_sale'];
+                    $lotReservationsModel->setCashSalePayment($lotId, $paymentAmount);
+                    $lotReservationsModel->setCashSaleDueDate($lotId);
+                    break;
+                case "6 Months":
+                    $paymentAmount = $pricing['six_months'];
+                    $lotReservationsModel->setSixMonthsPayment($lotId, $paymentAmount);
+                    $lotReservationsModel->setSixMonthsDueDate($lotId);
+                    break;
+                case "Installment: 1 Year":
+                    $termYears = 1;
+                    $downPayment = $pricing["down_payment"];
+                    $totalAmount = $calculator->getFinalBalance($pricing["monthly_amortization_one_year"], $termYears);
+                    $paymentAmount = $pricing["monthly_amortization_one_year"];
+                    $lotReservationsModel->setInstallmentPayment($lotId, $termYears, $downPayment, "Pending", $downPaymentDueDate, $totalAmount, $paymentAmount, $pricing["one_year_interest_rate"], "Pending");
+                    break;
+                case "Installment: 2 Years":
+                    $termYears = 2;
+                    $downPayment = $pricing["down_payment"];
+                    $totalAmount = $calculator->getFinalBalance($pricing["monthly_amortization_two_years"], $termYears);
+                    $paymentAmount = $pricing["monthly_amortization_two_years"];
+                    $lotReservationsModel->setInstallmentPayment($lotId, $termYears, $downPayment, "Pending", $downPaymentDueDate, $totalAmount, $paymentAmount, $pricing["two_years_interest_rate"], "Pending");
+                    break;
+                case "Installment: 3 Years":
+                    $termYears = 3;
+                    $downPayment = $pricing["down_payment"];
+                    $totalAmount = $calculator->getFinalBalance($pricing["monthly_amortization_four_years"], $termYears);
+                    $paymentAmount = $pricing["monthly_amortization_three_years"];
+                    $lotReservationsModel->setInstallmentPayment($lotId, $termYears, $downPayment, "Pending", $downPaymentDueDate, $totalAmount, $paymentAmount, $pricing["three_years_interest_rate"], "Pending");
+                    break;
+                case "Installment: 4 Years":
+                    $termYears = 4;
+                    $downPayment = $pricing["down_payment"];
+                    $totalAmount = $calculator->getFinalBalance($pricing["monthly_amortization_four_years"], $termYears);
+                    $paymentAmount = $pricing["monthly_amortization_four_years"];
+                    $lotReservationsModel->setInstallmentPayment($lotId, $termYears, $downPayment, "Pending", $downPaymentDueDate, $totalAmount, $paymentAmount, $pricing["four_years_interest_rate"], "Pending");
+                    break;
+                case "Installment: 5 Years":
+                    $termYears = 5;
+                    $downPayment = $pricing["down_payment"];
+                    $totalAmount = $calculator->getFinalBalance($pricing["monthly_amortization_five_years"], $termYears);
+                    $paymentAmount = $pricing["monthly_amortization_five_years"];
+                    $lotReservationsModel->setInstallmentPayment($lotId, $termYears, $downPayment, "Pending", $downPaymentDueDate, $totalAmount, $paymentAmount, $pricing["five_years_interest_rate"], "Pending");
+                    break;
+            }
+            $lotReservationsModel->setLotStatus($lotId);
     
             $this->redirectBack();    
         }
     }
 
+    public function setDownPaymentDueDate() {
+        return date("Y-m-d", strtotime("+30 days"));
+    }
 
 }

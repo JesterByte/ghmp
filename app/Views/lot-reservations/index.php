@@ -1,7 +1,8 @@
 <?php 
     use App\Helpers\TableHelper;
     use App\Helpers\DateHelper;
-    use App\Utils\Formatter;
+use App\Helpers\DisplayHelper;
+use App\Utils\Formatter;
 
     $snakeCasePageTitle = Formatter::convertToSnakeCase($pageTitle);
     $timeStamp = DateHelper::getTimestamp();
@@ -20,7 +21,12 @@
     }
 ?>
 <div class="row">
-    <div class="col d-flex justify-content-end">
+    <div class="col d-flex justify-content-between">
+        <div class="btn-group">
+            <a href="lot-reservations-cash-sale" class="btn btn-primary <?= DisplayHelper::isActivePage($currentTable, "Cash Sale", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "Cash Sale", "aria-current='page'") ?>>Cash Sale</a>
+            <a href="lot-reservations-six-months" class="btn btn-primary <?= DisplayHelper::isActivePage($currentTable, "6 Months", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "6 Months", "aria-current='page'") ?>>6 Months</a>
+            <a href="lot-reservations-installment" class="btn btn-primary <?= DisplayHelper::isActivePage($currentTable, "Installment", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "Installment", "aria-current='page'") ?>>Installment</a>
+        </div>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-lot-reservation-modal"><i class="bi bi-plus"></i> Add New Reservation</button>
     </div>
 </div>
@@ -30,11 +36,12 @@
     <table class="table table-striped table-hover table-bordered" id="table">
         <thead>
             <tr>
+                <th>Reservation Date</th>
                 <th>Lot</th>
                 <th>Reservee</th>
                 <th>Lot Type</th>
-                <th>Payment Option</th>
-                <th>Payment Status</th>
+                <!-- <th>Payment Option</th> -->
+                <th>Reservation Status</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -44,13 +51,15 @@
                     if (!empty($lotReservationsTable)) {
                         $lotId = Formatter::formatLotId($lotReservationsRow["lot_id"]);
                         $reservee = Formatter::formatFullName($lotReservationsRow["first_name"], $lotReservationsRow["middle_name"], $lotReservationsRow["last_name"], $lotReservationsRow["suffix_name"]);
+                        $reservationDate = Formatter::formatDateTime($lotReservationsRow["created_at"]);
 
                         TableHelper::startRow();
+                        TableHelper::cell($reservationDate);
                         TableHelper::cell($lotId);
                         TableHelper::cell($reservee);
                         TableHelper::cell($lotReservationsRow["lot_type"]);
-                        TableHelper::cell($lotReservationsRow["payment_option"]);
-                        TableHelper::cell($lotReservationsRow["payment_status"]);
+                        TableHelper::cell($lotReservationsRow["reservation_status"]);
+                        // TableHelper::cell($lotReservationsRow["payment_status"]);
                         TableHelper::cell('');
                         TableHelper::endRow();
                     }
@@ -64,6 +73,11 @@
 <?php include_once VIEW_PATH . "/modals/modal-add-lot-reservation.php" ?>
 
 <script src="<?= BASE_URL . "/js/form-validation.js" ?>"></script>
+<script src="<?= BASE_URL . "/js/modal-autofocus.js" ?>"></script>
+
+<script>
+    autofocusModal("add-lot-reservation-modal", "lot");
+</script>
 
 <script>
     createDataTable("#table", "<?= $fileName ?>");

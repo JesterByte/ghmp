@@ -33,7 +33,7 @@
                     </ul>
                 </div>
             </li>
-            <?php $paymentsList = ["Cash Sales", "Fully Paids"]; ?>
+            <?php $paymentsList = ["Cash Sales", "6 Months", "Installments", "Fully Paids"]; ?>
             <li class="nav-item">
                 <a class="nav-link d-flex align-items-center gap-2" data-bs-toggle="collapse" href="#paymentsSubmenu" role="button" aria-expanded="<?= DisplayHelper::isPageInList($pageTitle, $paymentsList, "true", "false") ?>" aria-controls="paymentsSubmenu">
                     <i class="bi bi-credit-card<?= DisplayHelper::isPageInList($pageTitle, $paymentsList, "-fill") ?>"></i> Payments <i class="bi bi-caret-down<?= DisplayHelper::isPageInList($pageTitle, $paymentsList, "-fill") ?>"></i>
@@ -41,6 +41,8 @@
                 <div class="collapse <?= DisplayHelper::isPageInList($pageTitle, $paymentsList, "show") ?>" id="paymentsSubmenu">
                     <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                         <li><a href="cash-sales" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isActivePage($pageTitle, "Cash Sales", "-fill text-bg-primary") ?>" <?= DisplayHelper::isActivePage($pageTitle, "Cash Sales", "aria-current='page'") ?>><i class="bi bi-caret-right<?= DisplayHelper::isActivePage($pageTitle, "Cash Sales", "-fill") ?>"></i> Cash Sales</a></li>
+                        <li><a href="six-months" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isActivePage($pageTitle, "6 Months", "-fill text-bg-primary") ?>" <?= DisplayHelper::isActivePage($pageTitle, "6 Months", "aria-current='page'") ?>><i class="bi bi-caret-right<?= DisplayHelper::isActivePage($pageTitle, "6 Months", "-fill") ?>"></i> 6 Months</a></li>
+                        <li><a href="installments" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isActivePage($pageTitle, "Installments", "-fill text-bg-primary") ?>" <?= DisplayHelper::isActivePage($pageTitle, "Installments", "aria-current='page'") ?>><i class="bi bi-caret-right<?= DisplayHelper::isActivePage($pageTitle, "Installments", "-fill") ?>"></i> Installments</a></li>
                         <li><a href="fully-paids" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isActivePage($pageTitle, "Fully Paids", "-fill text-bg-primary") ?>" <?= DisplayHelper::isActivePage($pageTitle, "Fully Paids", "aria-current='page'") ?>><i class="bi bi-caret-right<?= DisplayHelper::isActivePage($pageTitle, "Fully Paids", "-fill") ?>"></i> Fully Paids</a></li>
 
                     </ul>
@@ -62,12 +64,24 @@
         </ul>
         <hr class="my-3">
         <ul class="nav flex-column mb-auto">
+            <?php $lotPricingList = ["Backup & Restore"]; ?>
             <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2" data-bs-toggle="collapse" href="#settingsSubmenu" role="button" aria-expanded="<?= DisplayHelper::isPageInList($pageTitle, $lotPricingList, "true", "false") ?>" aria-controls="settingsSubmenu">
+                    <i class="bi bi-gear<?= DisplayHelper::isPageInList($pageTitle, $lotPricingList, "-fill") ?>"></i> Settings <i class="bi bi-caret-down<?= DisplayHelper::isPageInList($pageTitle, $lotPricingList, "-fill") ?>"></i>
+                </a>
+                <div class="collapse <?= DisplayHelper::isPageInList($pageTitle, $lotPricingList, "show") ?>" id="settingsSubmenu">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                        <li><a href="backup-and-restore" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isActivePage($pageTitle, "Backup & Restore", "-fill text-bg-primary") ?>" <?= DisplayHelper::isActivePage($pageTitle, "Backup & Restore", "aria-current='page'") ?>><i class="bi bi-caret-right<?= DisplayHelper::isActivePage($pageTitle, "Backup & Restore", "-fill") ?>"></i> Backup & Restore</a></li>
+
+                    </ul>
+                </div>
+            </li>
+            <!-- <li class="nav-item">
                 <a class="nav-link d-flex align-items-center gap-2" href="#">
                     <i class="bi bi-gear"></i>                
                     Settings
                 </a>
-            </li>
+            </li> -->
             <li class="nav-item">
                 <a class="nav-link d-flex align-items-center gap-2" href="#" role="button" data-bs-toggle="modal" data-bs-target="#sign-out-modal">
                     <i class="bi bi-door-closed"></i>                

@@ -54,11 +54,11 @@
                         <option selected disabled></option>
                         <option value="Cash Sale">Cash Sale</option>
                         <option value="6 Months">6 Months</option>
-                        <option value="Installment: 1 year">Installment: 1 year</option>
-                        <option value="Installment: 2 years">Installment: 2 years</option>
-                        <option value="Installment: 3 years">Installment: 3 years</option>
-                        <option value="Installment: 4 years">Installment: 4 years</option>
-                        <option value="Installment: 5 years">Installment: 5 years</option>
+                        <option value="Installment: 1 Year">Installment: 1 Year</option>
+                        <option value="Installment: 2 Years">Installment: 2 Years</option>
+                        <option value="Installment: 3 Years">Installment: 3 Years</option>
+                        <option value="Installment: 4 Years">Installment: 4 Years</option>
+                        <option value="Installment: 5 Years">Installment: 5 Years</option>
                     </select>
                     <label for="payment-option">Payment Option</label>          
                 </div>

@@ -30,6 +30,8 @@ class CashSalesController extends BaseController {
 
             $cashSalesModel->setPayment($lotId);
             $cashSalesModel->setLotReservation($lotId);
+            $reserveeId = $cashSalesModel->getReserveeId($lotId)["reservee_id"];
+            $cashSalesModel->setLotOwnership($lotId, $reserveeId);
 
             $this->redirectBack();
         }

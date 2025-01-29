@@ -17,7 +17,7 @@
 ?>
 <div class="row">
     <div class="col d-flex justify-content-end">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-cash-sale-payment-modal"><i class="bi bi-plus"></i> Add New Payment</button>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-six-months-payment-modal"><i class="bi bi-plus"></i> Add New Payment</button>
     </div>
 </div>
 
@@ -35,12 +35,12 @@
         </thead>
         <tbody>
             <?php 
-                foreach ($cashSalesTable as $cashSalesRow) {
-                    if (!empty($cashSalesTable)) {
-                        $lotId = Formatter::formatLotId($cashSalesRow["lot_id"]);
-                        $payer = Formatter::formatFullName($cashSalesRow["first_name"], $cashSalesRow["middle_name"], $cashSalesRow["last_name"], $cashSalesRow["suffix_name"]);
-                        $paymentAmount = Formatter::formatCurrency($cashSalesRow["payment_amount"]);
-                        $paymentDate = Formatter::formatDateTime($cashSalesRow["updated_at"]);
+                foreach ($sixMonthsTable as $sixMonthsRow) {
+                    if (!empty($sixMonthsTable)) {
+                        $lotId = Formatter::formatLotId($sixMonthsRow["lot_id"]);
+                        $payer = Formatter::formatFullName($sixMonthsRow["first_name"], $sixMonthsRow["middle_name"], $sixMonthsRow["last_name"], $sixMonthsRow["suffix_name"]);
+                        $paymentAmount = Formatter::formatCurrency($sixMonthsRow["payment_amount"]);
+                        $paymentDate = Formatter::formatDateTime($sixMonthsRow["updated_at"]);
 
                         TableHelper::startRow();
                         TableHelper::cell($paymentDate);
@@ -57,13 +57,13 @@
 </div>
 
 <?php include_once VIEW_PATH . "/templates/dataTables-scripts.php" ?>
-<?php include_once VIEW_PATH . "/modals/modal-add-cash-sale-payment.php" ?>
+<?php include_once VIEW_PATH . "/modals/modal-add-six-months-payment.php" ?>
 
 <script src="<?= BASE_URL . "/js/form-validation.js" ?>"></script>
 <script src="<?= BASE_URL . "/js/modal-autofocus.js" ?>"></script>
 
 <script>
-    autofocusModal("add-cash-sale-payment-modal", "lot-id");
+    autofocusModal("add-six-months-payment-modal", "lot-id");
 </script>
 
 <script>
