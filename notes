@@ -2,3 +2,8 @@
 
 For installments: 
 Sum all payments and check if it is greater than the total amount
+
+Use Windows Task Scheduler
+Create Basic Task
+C:/xampp/php/php.exe
+C:/xampp/htdocs/ghmp/app/Console/ScheduleBackup.php
