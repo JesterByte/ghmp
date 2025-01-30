@@ -2,6 +2,8 @@
 
 namespace App\Utils;
 
+use DateTime;
+
 class Formatter {
 
     /**
@@ -104,5 +106,28 @@ class Formatter {
 
     public static function formatDateTime($dateTime) {
         return date("d/m/Y h:i:s A", strtotime($dateTime));
+    }
+
+    // Format file name for database restore
+    public static function formatDatabaseVersion($filename) {
+        // Regular expression to extract date and time parts from the filename
+        preg_match('/(\d{4}-\d{2}-\d{2})_(\d{2}-\d{2}-\d{2})-(am|pm)/', $filename, $matches);
+
+        if ($matches) {
+            // Extract date and time from matches
+            $date = $matches[1]; // 2025-01-29
+            $time = $matches[2]; // 06-54-49
+            $am_pm = $matches[3]; // am or pm
+            
+            // Combine date and time into a single datetime string
+            $datetime_str = $date . ' ' . str_replace('-', ':', $time) . ' ' . $am_pm;
+            
+            // Convert it into a DateTime object
+            $datetime = DateTime::createFromFormat("Y-m-d h:i:s a", $datetime_str);
+            
+            return $datetime->format("F j, Y, g:i A");
+        } else {
+            echo "Invalid filename format.";
+        }
     }
 }

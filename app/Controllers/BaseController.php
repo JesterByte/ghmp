@@ -5,6 +5,10 @@ namespace App\Controllers;
 use App\Core\View;
 
 class BaseController {
+    public function __construct() {
+        session_start();
+        date_default_timezone_set("Asia/Manila");
+    }
 
     // Sanitize string input to prevent XSS attacks
     protected function sanitizeInput($input) {
@@ -23,9 +27,16 @@ class BaseController {
     }
 
     // Redirect to another page with an optional message
-    protected function redirect($url, $message = null) {
-        if ($message) {
-            $_SESSION['flash_message'] = $message;
+    protected function redirect($url, $icon = '<i class="bi bi-check-lg text-success"></i>', $message = "", $title = "Operation Successful", $link = "", $linkText = "") {
+        if ($icon && $message && $title) {
+
+            $_SESSION["flash_message"] = [
+                "icon" => $icon,
+                "message" => $message,
+                "title" => $title,
+                "link" => $link,
+                "link_text" => $linkText
+            ];
         }
         header("Location: {$url}");
         exit;

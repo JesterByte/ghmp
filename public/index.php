@@ -35,6 +35,8 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute("GET", "/fully-paids-installment", ['App\Controllers\FullyPaidsController', 'indexInstallment']);
     $r->addRoute("GET", "/backup-and-restore", ['App\Controllers\BackupAndRestoreController', 'index']);
     $r->addRoute("GET", "/backup-database", ['App\Controllers\BackupAndRestoreController', 'backupDatabase']);
+    $r->addRoute("POST", "/restore-database", ['App\Controllers\BackupAndRestoreController', 'restoreDatabase']);
+    $r->addRoute("GET", "/undo-restore", ['App\Controllers\BackupAndRestoreController', 'undoRestore']);
 
 
 });
