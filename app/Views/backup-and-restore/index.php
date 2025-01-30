@@ -8,32 +8,10 @@
             <div class="card-body">
                 <h4 class="card-title text-center">Automated Backup</h4>
                 <p class="card-text text-center">Set up an automated backup for your database. (e.g., daily at midnight).</p>
-                
                 <div class="text-center">
-                    <button type="button" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#automatedModal">
+                    <button type="button" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#automated-backup-modal">
                         Set Up Automated Backup
                     </button>
-                </div>
-                
-                <!-- Modal for automated backup -->
-                <div class="modal fade" id="automatedModal" tabindex="-1" aria-labelledby="automatedModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="automatedModalLabel">Automated Backup Settings</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form action="your_automated_backup_script.php" method="post">
-                                    <div class="mb-3">
-                                        <label for="backupTime" class="form-label">Backup Time</label>
-                                        <input type="time" class="form-control" id="backupTime" name="backup_time" required>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Save Settings</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -91,4 +69,5 @@
     </div>
 </div>
 
+<?php include_once VIEW_PATH . "/modals/modal-backup-time.php" ?>
 <script src="<?= BASE_URL . "/js/form-validation.js" ?>"></script>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 30, 2025 at 02:06 AM
+-- Generation Time: Jan 30, 2025 at 01:58 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,24 @@ SET time_zone = "+00:00";
 --
 -- Database: `ghmp_db`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `backup_settings`
+--
+
+CREATE TABLE `backup_settings` (
+  `id` int(11) NOT NULL,
+  `backup_time` time NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `backup_settings`
+--
+
+INSERT INTO `backup_settings` (`id`, `backup_time`) VALUES
+(1, '20:20:00');
 
 -- --------------------------------------------------------
 
@@ -786,6 +804,12 @@ INSERT INTO `users` (`id`, `email`, `password_hash`, `created_at`) VALUES
 --
 
 --
+-- Indexes for table `backup_settings`
+--
+ALTER TABLE `backup_settings`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `beneficiaries`
 --
 ALTER TABLE `beneficiaries`
@@ -878,6 +902,12 @@ ALTER TABLE `users`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `backup_settings`
+--
+ALTER TABLE `backup_settings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `beneficiaries`

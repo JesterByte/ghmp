@@ -7,7 +7,9 @@ use App\Core\View;
 
 class BackupAndRestoreController extends BaseController {
     public function index() {
-
+        $backupAndRestoreModel = new BackupAndRestoreModel();
+        $backupSettings = $backupAndRestoreModel->getBackupTime();
+        
         $backupDirectory = __DIR__ . "/../../storage/backups/";
         $backupFiles = [];
     
@@ -28,6 +30,7 @@ class BackupAndRestoreController extends BaseController {
             "pageTitle" => "Backup & Restore",
             "usesDataTables" => false,
             "backupFiles" => $backupFiles,
+            "backupSettings" => $backupSettings,
             "view" => "backup-and-restore/index"
         ];
 
@@ -109,5 +112,25 @@ class BackupAndRestoreController extends BaseController {
         }
     
         $this->redirect(BASE_URL . "/backup-and-restore", $icon, $message, $title);
+    }
+
+    public function updateBackupTime() {
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            $backupTime = $_POST["backup-time"];
+            $backupAndRestoreModel = new BackupAndRestoreModel();
+    
+            if ($backupAndRestoreModel->setBackupTime($backupTime)) {
+                $icon = '<i class="bi bi-check-lg text-success"></i>';
+                $message = "Backup time updated successfully!";
+                $title = "Operation Successful";
+            } else {
+                $icon = '<i class="bi bi-x-lg text-danger"></i>';
+                $message = "Failed to update backup time!";
+                $title = "Operation Failed";
+            }
+    
+            // $this->redirectBack();
+            $this->redirect(BASE_URL . "/backup-and-restore", $icon, $message, $title);
+        }
     }
 }
