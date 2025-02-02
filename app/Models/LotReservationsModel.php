@@ -126,10 +126,10 @@ class LotReservationsModel extends Model {
         return $stmt->execute();
     }
 
-    public function setCashSale($lotId) {
-        $stmt = $this->db->prepare('INSERT INTO cash_sales (lot_reservation_id, payment_amount) VALUES (:lot_reservation_id, :payment_amount)');
-        $stmt->bindParam(':lot_reservation_id', $lotId);
-        $stmt->bindParam(':payment_amount', $paymentAmount);
-        return $stmt->execute();
-    }
+    // public function setCashSale($lotId) {
+    //     $stmt = $this->db->prepare('INSERT INTO cash_sales (lot_reservation_id, payment_amount) VALUES (:lot_reservation_id, :payment_amount)');
+    //     $stmt->bindParam(':lot_reservation_id', $lotId);
+    //     $stmt->bindParam(':payment_amount', $paymentAmount);
+    //     return $stmt->execute();
+    // }
 }

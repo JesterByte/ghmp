@@ -1,6 +1,11 @@
 <?php 
     use App\Helpers\TableHelper;
     use App\Utils\Formatter;
+    use App\Helpers\DateHelper;
+
+    $snakeCasePageTitle = Formatter::convertToSnakeCase($pageTitle);
+    $timeStamp = DateHelper::getTimestamp();
+    $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
     
     $firstRow = reset($estatePricingTable);
 ?>
@@ -93,7 +98,13 @@
 <?php include_once VIEW_PATH . "/modals/modal-update-estate-rates.php" ?>
 
 <script src="<?= BASE_URL . "/js/form-validation.js" ?>"></script>
+<script src="<?= BASE_URL . "/js/modal-autofocus.js" ?>"></script>
 
 <script>
-    createDataTable("#table");
+    autofocusModal("pricing-update-estate-modal", "estate");
+    autofocusModal("rates-update-estate-modal", "vat");
+</script>
+
+<script>
+    createDataTable("#table", "<?= $fileName ?>");
 </script>

@@ -27,7 +27,7 @@
         <thead>
             <tr>
                 <th>Completed On</th>
-                <th>Lot</th>
+                <th>Asset</th>
                 <th>Reservee</th>
                 <th>Payment Amount</th>
                 <th>Action</th>
@@ -37,7 +37,7 @@
             <?php 
                 foreach ($fullyPaidsTable as $fullyPaidsRow) {
                     if (!empty($fullyPaidsTable)) {
-                        $lotId = Formatter::formatLotId($fullyPaidsRow["lot_id"]);
+                        $assetId = Formatter::formatAssetId($fullyPaidsRow["asset_id"]);
                         $reservee = Formatter::formatFullName($fullyPaidsRow["first_name"], $fullyPaidsRow["middle_name"], $fullyPaidsRow["last_name"], $fullyPaidsRow["suffix_name"]);
 
                         if ($currentTable == "Installment") {
@@ -49,7 +49,7 @@
 
                         TableHelper::startRow();
                         TableHelper::cell($completedOn);
-                        TableHelper::cell($lotId);
+                        TableHelper::cell($assetId);
                         TableHelper::cell($reservee);
                         TableHelper::cell($paymentAmount);
                         TableHelper::cell('');

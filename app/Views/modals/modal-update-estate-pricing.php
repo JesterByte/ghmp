@@ -17,10 +17,10 @@
                     </select>
                     <label for="estate">Estate</label>                
                 </div>
-                <label for="new-lot-price" class="form-label">New Lot Price</label>
+                <label for="new-estate-price" class="form-label">New Estate Price</label>
                 <div class="input-group mb-3">
                     <span class="input-group-text">₱</span>
-                    <input type="number" class="form-control" step="0.01" id="new-lot-price" name="new-lot-price" aria-label="Amount (to the nearest peso)" placeholder="0.00" required>
+                    <input type="number" class="form-control" step="0.01" id="new-estate-price" name="new-estate-price" aria-label="Amount (to the nearest peso)" placeholder="0.00" required>
                 </div>               
         </div>
         <div class="modal-footer">

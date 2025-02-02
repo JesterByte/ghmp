@@ -9,17 +9,17 @@
         <div class="modal-body">
             <form action="add-monthly-payment" method="post" class="needs-validation" novalidate>     
                 <div class="form-floating">
-                    <select class="form-select" id="lot-id" name="lot-id" aria-label="Floating label select example" required>
+                    <select class="form-select" id="asset-id" name="asset-id" aria-label="Floating label select example" required>
                         <option selected disabled></option>
                         <?php
                             if (!empty($formattedOngoingInstallments)) {
-                                for ($i = 0; $i < count($formattedOngoingInstallments["lot"]); $i++) {
-                                    echo "<option value='{$formattedOngoingInstallments["lot_id"][$i]}'>{$formattedOngoingInstallments["lot"][$i]} ({$formattedOngoingInstallments["monthly_payment"][$i]})</option>";
+                                for ($i = 0; $i < count($formattedOngoingInstallments["asset"]); $i++) {
+                                    echo "<option value='{$formattedOngoingInstallments["asset_id"][$i]}'>{$formattedOngoingInstallments["asset"][$i]} ({$formattedOngoingInstallments["monthly_payment"][$i]})</option>";
                                 }
                             }
                         ?>
                     </select>
-                    <label for="lot-id">Reservation</label>
+                    <label for="asset-id">Reservation</label>
                 </div>
         </div>
         <div class="modal-footer">

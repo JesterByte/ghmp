@@ -9,17 +9,17 @@
         <div class="modal-body">
             <form action="add-cash-sale-payment" method="post" class="needs-validation" novalidate>     
                 <div class="form-floating">
-                    <select class="form-select" id="lot-id" name="lot-id" aria-label="Floating label select example" required>
+                    <select class="form-select" id="asset-id" name="asset-id" aria-label="Floating label select example" required>
                         <option selected disabled></option>
                         <?php
                             if (!empty($formattedReservationsTable)) {
-                                for ($i = 0; $i < count($formattedReservationsTable["lot"]); $i++) {
-                                    echo "<option value='{$formattedReservationsTable["lot_id"][$i]}'>{$formattedReservationsTable["lot"][$i]} ({$formattedReservationsTable["payment_amount"][$i]})</option>";
+                                for ($i = 0; $i < count($formattedReservationsTable["asset"]); $i++) {
+                                    echo "<option value='{$formattedReservationsTable["asset_id"][$i]}'>{$formattedReservationsTable["asset"][$i]} ({$formattedReservationsTable["payment_amount"][$i]})</option>";
                                 }
                             }
                         ?>
                     </select>
-                    <label for="lot-id">Reservation</label>
+                    <label for="asset-id">Reservation</label>
                 </div>
         </div>
         <div class="modal-footer">

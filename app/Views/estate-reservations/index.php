@@ -1,0 +1,82 @@
+<?php 
+    use App\Helpers\TableHelper;
+    use App\Helpers\DateHelper;
+    use App\Helpers\DisplayHelper;
+    use App\Utils\Formatter;
+
+    $snakeCasePageTitle = Formatter::convertToSnakeCase($pageTitle);
+    $timeStamp = DateHelper::getTimestamp();
+    $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
+
+    $formattedAvailableEstates = [];
+    foreach ($availableEstates as $availableEstate) {
+        $formattedAvailableEstates["available_estate"][] = Formatter::formatEstateId($availableEstate["estate_id"]);  
+        $formattedAvailableEstates["estate_id"][] = $availableEstate["estate_id"];
+    }
+
+    $formattedCustomers = [];
+    foreach ($customers as $customer) {
+        $formattedCustomers["customer"][] = Formatter::formatFullName($customer["first_name"], $customer["middle_name"], $customer["last_name"], $customer["suffix_name"]);
+        $formattedCustomers["customer_id"][] = $customer["id"];
+    }
+?>
+<div class="row">
+    <div class="col d-flex justify-content-between">
+        <div class="btn-group">
+            <a href="estate-reservations-cash-sale" class="btn btn-primary <?= DisplayHelper::isActivePage($currentTable, "Cash Sale", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "Cash Sale", "aria-current='page'") ?>>Cash Sale</a>
+            <a href="estate-reservations-six-months" class="btn btn-primary <?= DisplayHelper::isActivePage($currentTable, "6 Months", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "6 Months", "aria-current='page'") ?>>6 Months</a>
+            <a href="estate-reservations-installment" class="btn btn-primary <?= DisplayHelper::isActivePage($currentTable, "Installment", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "Installment", "aria-current='page'") ?>>Installment</a>
+        </div>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-estate-reservation-modal"><i class="bi bi-plus"></i> Add New Reservation</button>
+    </div>
+</div>
+
+<?php include_once VIEW_PATH . "/templates/dataTables-styles.php" ?>
+<div class="table-responsive-sm shadow">
+    <table class="table table-striped table-hover table-bordered" id="table">
+        <thead>
+            <tr>
+                <th>Reservation Date</th>
+                <th>Estate</th>
+                <th>Reservee</th>
+                <!-- <th>Payment Option</th> -->
+                <th>Reservation Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php 
+                foreach ($estateReservationsTable as $estateReservationsRow) {
+                    if (!empty($estateReservationsTable)) {
+                        $estateId = Formatter::formatEstateId($estateReservationsRow["estate_id"]);
+                        $reservee = Formatter::formatFullName($estateReservationsRow["first_name"], $estateReservationsRow["middle_name"], $estateReservationsRow["last_name"], $estateReservationsRow["suffix_name"]);
+                        $reservationDate = Formatter::formatDateTime($estateReservationsRow["created_at"]);
+
+                        TableHelper::startRow();
+                        TableHelper::cell($reservationDate);
+                        TableHelper::cell($estateId);
+                        TableHelper::cell($reservee);
+                        TableHelper::cell($estateReservationsRow["reservation_status"]);
+                        // TableHelper::cell($estateReservationsRow["payment_status"]);
+                        TableHelper::cell('');
+                        TableHelper::endRow();
+                    }
+                }
+            ?>
+        </tbody>
+    </table>
+</div>
+
+<?php include_once VIEW_PATH . "/templates/dataTables-scripts.php" ?>
+<?php include_once VIEW_PATH . "/modals/modal-add-estate-reservation.php" ?>
+
+<script src="<?= BASE_URL . "/js/form-validation.js" ?>"></script>
+<script src="<?= BASE_URL . "/js/modal-autofocus.js" ?>"></script>
+
+<script>
+    autofocusModal("add-estate-reservation-modal", "estate");
+</script>
+
+<script>
+    createDataTable("#table", "<?= $fileName ?>");
+</script>

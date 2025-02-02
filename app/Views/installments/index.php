@@ -11,14 +11,14 @@
     $formattedOngoingInstallments = [];
 
     foreach ($pendingDownPayments as $pendingDownPayment) {
-        $formattedPendingDownPayments["lot"][] = Formatter::formatLotId($pendingDownPayment["lot_id"]);
-        $formattedPendingDownPayments["lot_id"][] = $pendingDownPayment["lot_id"];
+        $formattedPendingDownPayments["asset"][] = Formatter::formatAssetId($pendingDownPayment["asset_id"]);
+        $formattedPendingDownPayments["asset_id"][] = $pendingDownPayment["asset_id"];
         $formattedPendingDownPayments["down_payment"][] = Formatter::formatCurrency($pendingDownPayment["down_payment"]);
     }
 
     foreach ($ongoingInstallments as $ongoingInstallment) {
-        $formattedOngoingInstallments["lot"][] = Formatter::formatLotId($ongoingInstallment["lot_id"]);
-        $formattedOngoingInstallments["lot_id"][] = $ongoingInstallment["lot_id"];
+        $formattedOngoingInstallments["asset"][] = Formatter::formatAssetId($ongoingInstallment["asset_id"]);
+        $formattedOngoingInstallments["asset_id"][] = $ongoingInstallment["asset_id"];
         $formattedOngoingInstallments["monthly_payment"][] = Formatter::formatCurrency($ongoingInstallment["monthly_payment"]);
     }
 ?>
@@ -37,7 +37,7 @@
         <thead>
             <tr>
                 <th>Payment Date</th>
-                <th>Lot</th>
+                <th>Asset</th>
                 <th>Payer</th>
                 <th>Payment Amount</th>
                 <th>Action</th>
@@ -47,14 +47,14 @@
             <?php 
                 foreach ($installmentsTable as $installmentsRow) {
                     if (!empty($installmentsTable)) {
-                        $lotId = Formatter::formatLotId($installmentsRow["lot_id"]);
+                        $assetId = Formatter::formatAssetId($installmentsRow["asset_id"]);
                         $payer = Formatter::formatFullName($installmentsRow["first_name"], $installmentsRow["middle_name"], $installmentsRow["last_name"], $installmentsRow["suffix_name"]);
                         $paymentAmount = Formatter::formatCurrency($installmentsRow["payment_amount"]);
                         $paymentDate = Formatter::formatDateTime($installmentsRow["payment_date"]);
 
                         TableHelper::startRow();
                         TableHelper::cell($paymentDate);
-                        TableHelper::cell($lotId);
+                        TableHelper::cell($assetId);
                         TableHelper::cell($payer);
                         TableHelper::cell($paymentAmount);
                         TableHelper::cell('');
@@ -74,8 +74,8 @@
 <script src="<?= BASE_URL . "/js/modal-autofocus.js" ?>"></script>
 
 <script>
-    autofocusModal("add-down-payment-modal", "lot-id");
-    autofocusModal("add-monthly-payment-modal", "lot-id");
+    autofocusModal("add-down-payment-modal", "asset-id");
+    autofocusModal("add-monthly-payment-modal", "asset-id");
 </script>
 
 <script>

@@ -28,9 +28,18 @@ class InstallmentsController extends BaseController {
         $installmentsModel = new InstallmentsModel();
 
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
-            $lotId = $_POST["lot-id"];
+            $assetId = $_POST["asset-id"];
+            $assetType = $this->checkAssetId($assetId);
 
-            $installmentsModel->setDownPayment($lotId);
+            switch ($assetType) {
+                case "lot":
+                    $installmentsModel->setDownPayment($assetId);
+                    break;
+                case "estate":
+                    $installmentsModel->setDownPaymentEstate($assetId);
+                    break;
+            }
+
             $this->redirectBack();
         }
     }
@@ -39,23 +48,43 @@ class InstallmentsController extends BaseController {
         $installmentsModel = new InstallmentsModel();
 
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
-            $lotId = $_POST["lot-id"];
+            $assetId = $_POST["asset-id"];
+            $assetType = $this->checkAssetId($assetId);
 
-            $installmentsModel->setMonthlyPayment($lotId);
-            $installmentsModel->setNextDueDate($lotId);
-
-            $installmentRow = $installmentsModel->getInstallmentByLotId($lotId);
-            $installmentId = $installmentRow["id"];
-            $totalPaid = $installmentsModel->getPaymentAmountSum($installmentId)["total_paid"];
-            $totalAmount = $installmentRow["total_amount"];
-
-            if ($totalPaid >= $totalAmount) {
-                $installmentsModel->setCompleteInstallment($installmentId);
-                $installmentsModel->setCompleteLotReservation($lotId);
-                $reserveeId = $installmentsModel->getReserveeId($lotId)["reservee_id"];
-                $installmentsModel->setLotOwnership($lotId, $reserveeId);
+            switch ($assetType) {
+                case "lot":
+                    $installmentsModel->setMonthlyPayment($assetId);
+                    $installmentsModel->setNextDueDate($assetId);
+        
+                    $installmentRow = $installmentsModel->getInstallmentByLotId($assetId);
+                    $installmentId = $installmentRow["id"];
+                    $totalPaid = $installmentsModel->getPaymentAmountSum($installmentId)["total_paid"];
+                    $totalAmount = $installmentRow["total_amount"];
+        
+                    if ($totalPaid >= $totalAmount) {
+                        $installmentsModel->setCompleteInstallment($installmentId);
+                        $installmentsModel->setLotReservation($assetId);
+                        $reserveeId = $installmentsModel->getReserveeId($assetId)["reservee_id"];
+                        $installmentsModel->setLotOwnership($assetId, $reserveeId);
+                    }
+                    break;
+                case "estate":
+                    $installmentsModel->setMonthlyPaymentEstate($assetId);
+                    $installmentsModel->setNextDueDateEstate($assetId);
+        
+                    $installmentRow = $installmentsModel->getInstallmentByEstateId($assetId);
+                    $installmentId = $installmentRow["id"];
+                    $totalPaid = $installmentsModel->getPaymentAmountSumEstate($installmentId)["total_paid"];
+                    $totalAmount = $installmentRow["total_amount"];
+        
+                    if ($totalPaid >= $totalAmount) {
+                        $installmentsModel->setCompleteInstallmentEstate($installmentId);
+                        $installmentsModel->setEstateReservation($assetId);
+                        $reserveeId = $installmentsModel->getReserveeIdEstate($assetId)["reservee_id"];
+                        $installmentsModel->setEstateOwnership($assetId, $reserveeId);
+                    }
+                    break;
             }
-
             $this->redirectBack();
         }
     }

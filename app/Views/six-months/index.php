@@ -10,8 +10,8 @@
     $formattedReservationsTable = [];
 
     foreach ($reservationsTable as $reservationRow) {
-        $formattedReservationsTable["lot"][] = Formatter::formatLotId($reservationRow["lot_id"]);
-        $formattedReservationsTable["lot_id"][] = $reservationRow["lot_id"];
+        $formattedReservationsTable["asset"][] = Formatter::formatLotId(lotId: $reservationRow["asset_id"]);
+        $formattedReservationsTable["asset_id"][] = $reservationRow["asset_id"];
         $formattedReservationsTable["payment_amount"][] = Formatter::formatCurrency($reservationRow["payment_amount"]);
     }
 ?>
@@ -27,7 +27,7 @@
         <thead>
             <tr>
                 <th>Payment Date</th>
-                <th>Lot</th>
+                <th>Asset</th>
                 <th>Payer</th>
                 <th>Payment Amount</th>
                 <th>Action</th>
@@ -37,14 +37,14 @@
             <?php 
                 foreach ($sixMonthsTable as $sixMonthsRow) {
                     if (!empty($sixMonthsTable)) {
-                        $lotId = Formatter::formatLotId($sixMonthsRow["lot_id"]);
+                        $assetId = Formatter::formatAssetId($sixMonthsRow["asset_id"]);
                         $payer = Formatter::formatFullName($sixMonthsRow["first_name"], $sixMonthsRow["middle_name"], $sixMonthsRow["last_name"], $sixMonthsRow["suffix_name"]);
                         $paymentAmount = Formatter::formatCurrency($sixMonthsRow["payment_amount"]);
                         $paymentDate = Formatter::formatDateTime($sixMonthsRow["updated_at"]);
 
                         TableHelper::startRow();
                         TableHelper::cell($paymentDate);
-                        TableHelper::cell($lotId);
+                        TableHelper::cell($assetId);
                         TableHelper::cell($payer);
                         TableHelper::cell($paymentAmount);
                         TableHelper::cell('');

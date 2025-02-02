@@ -26,13 +26,23 @@ class SixMonthsController extends BaseController {
         $sixMonthsModel = new SixMonthsModel();
         
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
-            $lotId = $_POST["lot-id"];
+            $assetId = $_POST["asset-id"];
+            $assetType = $this->checkAssetId($assetId);
 
-            $sixMonthsModel->setPayment($lotId);
-            $sixMonthsModel->setLotReservation($lotId);
-            $reserveeId = $sixMonthsModel->getReserveeId($lotId)["reservee_id"];
-            $sixMonthsModel->setLotOwnership($lotId, $reserveeId);
-
+            switch ($assetType) {
+                case "lot":
+                    $sixMonthsModel->setPayment($assetId);
+                    $sixMonthsModel->setLotReservation($assetId);
+                    $reserveeId = $sixMonthsModel->getReserveeId($assetId)["reservee_id"];
+                    $sixMonthsModel->setLotOwnership($assetId, $reserveeId);
+                    break;
+                case "estate":
+                    $sixMonthsModel->setPaymentEstate($assetId);
+                    $sixMonthsModel->setEstateReservation($assetId);
+                    $reserveeId = $sixMonthsModel->getReserveeIdEstate($assetId)["reservee_id"];
+                    $sixMonthsModel->setEstateOwnership($assetId, $reserveeId);
+                    break;
+            }
             $this->redirectBack();
         }
     }

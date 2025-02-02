@@ -21,7 +21,7 @@
                     Map
                 </a>
             </li>
-            <?php $reservationsList = ["Reservation Requests", "Lot Reservations"]; ?>
+            <?php $reservationsList = ["Reservation Requests", "Lot Reservations", "Estate Reservations"]; ?>
             <li class="nav-item">
                 <a class="nav-link d-flex align-items-center gap-2" data-bs-toggle="collapse" href="#reservationsSubmenu" role="button" aria-expanded="<?= DisplayHelper::isPageInList($pageTitle, $reservationsList, "true", "false") ?>" aria-controls="reservationsSubmenu">
                     <i class="bi bi-calendar<?= DisplayHelper::isPageInList($pageTitle, $reservationsList, "-fill") ?>"></i> Reservations <i class="bi bi-caret-down<?= DisplayHelper::isPageInList($pageTitle, $reservationsList, "-fill") ?>"></i>
@@ -30,6 +30,7 @@
                     <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                         <li><a href="reservation-requests" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isActivePage($pageTitle, "Reservation Requests", "-fill text-bg-primary") ?>" <?= DisplayHelper::isActivePage($pageTitle, "Reservation Requests", "aria-current='page'") ?>><i class="bi bi-caret-right<?= DisplayHelper::isActivePage($pageTitle, "Reservation Requests", "-fill") ?>"></i> Reservation Requests</a></li>
                         <li><a href="lot-reservations" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isActivePage($pageTitle, "Lot Reservations", "-fill text-bg-primary") ?>" <?= DisplayHelper::isActivePage($pageTitle, "Lot Reservations", "aria-current='page'") ?>><i class="bi bi-caret-right<?= DisplayHelper::isActivePage($pageTitle, "Lot Reservations", "-fill") ?>"></i> Lot Reservations</a></li>
+                        <li><a href="estate-reservations" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isActivePage($pageTitle, "Estate Reservations", "-fill text-bg-primary") ?>" <?= DisplayHelper::isActivePage($pageTitle, "Estate Reservations", "aria-current='page'") ?>><i class="bi bi-caret-right<?= DisplayHelper::isActivePage($pageTitle, "Estate Reservations", "-fill") ?>"></i> Estate Reservations</a></li>
                     </ul>
                 </div>
             </li>

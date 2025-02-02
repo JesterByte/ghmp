@@ -61,5 +61,16 @@ class BaseController {
         header("Location: " . $_SERVER['HTTP_REFERER']);
         exit;
     }
+
+    protected function checkAssetId($assetId) {
+        $lotIdPattern = '/^(\d)([A-Z])(\d+)-(\d+)$/';
+        $estateIdPattern = '/E-([A-C])(\d+)/';
+
+        if (preg_match($lotIdPattern, $assetId)) {
+            return "lot";
+        } else if (preg_match($estateIdPattern, $assetId)) {
+            return "estate";
+        }
+    }
     
 }

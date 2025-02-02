@@ -1,8 +1,8 @@
 <?php 
     use App\Helpers\TableHelper;
     use App\Helpers\DateHelper;
-use App\Helpers\DisplayHelper;
-use App\Utils\Formatter;
+    use App\Helpers\DisplayHelper;
+    use App\Utils\Formatter;
 
     $snakeCasePageTitle = Formatter::convertToSnakeCase($pageTitle);
     $timeStamp = DateHelper::getTimestamp();

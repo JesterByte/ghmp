@@ -9,17 +9,17 @@
         <div class="modal-body">
             <form action="add-down-payment" method="post" class="needs-validation" novalidate>     
                 <div class="form-floating">
-                    <select class="form-select" id="lot-id" name="lot-id" aria-label="Floating label select example" required>
+                    <select class="form-select" id="asset-id" name="asset-id" aria-label="Floating label select example" required>
                         <option selected disabled></option>
                         <?php
                             if (!empty($formattedPendingDownPayments)) {
-                                for ($i = 0; $i < count($formattedPendingDownPayments["lot"]); $i++) {
-                                    echo "<option value='{$formattedPendingDownPayments["lot_id"][$i]}'>{$formattedPendingDownPayments["lot"][$i]} ({$formattedPendingDownPayments["down_payment"][$i]})</option>";
+                                for ($i = 0; $i < count($formattedPendingDownPayments["asset"]); $i++) {
+                                    echo "<option value='{$formattedPendingDownPayments["asset_id"][$i]}'>{$formattedPendingDownPayments["asset"][$i]} ({$formattedPendingDownPayments["down_payment"][$i]})</option>";
                                 }
                             }
                         ?>
                     </select>
-                    <label for="lot-id">Reservation</label>
+                    <label for="asset-id">Reservation</label>
                 </div>
         </div>
         <div class="modal-footer">

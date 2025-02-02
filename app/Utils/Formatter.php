@@ -85,6 +85,25 @@ class Formatter {
         return $fullName;
     }
 
+    public static function formatAssetId($assetId) {
+        // Regular expression to match the components of the lot ID
+        $lotIdPattern = '/^(\d)([A-Z])(\d+)-(\d+)$/';
+        $estateIdPattern = '/E-([A-C])(\d+)/';
+
+        if (preg_match($lotIdPattern, $assetId, $matches)) {
+            // Extracted components
+            $phase = $matches[1];
+            $lawn = $matches[2];
+            $row = $matches[3];
+            $lot = $matches[4];
+    
+            // Return the formatted string
+            return "Phase $phase Lawn $lawn Row $row Lot $lot";
+        } else if (preg_match($estateIdPattern, $assetId, $matches)) {
+            return "Estate {$matches[1]} - {$matches[2]}";
+        }
+    }
+
     public static function formatLotId($lotId) {
         // Regular expression to match the components of the lot ID
         $pattern = '/^(\d)([A-Z])(\d+)-(\d+)$/';
@@ -100,8 +119,40 @@ class Formatter {
             return "Phase $phase Lawn $lawn Row $row Lot $lot";
         } else {
             // Return a fallback for invalid lot IDs
-            return "Invalid Lot ID";
+            // return "Invalid Lot ID";
+            return $lotId;
         }
+    }
+
+    public static function extractPhase($lotId) {
+        // Regular expression to match the components of the lot ID
+        $pattern = '/^(\d)([A-Z])(\d+)-(\d+)$/';
+    
+        if (preg_match($pattern, $lotId, $matches)) {
+            // Extracted components
+            $phase = $matches[1];
+    
+            // Return the formatted string
+            return $phase;
+        } else {
+            // Return a fallback for invalid lot IDs
+            // return "Invalid Lot ID";
+            return $lotId;
+        }
+    }
+
+    public static function formatEstateId($estateId) {
+        if (preg_match('/E-([A-C])(\d+)/', $estateId, $matches)) {
+            return "Estate {$matches[1]} - {$matches[2]}";
+        }
+        return $estateId; // Return as is if format is incorrect
+    }
+
+    public static function extractEstateType($estateId) {
+        if (preg_match('/E-([A-C])(\d+)/', $estateId, $matches)) {
+            return $matches[1];
+        }
+        return $estateId; // Return as is if format is incorrect
     }
 
     public static function formatDateTime($dateTime) {

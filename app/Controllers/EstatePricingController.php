@@ -35,8 +35,8 @@ class EstatePricingController extends BaseController {
         $calculator = new Calculator();
         if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["update-pricing-submit"])) {
             $estate = $_POST["estate"];
-            $newLotPrice = $_POST["new-lot-price"];
-            $newTotalPurchasePrice = $calculator->getTotalPurchasePrice($newLotPrice, $rates["vat"], $rates["memorial_care_fee"]);
+            $newEstatePrice = $_POST["new-estate-price"];
+            $newTotalPurchasePrice = $calculator->getTotalPurchasePrice($newEstatePrice, $rates["vat"], $rates["memorial_care_fee"]);
             $newCashSale = $calculator->getDiscount($newTotalPurchasePrice, $rates["cash_sale_discount"]);
             $newSixMonths = $calculator->getDiscount($newTotalPurchasePrice, $rates["six_months_discount"]);
             $newDownPayment = $calculator->getDownPayment($newTotalPurchasePrice, $rates["down_payment_rate"]) + $rates["memorial_care_fee"];
@@ -49,7 +49,7 @@ class EstatePricingController extends BaseController {
                 $year++;
             } 
 
-            $estatePricingModel->updatePrice($estate, $newLotPrice, $newTotalPurchasePrice, $newCashSale, $newSixMonths, $newDownPayment, $newBalance, $newMonthlyAmortizations);
+            $estatePricingModel->updatePrice($estate, $newEstatePrice, $newTotalPurchasePrice, $newCashSale, $newSixMonths, $newDownPayment, $newBalance, $newMonthlyAmortizations);
 
             $this->redirectBack();
         }

@@ -88,11 +88,11 @@ class LotReservationsController extends BaseController {
             $lotReservationsModel = new LotReservationsModel();
             $lotId = $_POST['lot'];
             $reserveeId = $_POST['customer'];
-            $phase = $_POST['phase'];
+            $phase = Formatter::extractPhase($_POST['lot']);
             $lotType = $_POST['lot-type'];
             $paymentOption = $_POST['payment-option'];
             
-            $pricing = $lotReservationsModel->getPricing($phase, $lotType);
+            $pricing = $lotReservationsModel->getPricing("Phase " . $phase, $lotType);
 
             $lotReservationsModel->setReservation($lotId, $reserveeId, $lotType, $paymentOption);
             $calculator = new Calculator();

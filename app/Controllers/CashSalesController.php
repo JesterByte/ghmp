@@ -26,12 +26,23 @@ class CashSalesController extends BaseController {
         $cashSalesModel = new CashSalesModel();
         
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
-            $lotId = $_POST["lot-id"];
+            $assetId = $_POST["asset-id"];
+            $assetType = $this->checkAssetId($assetId);
 
-            $cashSalesModel->setPayment($lotId);
-            $cashSalesModel->setLotReservation($lotId);
-            $reserveeId = $cashSalesModel->getReserveeId($lotId)["reservee_id"];
-            $cashSalesModel->setLotOwnership($lotId, $reserveeId);
+            switch ($assetType) {
+                case "lot":
+                    $cashSalesModel->setPayment($assetId);
+                    $cashSalesModel->setLotReservation($assetId);
+                    $reserveeId = $cashSalesModel->getReserveeId($assetId)["reservee_id"];
+                    $cashSalesModel->setLotOwnership($assetId, $reserveeId);        
+                    break;
+                case "estate":
+                    $cashSalesModel->setPaymentEstate($assetId);
+                    $cashSalesModel->setEstateReservation($assetId);
+                    $reserveeId = $cashSalesModel->getReserveeIdEstate($assetId)["reservee_id"];
+                    $cashSalesModel->setEstateOwnership($assetId, $reserveeId);        
+                    break;
+            }
 
             $this->redirectBack();
         }

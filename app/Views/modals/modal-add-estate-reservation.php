@@ -1,23 +1,23 @@
-<!-- Update Add Lot Reservation Modal -->
-<div class="modal fade" id="add-lot-reservation-modal" tabindex="-1" aria-labelledby="add-lot-reservation-modal-label" aria-hidden="true">
+<!-- Update Add Estate Reservation Modal -->
+<div class="modal fade" id="add-estate-reservation-modal" tabindex="-1" aria-labelledby="add-estate-reservation-modal-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
         <div class="modal-header">
-            <h1 class="modal-title fs-5" id="add-lot-reservation-modal-label">Add New Lot Reservation</h1>
+            <h1 class="modal-title fs-5" id="add-estate-reservation-modal-label">Add New Estate Reservation</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <form action="add-reservation" method="post" class="needs-validation" novalidate>     
+            <form action="add-reservation-estate" method="post" class="needs-validation" novalidate>     
                 <div class="form-floating mb-3">
-                    <select class="form-select" id="lot" name="lot" aria-label="Floating label select example" required>
+                    <select class="form-select" id="estate" name="estate" aria-label="Floating label select example" required>
                         <option selected disabled></option>
                         <?php 
-                            for ($i = 0; $i < count($formattedAvailableLots["available_lot"]); $i++) {
-                                echo "<option value='{$formattedAvailableLots["lot_id"][$i]}'>{$formattedAvailableLots["available_lot"][$i]}</option>";
+                            for ($i = 0; $i < count($formattedAvailableEstates["available_estate"]); $i++) {
+                                echo "<option value='{$formattedAvailableEstates["estate_id"][$i]}'>{$formattedAvailableEstates["available_estate"][$i]}</option>";
                             }
                         ?>
                     </select>
-                    <label for="lot">Available Lots</label>          
+                    <label for="estate">Available Estate</label>          
                 </div>
                 <div class="form-floating mb-3">
                     <select class="form-select" id="customer" name="customer" aria-label="Floating label select example" required>
@@ -29,25 +29,6 @@
                         ?>
                     </select>
                     <label for="customer">Customers</label>          
-                </div>
-                <!-- <div class="form-floating mb-3">
-                    <select class="form-select" id="phase" name="phase" aria-label="Floating label select example" required>
-                        <option selected disabled></option>
-                        <option value="Phase 1">1</option>
-                        <option value="Phase 2">2</option>
-                        <option value="Phase 3">3</option>
-                        <option value="Phase 4">4</option>
-                    </select>
-                    <label for="phase">Phase</label>          
-                </div> -->
-                <div class="form-floating mb-3">
-                    <select class="form-select" id="lot-type" name="lot-type" aria-label="Floating label select example" required>
-                        <option selected disabled></option>
-                        <option value="Supreme">Supreme</option>
-                        <option value="Special">Special</option>
-                        <option value="Standard">Standard</option>
-                    </select>
-                    <label for="lot-type">Lot Type</label>          
                 </div>
                 <div class="form-floating mb-3">
                     <select class="form-select" id="payment-option" name="payment-option" aria-label="Floating label select example" required>
@@ -65,7 +46,7 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-primary" name="add-lot-reservation-submit">Add</button>
+            <button type="submit" class="btn btn-primary" name="add-estate-reservation-submit">Add</button>
             </form>
         </div>
         </div>

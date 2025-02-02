@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 30, 2025 at 01:58 PM
+-- Generation Time: Feb 02, 2025 at 09:03 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -128,6 +128,101 @@ INSERT INTO `customers` (`id`, `first_name`, `middle_name`, `last_name`, `suffix
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `estates`
+--
+
+CREATE TABLE `estates` (
+  `id` int(11) NOT NULL,
+  `estate_id` varchar(10) NOT NULL,
+  `owner_id` int(11) DEFAULT NULL,
+  `latitude_start` decimal(10,7) NOT NULL,
+  `longitude_start` decimal(10,7) NOT NULL,
+  `latitude_end` decimal(10,7) NOT NULL,
+  `longitude_end` decimal(10,7) NOT NULL,
+  `status` enum('Available','Reserved','Sold','Sold and Occupied') NOT NULL DEFAULT 'Available',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `estates`
+--
+
+INSERT INTO `estates` (`id`, `estate_id`, `owner_id`, `latitude_start`, `longitude_start`, `latitude_end`, `longitude_end`, `status`, `created_at`, `updated_at`) VALUES
+(28, 'E-C1', NULL, 14.8715127, 120.9769721, 14.8715487, 120.9770081, 'Available', '2025-02-01 05:45:47', '2025-02-02 05:32:15'),
+(29, 'E-B1', NULL, 14.8714647, 120.9769721, 14.8715097, 120.9770036, 'Available', '2025-02-01 05:45:47', '2025-02-01 05:45:47'),
+(30, 'E-A1', NULL, 14.8714167, 120.9769721, 14.8714617, 120.9770081, 'Available', '2025-02-01 05:45:47', '2025-02-01 14:25:44');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `estate_cash_sales`
+--
+
+CREATE TABLE `estate_cash_sales` (
+  `id` int(11) NOT NULL,
+  `estate_id` varchar(10) NOT NULL,
+  `payment_amount` decimal(10,2) NOT NULL,
+  `payment_date` date DEFAULT NULL,
+  `payment_status` enum('Paid','Failed','Pending','Overdue') NOT NULL DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `estate_cash_sale_due_dates`
+--
+
+CREATE TABLE `estate_cash_sale_due_dates` (
+  `id` int(11) NOT NULL,
+  `estate_id` varchar(10) NOT NULL,
+  `due_date` date NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `estate_installments`
+--
+
+CREATE TABLE `estate_installments` (
+  `id` int(11) NOT NULL,
+  `estate_id` varchar(10) NOT NULL,
+  `term_years` int(11) NOT NULL,
+  `down_payment` decimal(10,2) NOT NULL,
+  `down_payment_status` enum('Pending','Paid') NOT NULL DEFAULT 'Pending',
+  `down_payment_date` date DEFAULT NULL,
+  `down_payment_due_date` date NOT NULL,
+  `next_due_date` date NOT NULL,
+  `total_amount` decimal(12,2) NOT NULL,
+  `monthly_payment` decimal(10,2) NOT NULL,
+  `interest_rate` decimal(5,2) NOT NULL,
+  `payment_status` enum('Pending','Ongoing','Completed') NOT NULL DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `estate_installment_payments`
+--
+
+CREATE TABLE `estate_installment_payments` (
+  `id` int(11) NOT NULL,
+  `installment_id` int(11) NOT NULL,
+  `payment_amount` decimal(10,2) NOT NULL,
+  `payment_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `payment_status` enum('Pending','Paid') NOT NULL DEFAULT 'Pending'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `estate_pricing`
 --
 
@@ -164,9 +259,56 @@ CREATE TABLE `estate_pricing` (
 --
 
 INSERT INTO `estate_pricing` (`id`, `estate`, `sqm`, `number_of_lots`, `lot_price`, `vat`, `memorial_care_fee`, `total_purchase_price`, `cash_sale`, `cash_sale_discount`, `six_months`, `six_months_discount`, `down_payment`, `down_payment_rate`, `balance`, `monthly_amortization_one_year`, `one_year_interest_rate`, `monthly_amortization_two_years`, `two_years_interest_rate`, `monthly_amortization_three_years`, `three_years_interest_rate`, `monthly_amortization_four_years`, `four_years_interest_rate`, `monthly_amortization_five_years`, `five_years_interest_rate`) VALUES
-(1, 'Estate A', 20.00, 8, 400.00, 0.12, 10000.00, 11648.00, 10483.20, 0.10, 11065.60, 0.05, 12329.60, 0.20, -681.60, -56.80, 0.00, -31.45, 0.10, -23.63, 0.15, -20.74, 0.20, -20.01, 0.25),
+(1, 'Estate A', 20.00, 8, 531016.00, 0.12, 10000.00, 605937.92, 545344.13, 0.10, 575641.02, 0.05, 131187.58, 0.20, 474750.34, 39562.53, 0.00, 21907.32, 0.10, 16457.38, 0.15, 14446.82, 0.20, 13934.55, 0.25),
 (2, 'Estate B', 17.50, 7, 449134.00, 0.12, 10000.00, 573030.08, 522727.00, 0.10, 547879.00, 0.05, 170606.00, 0.20, 402424.06, 33535.34, 0.00, 18444.42, 0.10, 12855.21, 0.15, 10060.60, 0.20, 8383.83, 0.25),
 (3, 'Estate C', 16.00, 6, 406342.40, 0.12, 10000.00, 519103.49, 473593.00, 0.10, 496348.00, 0.05, 155021.00, 0.20, 364082.79, 30340.23, 0.00, 16687.13, 0.10, 11630.42, 0.15, 9102.07, 0.20, 7585.06, 0.25);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `estate_reservations`
+--
+
+CREATE TABLE `estate_reservations` (
+  `id` int(11) NOT NULL,
+  `estate_id` varchar(10) NOT NULL,
+  `reservee_id` int(11) NOT NULL,
+  `estate_type` enum('A','B','C') NOT NULL,
+  `payment_option` enum('Cash Sale','6 Months','Installment: 1 Year','Installment: 2 Years','Installment: 3 Years','Installment: 4 Years','Installment: 5 Years','Pending') NOT NULL DEFAULT 'Pending',
+  `reservation_status` enum('Pending','Confirmed','Completed','Cancelled') NOT NULL DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `estate_six_months`
+--
+
+CREATE TABLE `estate_six_months` (
+  `id` int(11) NOT NULL,
+  `estate_id` varchar(10) NOT NULL,
+  `payment_amount` decimal(10,2) NOT NULL,
+  `payment_date` date DEFAULT NULL,
+  `payment_status` enum('Paid','Failed','Pending','Overdue') NOT NULL DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `estate_six_months_due_dates`
+--
+
+CREATE TABLE `estate_six_months_due_dates` (
+  `id` int(11) NOT NULL,
+  `estate_id` varchar(10) NOT NULL,
+  `due_date` date NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -190,6 +332,13 @@ CREATE TABLE `installments` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `installments`
+--
+
+INSERT INTO `installments` (`id`, `lot_id`, `term_years`, `down_payment`, `down_payment_status`, `down_payment_date`, `down_payment_due_date`, `next_due_date`, `total_amount`, `monthly_payment`, `interest_rate`, `payment_status`, `created_at`, `updated_at`) VALUES
+(10, '1C1-3', 1, 27108.45, 'Pending', NULL, '2025-03-04', NULL, 58433.76, 4869.48, 0.00, 'Pending', '2025-02-02 04:01:03', '2025-02-02 04:01:03');
 
 -- --------------------------------------------------------
 
@@ -231,7 +380,7 @@ CREATE TABLE `lots` (
 INSERT INTO `lots` (`id`, `lot_id`, `owner_id`, `latitude_start`, `longitude_start`, `latitude_end`, `longitude_end`, `status`, `created_at`, `updated_at`) VALUES
 (2228, '1C1-1', NULL, 14.87157650, 120.97704960, 14.87159450, 120.97705860, 'Reserved', '2025-01-26 03:36:58', '2025-01-26 03:36:58'),
 (2229, '1C1-2', NULL, 14.87159950, 120.97704960, 14.87161750, 120.97705860, 'Reserved', '2025-01-26 03:36:58', '2025-01-26 03:36:58'),
-(2230, '1C1-3', NULL, 14.87162250, 120.97704960, 14.87164050, 120.97705860, 'Available', '2025-01-26 03:36:58', '2025-01-29 05:21:54'),
+(2230, '1C1-3', NULL, 14.87162250, 120.97704960, 14.87164050, 120.97705860, 'Reserved', '2025-01-26 03:36:58', '2025-02-02 04:01:03'),
 (2231, '1C1-4', NULL, 14.87164550, 120.97704960, 14.87166350, 120.97705860, 'Sold and Occupied', '2025-01-26 03:36:58', '2025-01-26 03:36:58'),
 (2232, '1C1-5', NULL, 14.87166850, 120.97704960, 14.87168650, 120.97705860, 'Available', '2025-01-26 03:36:58', '2025-01-29 05:21:53'),
 (2233, '1C1-6', NULL, 14.87169150, 120.97704960, 14.87170950, 120.97705860, 'Sold', '2025-01-26 03:36:58', '2025-01-26 03:36:58'),
@@ -594,9 +743,9 @@ INSERT INTO `lots` (`id`, `lot_id`, `owner_id`, `latitude_start`, `longitude_sta
 (2590, '1C23-2', NULL, 14.87142400, 120.97734660, 14.87144200, 120.97735560, 'Sold', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
 (2591, '1C23-3', NULL, 14.87144700, 120.97734660, 14.87146500, 120.97735560, 'Sold', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
 (2592, '1C23-4', NULL, 14.87147000, 120.97734660, 14.87148800, 120.97735560, 'Reserved', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
-(2593, '1C23-5', NULL, 14.87149300, 120.97734660, 14.87151100, 120.97735560, 'Sold', '2025-01-26 03:36:59', '2025-01-26 03:36:59');
+(2593, '1C23-5', NULL, 14.87149300, 120.97734660, 14.87151100, 120.97735560, 'Sold', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
+(2594, '1C23-6', NULL, 14.87151600, 120.97734660, 14.87153400, 120.97735560, 'Reserved', '2025-01-26 03:36:59', '2025-01-26 03:36:59');
 INSERT INTO `lots` (`id`, `lot_id`, `owner_id`, `latitude_start`, `longitude_start`, `latitude_end`, `longitude_end`, `status`, `created_at`, `updated_at`) VALUES
-(2594, '1C23-6', NULL, 14.87151600, 120.97734660, 14.87153400, 120.97735560, 'Reserved', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
 (2595, '1C23-7', NULL, 14.87153900, 120.97734660, 14.87155700, 120.97735560, 'Available', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
 (2596, '1C23-8', NULL, 14.87156200, 120.97734660, 14.87158000, 120.97735560, 'Available', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
 (2597, '1C23-9', NULL, 14.87158500, 120.97734660, 14.87160300, 120.97735560, 'Sold and Occupied', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
@@ -696,6 +845,13 @@ CREATE TABLE `lot_reservations` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `lot_reservations`
+--
+
+INSERT INTO `lot_reservations` (`id`, `lot_id`, `reservee_id`, `lot_type`, `payment_option`, `reservation_status`, `created_at`, `updated_at`) VALUES
+(39, '1C1-3', 1, 'Supreme', 'Installment: 1 Year', 'Confirmed', '2025-02-02 04:01:03', '2025-02-02 04:01:03');
 
 -- --------------------------------------------------------
 
@@ -838,10 +994,68 @@ ALTER TABLE `customers`
   ADD UNIQUE KEY `email_address` (`email_address`);
 
 --
+-- Indexes for table `estates`
+--
+ALTER TABLE `estates`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `estate_id` (`estate_id`),
+  ADD KEY `owner_id` (`owner_id`);
+
+--
+-- Indexes for table `estate_cash_sales`
+--
+ALTER TABLE `estate_cash_sales`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `estate_id` (`estate_id`);
+
+--
+-- Indexes for table `estate_cash_sale_due_dates`
+--
+ALTER TABLE `estate_cash_sale_due_dates`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `estate_id` (`estate_id`);
+
+--
+-- Indexes for table `estate_installments`
+--
+ALTER TABLE `estate_installments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `estate_id` (`estate_id`);
+
+--
+-- Indexes for table `estate_installment_payments`
+--
+ALTER TABLE `estate_installment_payments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `installment_id` (`installment_id`);
+
+--
 -- Indexes for table `estate_pricing`
 --
 ALTER TABLE `estate_pricing`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `estate_reservations`
+--
+ALTER TABLE `estate_reservations`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `estate_id` (`estate_id`),
+  ADD KEY `reservee_id` (`reservee_id`);
+
+--
+-- Indexes for table `estate_six_months`
+--
+ALTER TABLE `estate_six_months`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `estate_id` (`estate_id`);
+
+--
+-- Indexes for table `estate_six_months_due_dates`
+--
+ALTER TABLE `estate_six_months_due_dates`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `estate_id` (`estate_id`);
 
 --
 -- Indexes for table `installments`
@@ -919,13 +1133,13 @@ ALTER TABLE `beneficiaries`
 -- AUTO_INCREMENT for table `cash_sales`
 --
 ALTER TABLE `cash_sales`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `cash_sale_due_dates`
 --
 ALTER TABLE `cash_sale_due_dates`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `customers`
@@ -934,16 +1148,64 @@ ALTER TABLE `customers`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `estates`
+--
+ALTER TABLE `estates`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+
+--
+-- AUTO_INCREMENT for table `estate_cash_sales`
+--
+ALTER TABLE `estate_cash_sales`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `estate_cash_sale_due_dates`
+--
+ALTER TABLE `estate_cash_sale_due_dates`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `estate_installments`
+--
+ALTER TABLE `estate_installments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `estate_installment_payments`
+--
+ALTER TABLE `estate_installment_payments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+
+--
 -- AUTO_INCREMENT for table `estate_pricing`
 --
 ALTER TABLE `estate_pricing`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT for table `estate_reservations`
+--
+ALTER TABLE `estate_reservations`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `estate_six_months`
+--
+ALTER TABLE `estate_six_months`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `estate_six_months_due_dates`
+--
+ALTER TABLE `estate_six_months_due_dates`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `installments`
 --
 ALTER TABLE `installments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `installment_payments`
@@ -961,7 +1223,7 @@ ALTER TABLE `lots`
 -- AUTO_INCREMENT for table `lot_reservations`
 --
 ALTER TABLE `lot_reservations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `phase_pricing`
@@ -1008,6 +1270,55 @@ ALTER TABLE `cash_sales`
 --
 ALTER TABLE `cash_sale_due_dates`
   ADD CONSTRAINT `cash_sale_due_dates_ibfk_1` FOREIGN KEY (`lot_id`) REFERENCES `lot_reservations` (`lot_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `estates`
+--
+ALTER TABLE `estates`
+  ADD CONSTRAINT `estates_ibfk_1` FOREIGN KEY (`owner_id`) REFERENCES `customers` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `estate_cash_sales`
+--
+ALTER TABLE `estate_cash_sales`
+  ADD CONSTRAINT `estate_cash_sales_ibfk_1` FOREIGN KEY (`estate_id`) REFERENCES `estates` (`estate_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `estate_cash_sale_due_dates`
+--
+ALTER TABLE `estate_cash_sale_due_dates`
+  ADD CONSTRAINT `estate_cash_sale_due_dates_ibfk_1` FOREIGN KEY (`estate_id`) REFERENCES `estates` (`estate_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `estate_installments`
+--
+ALTER TABLE `estate_installments`
+  ADD CONSTRAINT `estate_installments_ibfk_1` FOREIGN KEY (`estate_id`) REFERENCES `estates` (`estate_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `estate_installment_payments`
+--
+ALTER TABLE `estate_installment_payments`
+  ADD CONSTRAINT `estate_installment_payments_ibfk_1` FOREIGN KEY (`installment_id`) REFERENCES `estate_installments` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `estate_reservations`
+--
+ALTER TABLE `estate_reservations`
+  ADD CONSTRAINT `estate_reservations_ibfk_1` FOREIGN KEY (`estate_id`) REFERENCES `estates` (`estate_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `estate_reservations_ibfk_2` FOREIGN KEY (`reservee_id`) REFERENCES `customers` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `estate_six_months`
+--
+ALTER TABLE `estate_six_months`
+  ADD CONSTRAINT `estate_six_months_ibfk_1` FOREIGN KEY (`estate_id`) REFERENCES `estates` (`estate_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `estate_six_months_due_dates`
+--
+ALTER TABLE `estate_six_months_due_dates`
+  ADD CONSTRAINT `estate_six_months_due_dates_ibfk_1` FOREIGN KEY (`estate_id`) REFERENCES `estates` (`estate_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `installments`
