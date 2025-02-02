@@ -10,7 +10,7 @@
                 <p class="card-text text-center">Set up an automated backup for your database. (e.g., daily at midnight).</p>
                 <div class="text-center">
                     <button type="button" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#automated-backup-modal">
-                        Set Up Automated Backup
+                        Setup Automated Backup
                     </button>
                 </div>
             </div>
