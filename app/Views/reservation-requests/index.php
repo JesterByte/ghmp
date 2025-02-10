@@ -1,6 +1,7 @@
 <?php 
     use App\Helpers\TableHelper;
     use App\Helpers\DateHelper;
+    use App\Utils\Encryption;
     use App\Utils\Formatter;
 
     $snakeCasePageTitle = Formatter::convertToSnakeCase($pageTitle);
@@ -34,7 +35,7 @@
                         TableHelper::cell($reservee);
                         TableHelper::cell($reservationRequestsRow["lot_type"]);
                         TableHelper::cell('<div class="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-success"><i class="bi bi-check"></i> Verify Lot Type</button>
+                        <a role="button" href="verify-lot-type/'. Encryption::encrypt($reservationRequestsRow["lot_id"], $secretKey).'" class="btn btn-success"><i class="bi bi-check"></i> Verify Lot Type</a>
                         <button type="button" class="btn btn-danger"><i class="bi bi-x"></i> Decline</button>
                         </div>');
                         TableHelper::endRow();

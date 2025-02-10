@@ -5,6 +5,8 @@ namespace App\Controllers;
 use App\Core\View;
 
 class BaseController {
+    protected $secretKey = "123";
+
     public function __construct() {
         session_start();
         date_default_timezone_set("Asia/Manila");

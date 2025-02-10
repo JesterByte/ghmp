@@ -21,6 +21,9 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute("GET", "/fetch-lots", ['App\Controllers\MapController', 'fetchLots']);
 
     $r->addRoute("GET", "/reservation-requests", ['App\Controllers\ReservationRequestsController', 'index']);
+    $r->addRoute("GET", "/verify-lot-type/{lotId:[A-Za-z0-9\+\/=]+}", ['App\Controllers\ReservationRequestsController', 'verifyLotType']);
+    $r->addRoute("POST", "/verify-lot-type-submit", ["App\Controllers\ReservationRequestsController", "setLotType"]);
+
     $r->addRoute("GET", "/lot-reservations", ['App\Controllers\LotReservationsController', 'indexCashSale']);
     $r->addRoute("GET", "/lot-reservations-cash-sale", ['App\Controllers\LotReservationsController', 'indexCashSale']);
     $r->addRoute("GET", "/lot-reservations-six-months", ['App\Controllers\LotReservationsController', 'indexSixMonths']);
@@ -72,7 +75,18 @@ switch ($routeInfo[0]) {
         echo '405 Method Not Allowed';
         break;
     case FastRoute\Dispatcher::FOUND:
-        [$class, $method] = $routeInfo[1];
-        call_user_func([new $class, $method]);
+        // Get the handler (controller and method) and route parameters
+        $handler = $routeInfo[1];
+        $vars = $routeInfo[2];
+
+        // Assuming handler is in the form of ['App\Controllers\ClassName', 'methodName']
+        list($controller, $method) = $handler;
+
+        // Call the controller method, passing the parameters
+        call_user_func_array([new $controller, $method], $vars);
         break;
+    // case FastRoute\Dispatcher::FOUND:
+    //     [$class, $method] = $routeInfo[1];
+    //     call_user_func([new $class, $method]);
+    //     break;
 }
