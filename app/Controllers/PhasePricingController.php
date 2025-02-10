@@ -53,7 +53,8 @@ class PhasePricingController extends BaseController {
 
             $phasePricingModel->updatePrice($phase, $lotType, $newLotPrice, $newTotalPurchasePrice, $newCashSale, $newSixMonths, $newDownPayment, $newBalance, $newMonthlyAmortizations);
 
-            $this->redirectBack();
+            // $this->redirectBack();
+            $this->redirect(BASE_URL . "/phase-pricing", '<i class="bi bi-check-lg text-success"></i>', "Pricing has been updated successfully", "Operation Successful");
         }
     }
 
@@ -78,7 +79,9 @@ class PhasePricingController extends BaseController {
             $phasePricingModel = new PhasePricingModel();
             $phasePricingModel->updateRates($vat, $mcf, $discounts, $downPaymentRate, $amortizationRates);
 
-            $this->redirectBack();
+            // $this->redirectBack();
+            $this->redirect(BASE_URL . "/phase-pricing", '<i class="bi bi-check-lg text-success"></i>', "Rates has been updated successfully", "Operation Successful");
+
         }
     }
 }
