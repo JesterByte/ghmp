@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 02, 2025 at 09:03 AM
+-- Generation Time: Feb 10, 2025 at 02:37 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -80,6 +80,7 @@ CREATE TABLE `cash_sales` (
   `payment_amount` decimal(10,2) NOT NULL,
   `payment_date` timestamp NULL DEFAULT NULL,
   `payment_status` enum('Pending','Paid','Overdue') NOT NULL DEFAULT 'Pending',
+  `receipt_path` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -122,7 +123,7 @@ CREATE TABLE `customers` (
 --
 
 INSERT INTO `customers` (`id`, `first_name`, `middle_name`, `last_name`, `suffix_name`, `contact_number`, `email_address`, `password_hashed`, `created_at`, `updated_at`) VALUES
-(1, 'John', 'A.', 'Doe', NULL, '1234567890', 'john.doe@example.com', 'hashed_password_1', '2025-01-26 16:55:27', '2025-01-26 16:55:27'),
+(1, 'John', 'A.', 'Doe', NULL, '1234567890', 'test@test.com', '123', '2025-01-26 16:55:27', '2025-02-04 14:00:22'),
 (2, 'Jane', 'B.', 'Smith', 'Jr.', '0987654321', 'jane.smith@example.com', 'hashed_password_2', '2025-01-26 16:55:27', '2025-01-26 16:55:27');
 
 -- --------------------------------------------------------
@@ -149,9 +150,9 @@ CREATE TABLE `estates` (
 --
 
 INSERT INTO `estates` (`id`, `estate_id`, `owner_id`, `latitude_start`, `longitude_start`, `latitude_end`, `longitude_end`, `status`, `created_at`, `updated_at`) VALUES
-(28, 'E-C1', NULL, 14.8715127, 120.9769721, 14.8715487, 120.9770081, 'Available', '2025-02-01 05:45:47', '2025-02-02 05:32:15'),
+(28, 'E-C1', NULL, 14.8715127, 120.9769721, 14.8715487, 120.9770081, 'Available', '2025-02-01 05:45:47', '2025-02-08 05:02:25'),
 (29, 'E-B1', NULL, 14.8714647, 120.9769721, 14.8715097, 120.9770036, 'Available', '2025-02-01 05:45:47', '2025-02-01 05:45:47'),
-(30, 'E-A1', NULL, 14.8714167, 120.9769721, 14.8714617, 120.9770081, 'Available', '2025-02-01 05:45:47', '2025-02-01 14:25:44');
+(30, 'E-A1', NULL, 14.8714167, 120.9769721, 14.8714617, 120.9770081, 'Available', '2025-02-01 05:45:47', '2025-02-08 10:29:46');
 
 -- --------------------------------------------------------
 
@@ -165,6 +166,7 @@ CREATE TABLE `estate_cash_sales` (
   `payment_amount` decimal(10,2) NOT NULL,
   `payment_date` date DEFAULT NULL,
   `payment_status` enum('Paid','Failed','Pending','Overdue') NOT NULL DEFAULT 'Pending',
+  `receipt_path` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -217,7 +219,8 @@ CREATE TABLE `estate_installment_payments` (
   `installment_id` int(11) NOT NULL,
   `payment_amount` decimal(10,2) NOT NULL,
   `payment_date` datetime NOT NULL DEFAULT current_timestamp(),
-  `payment_status` enum('Pending','Paid') NOT NULL DEFAULT 'Pending'
+  `payment_status` enum('Pending','Paid') NOT NULL DEFAULT 'Pending',
+  `receipt_path` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -292,6 +295,7 @@ CREATE TABLE `estate_six_months` (
   `payment_amount` decimal(10,2) NOT NULL,
   `payment_date` date DEFAULT NULL,
   `payment_status` enum('Paid','Failed','Pending','Overdue') NOT NULL DEFAULT 'Pending',
+  `receipt_path` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -333,13 +337,6 @@ CREATE TABLE `installments` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `installments`
---
-
-INSERT INTO `installments` (`id`, `lot_id`, `term_years`, `down_payment`, `down_payment_status`, `down_payment_date`, `down_payment_due_date`, `next_due_date`, `total_amount`, `monthly_payment`, `interest_rate`, `payment_status`, `created_at`, `updated_at`) VALUES
-(10, '1C1-3', 1, 27108.45, 'Pending', NULL, '2025-03-04', NULL, 58433.76, 4869.48, 0.00, 'Pending', '2025-02-02 04:01:03', '2025-02-02 04:01:03');
-
 -- --------------------------------------------------------
 
 --
@@ -351,7 +348,8 @@ CREATE TABLE `installment_payments` (
   `installment_id` int(11) NOT NULL,
   `payment_amount` decimal(10,2) NOT NULL,
   `payment_date` datetime DEFAULT current_timestamp(),
-  `payment_status` enum('Pending','Paid') DEFAULT 'Paid'
+  `payment_status` enum('Pending','Paid') DEFAULT 'Paid',
+  `receipt_path` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -380,7 +378,7 @@ CREATE TABLE `lots` (
 INSERT INTO `lots` (`id`, `lot_id`, `owner_id`, `latitude_start`, `longitude_start`, `latitude_end`, `longitude_end`, `status`, `created_at`, `updated_at`) VALUES
 (2228, '1C1-1', NULL, 14.87157650, 120.97704960, 14.87159450, 120.97705860, 'Reserved', '2025-01-26 03:36:58', '2025-01-26 03:36:58'),
 (2229, '1C1-2', NULL, 14.87159950, 120.97704960, 14.87161750, 120.97705860, 'Reserved', '2025-01-26 03:36:58', '2025-01-26 03:36:58'),
-(2230, '1C1-3', NULL, 14.87162250, 120.97704960, 14.87164050, 120.97705860, 'Reserved', '2025-01-26 03:36:58', '2025-02-02 04:01:03'),
+(2230, '1C1-3', NULL, 14.87162250, 120.97704960, 14.87164050, 120.97705860, 'Available', '2025-01-26 03:36:58', '2025-02-08 10:30:42'),
 (2231, '1C1-4', NULL, 14.87164550, 120.97704960, 14.87166350, 120.97705860, 'Sold and Occupied', '2025-01-26 03:36:58', '2025-01-26 03:36:58'),
 (2232, '1C1-5', NULL, 14.87166850, 120.97704960, 14.87168650, 120.97705860, 'Available', '2025-01-26 03:36:58', '2025-01-29 05:21:53'),
 (2233, '1C1-6', NULL, 14.87169150, 120.97704960, 14.87170950, 120.97705860, 'Sold', '2025-01-26 03:36:58', '2025-01-26 03:36:58'),
@@ -743,9 +741,9 @@ INSERT INTO `lots` (`id`, `lot_id`, `owner_id`, `latitude_start`, `longitude_sta
 (2590, '1C23-2', NULL, 14.87142400, 120.97734660, 14.87144200, 120.97735560, 'Sold', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
 (2591, '1C23-3', NULL, 14.87144700, 120.97734660, 14.87146500, 120.97735560, 'Sold', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
 (2592, '1C23-4', NULL, 14.87147000, 120.97734660, 14.87148800, 120.97735560, 'Reserved', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
-(2593, '1C23-5', NULL, 14.87149300, 120.97734660, 14.87151100, 120.97735560, 'Sold', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
-(2594, '1C23-6', NULL, 14.87151600, 120.97734660, 14.87153400, 120.97735560, 'Reserved', '2025-01-26 03:36:59', '2025-01-26 03:36:59');
+(2593, '1C23-5', NULL, 14.87149300, 120.97734660, 14.87151100, 120.97735560, 'Sold', '2025-01-26 03:36:59', '2025-01-26 03:36:59');
 INSERT INTO `lots` (`id`, `lot_id`, `owner_id`, `latitude_start`, `longitude_start`, `latitude_end`, `longitude_end`, `status`, `created_at`, `updated_at`) VALUES
+(2594, '1C23-6', NULL, 14.87151600, 120.97734660, 14.87153400, 120.97735560, 'Reserved', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
 (2595, '1C23-7', NULL, 14.87153900, 120.97734660, 14.87155700, 120.97735560, 'Available', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
 (2596, '1C23-8', NULL, 14.87156200, 120.97734660, 14.87158000, 120.97735560, 'Available', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
 (2597, '1C23-9', NULL, 14.87158500, 120.97734660, 14.87160300, 120.97735560, 'Sold and Occupied', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
@@ -819,7 +817,7 @@ INSERT INTO `lots` (`id`, `lot_id`, `owner_id`, `latitude_start`, `longitude_sta
 (2665, '1C20-13', NULL, 14.87167700, 120.97730610, 14.87169500, 120.97731510, 'Reserved', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
 (2666, '1C20-14', NULL, 14.87170000, 120.97730610, 14.87171800, 120.97731510, 'Sold and Occupied', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
 (2667, '1C20-15', NULL, 14.87172300, 120.97730610, 14.87174100, 120.97731510, 'Sold', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
-(2668, '1C31-1', NULL, 14.87157100, 120.97745460, 14.87158900, 120.97746360, 'Available', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
+(2668, '1C31-1', NULL, 14.87157100, 120.97745460, 14.87158900, 120.97746360, 'Available', '2025-01-26 03:36:59', '2025-02-10 01:23:18'),
 (2669, '1C31-2', NULL, 14.87159400, 120.97745460, 14.87161200, 120.97746360, 'Sold', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
 (2670, '1C31-3', NULL, 14.87161700, 120.97745460, 14.87163500, 120.97746360, 'Sold', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
 (2671, '1C31-4', NULL, 14.87164000, 120.97745460, 14.87165800, 120.97746360, 'Sold', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
@@ -839,9 +837,9 @@ CREATE TABLE `lot_reservations` (
   `id` int(11) NOT NULL,
   `lot_id` varchar(255) NOT NULL,
   `reservee_id` int(11) NOT NULL,
-  `lot_type` enum('Supreme','Special','Standard','Pending') NOT NULL,
-  `payment_option` enum('Cash Sale','6 Months','Installment: 1 Year','Installment: 2 Years','Installment: 3 Years','Installment: 4 Years','Installment: 5 Years','Pending') NOT NULL,
-  `reservation_status` enum('Pending','Confirmed','Cancelled','Completed') NOT NULL,
+  `lot_type` enum('Supreme','Special','Standard','Pending') NOT NULL DEFAULT 'Pending',
+  `payment_option` enum('Cash Sale','6 Months','Installment: 1 Year','Installment: 2 Years','Installment: 3 Years','Installment: 4 Years','Installment: 5 Years','Pending') NOT NULL DEFAULT 'Pending',
+  `reservation_status` enum('Pending','Confirmed','Cancelled','Completed') NOT NULL DEFAULT 'Pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -851,7 +849,7 @@ CREATE TABLE `lot_reservations` (
 --
 
 INSERT INTO `lot_reservations` (`id`, `lot_id`, `reservee_id`, `lot_type`, `payment_option`, `reservation_status`, `created_at`, `updated_at`) VALUES
-(39, '1C1-3', 1, 'Supreme', 'Installment: 1 Year', 'Confirmed', '2025-02-02 04:01:03', '2025-02-02 04:01:03');
+(42, '1C31-1', 1, 'Standard', 'Pending', 'Confirmed', '2025-02-08 10:31:45', '2025-02-10 01:24:01');
 
 -- --------------------------------------------------------
 
@@ -918,7 +916,8 @@ CREATE TABLE `six_months` (
   `payment_date` datetime DEFAULT NULL,
   `payment_status` enum('Pending','Paid','Overdue') DEFAULT 'Pending',
   `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `receipt_path` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -1133,13 +1132,13 @@ ALTER TABLE `beneficiaries`
 -- AUTO_INCREMENT for table `cash_sales`
 --
 ALTER TABLE `cash_sales`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `cash_sale_due_dates`
 --
 ALTER TABLE `cash_sale_due_dates`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `customers`
@@ -1157,13 +1156,13 @@ ALTER TABLE `estates`
 -- AUTO_INCREMENT for table `estate_cash_sales`
 --
 ALTER TABLE `estate_cash_sales`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `estate_cash_sale_due_dates`
 --
 ALTER TABLE `estate_cash_sale_due_dates`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `estate_installments`
@@ -1187,25 +1186,25 @@ ALTER TABLE `estate_pricing`
 -- AUTO_INCREMENT for table `estate_reservations`
 --
 ALTER TABLE `estate_reservations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `estate_six_months`
 --
 ALTER TABLE `estate_six_months`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `estate_six_months_due_dates`
 --
 ALTER TABLE `estate_six_months_due_dates`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `installments`
 --
 ALTER TABLE `installments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `installment_payments`
@@ -1223,7 +1222,7 @@ ALTER TABLE `lots`
 -- AUTO_INCREMENT for table `lot_reservations`
 --
 ALTER TABLE `lot_reservations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `phase_pricing`
@@ -1235,13 +1234,13 @@ ALTER TABLE `phase_pricing`
 -- AUTO_INCREMENT for table `six_months`
 --
 ALTER TABLE `six_months`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `six_months_due_dates`
 --
 ALTER TABLE `six_months_due_dates`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `users`
