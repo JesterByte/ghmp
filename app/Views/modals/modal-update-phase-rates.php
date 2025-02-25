@@ -54,7 +54,7 @@ use App\Utils\Formatter;
                 </div>  
                 <label for="four-years-interest-rate" class="form-label">4 Years Interest Rate</label>
                 <div class="input-group mb-3">
-                    <input required type="number" step="0.01" class="form-control" id="four-years-interest-rate" name="four-years-interest-rate" aria-label="Amount (to the nearest peso)" value="<?= Formatter::formatPercentageWithoutSymbol($firstRow["three_years_interest_rate"]) ?>" placeholder="0.00">
+                    <input required type="number" step="0.01" class="form-control" id="four-years-interest-rate" name="four-years-interest-rate" aria-label="Amount (to the nearest peso)" value="<?= Formatter::formatPercentageWithoutSymbol($firstRow["four_years_interest_rate"]) ?>" placeholder="0.00">
                     <span class="input-group-text">%</span>
                 </div> 
                 <label for="five-years-interest-rate" class="form-label">5 Years Interest Rate</label>
