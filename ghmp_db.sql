@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 25, 2025 at 03:53 PM
+-- Generation Time: Feb 27, 2025 at 03:03 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -71,6 +71,33 @@ INSERT INTO `beneficiaries` (`id`, `customer_id`, `first_name`, `middle_name`, `
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `burial_pricing`
+--
+
+CREATE TABLE `burial_pricing` (
+  `id` int(11) NOT NULL,
+  `category` enum('Lot','Estate') NOT NULL,
+  `burial_type` enum('Standard','Cremation','Mausoleum','Bone Transfer') NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `burial_pricing`
+--
+
+INSERT INTO `burial_pricing` (`id`, `category`, `burial_type`, `price`, `created_at`, `updated_at`) VALUES
+(1, 'Lot', 'Standard', 50000.00, '2025-02-27 00:17:52', '2025-02-27 00:17:52'),
+(2, 'Lot', 'Cremation', 30000.00, '2025-02-27 00:17:52', '2025-02-27 00:17:52'),
+(3, 'Lot', 'Bone Transfer', 20000.00, '2025-02-27 00:17:52', '2025-02-27 00:17:52'),
+(4, 'Estate', 'Standard', 100000.00, '2025-02-27 00:17:52', '2025-02-27 00:17:52'),
+(5, 'Estate', 'Mausoleum', 200000.00, '2025-02-27 00:17:52', '2025-02-27 00:17:52'),
+(6, 'Estate', 'Bone Transfer', 50000.00, '2025-02-27 00:17:52', '2025-02-27 00:17:52');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `burial_reservations`
 --
 
@@ -96,7 +123,8 @@ CREATE TABLE `burial_reservations` (
 --
 
 INSERT INTO `burial_reservations` (`id`, `reservee_id`, `asset_id`, `relationship`, `first_name`, `middle_name`, `last_name`, `suffix`, `date_of_birth`, `date_of_death`, `obituary`, `date_time`, `status`, `created_at`) VALUES
-(2, 1, '1C1-3', 'Spouse', 'test', 'test', 'test', 'Sr.', '2025-02-26', '2025-01-29', 'test', '2025-01-31 22:48:00', 'Pending', '2025-02-25 14:48:04');
+(2, 1, '1C1-3', 'Spouse', 'test', 'test', 'test', 'Sr.', '2025-02-26', '2025-01-29', 'test', '2025-02-26 22:48:00', 'Pending', '2025-02-25 14:48:04'),
+(3, 1, '1C1-3', 'Child', 'qwerty', '', 'qwerty', '', '2025-02-27', '2025-02-27', 'qwerty qwerty qwerty qwerty', '2025-02-26 08:03:00', 'Cancelled', '2025-02-26 00:03:55');
 
 -- --------------------------------------------------------
 
@@ -1034,6 +1062,12 @@ ALTER TABLE `beneficiaries`
   ADD KEY `customer_id` (`customer_id`);
 
 --
+-- Indexes for table `burial_pricing`
+--
+ALTER TABLE `burial_pricing`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `burial_reservations`
 --
 ALTER TABLE `burial_reservations`
@@ -1205,10 +1239,16 @@ ALTER TABLE `beneficiaries`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT for table `burial_pricing`
+--
+ALTER TABLE `burial_pricing`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
 -- AUTO_INCREMENT for table `burial_reservations`
 --
 ALTER TABLE `burial_reservations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `cash_sales`

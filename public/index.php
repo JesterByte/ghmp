@@ -24,6 +24,12 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute("GET", "/verify-lot-type/{lotId:[A-Za-z0-9\+\/=]+}", ['App\Controllers\ReservationRequestsController', 'verifyLotType']);
     $r->addRoute("POST", "/verify-lot-type-submit", ["App\Controllers\ReservationRequestsController", "setLotType"]);
 
+    $r->addRoute("GET", "/burial-reservations", ['App\Controllers\BurialReservationsController', 'index']);
+    $r->addRoute("GET", "/burial-reservations/get-events", ['App\Controllers\BurialReservationsController', 'getEvents']);
+    $r->addRoute("GET", "/burial-reservation-requests", ['App\Controllers\BurialReservationRequestsController', 'index']); 
+    $r->addRoute("POST", "/burial-reservation-confirmation", ['App\Controllers\BurialReservationRequestsController', 'submitBurialReservationConfirmation']);
+    
+
     $r->addRoute("GET", "/lot-reservations", ['App\Controllers\LotReservationsController', 'indexCashSale']);
     $r->addRoute("GET", "/lot-reservations-cash-sale", ['App\Controllers\LotReservationsController', 'indexCashSale']);
     $r->addRoute("GET", "/lot-reservations-six-months", ['App\Controllers\LotReservationsController', 'indexSixMonths']);

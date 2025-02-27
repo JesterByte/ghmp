@@ -8,6 +8,15 @@
     $timeStamp = DateHelper::getTimestamp();
     $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
 ?>
+<div class="d-flex justify-content-end">
+    <!-- <a href="<?= BASE_URL . "/lot-reservations" ?>" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Back</a> -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="<?= BASE_URL . "/lot-reservations" ?>">Lot Reservations</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Reservation Requests</li>
+        </ol>
+    </nav>
+</div>
 
 <?php include_once VIEW_PATH . "/templates/dataTables-styles.php" ?>
 <div class="table-responsive-sm shadow">

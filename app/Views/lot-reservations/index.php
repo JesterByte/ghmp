@@ -21,6 +21,11 @@
     }
 ?>
 <div class="row">
+    <div class="col d-flex justify-content-end">
+        <a href="<?= BASE_URL . "/reservation-requests" ?>" role="button" class="btn btn-primary">Reservation Requests</a>
+    </div>
+</div>
+<div class="row">
     <div class="col d-flex justify-content-between">
         <div class="btn-group">
             <a href="lot-reservations-cash-sale" class="btn btn-primary <?= DisplayHelper::isActivePage($currentTable, "Cash Sale", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "Cash Sale", "aria-current='page'") ?>>Cash Sale</a>
