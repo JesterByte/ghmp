@@ -10,6 +10,13 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
 
     $r->addRoute('GET', '/dashboard', ['App\Controllers\DashboardController', 'index']);
 
+    $r->addRoute("GET", "/burial-pricing", ['App\Controllers\BurialPricingController', 'indexLot']);
+    $r->addRoute("POST", "/burial-pricing", ['App\Controllers\BurialPricingController', 'updatePrice']);
+
+    $r->addRoute("GET", "/burial-pricing-lot", ['App\Controllers\BurialPricingController', 'indexLot']);
+    $r->addRoute("GET", "/burial-pricing-estate", ['App\Controllers\BurialPricingController', 'indexEstate']);
+
+
     $r->addRoute('GET', '/phase-pricing', ['App\Controllers\PhasePricingController', 'index']);
     $r->addRoute('POST', '/phase-pricing', ['App\Controllers\PhasePricingController', 'setPrice']);
     $r->addRoute('POST', '/phase-rates', ['App\Controllers\PhasePricingController', 'setRates']);
@@ -27,8 +34,9 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute("GET", "/burial-reservations", ['App\Controllers\BurialReservationsController', 'index']);
     $r->addRoute("GET", "/burial-reservations/get-events", ['App\Controllers\BurialReservationsController', 'getEvents']);
     $r->addRoute("GET", "/burial-reservation-requests", ['App\Controllers\BurialReservationRequestsController', 'index']); 
-    $r->addRoute("POST", "/burial-reservation-confirmation", ['App\Controllers\BurialReservationRequestsController', 'submitBurialReservationConfirmation']);
-    
+    $r->addRoute("POST", "/burial-reservation-confirmation", ['App\Controllers\BurialReservationRequestsController', 'submitBurialReservationConfirmation']); 
+    $r->addRoute("POST", "/burial-reservations/mark-done", ['App\Controllers\BurialReservationsController', 'markDone']); 
+
 
     $r->addRoute("GET", "/lot-reservations", ['App\Controllers\LotReservationsController', 'indexCashSale']);
     $r->addRoute("GET", "/lot-reservations-cash-sale", ['App\Controllers\LotReservationsController', 'indexCashSale']);

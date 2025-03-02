@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 27, 2025 at 03:03 PM
+-- Generation Time: Mar 02, 2025 at 03:23 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -88,10 +88,10 @@ CREATE TABLE `burial_pricing` (
 --
 
 INSERT INTO `burial_pricing` (`id`, `category`, `burial_type`, `price`, `created_at`, `updated_at`) VALUES
-(1, 'Lot', 'Standard', 50000.00, '2025-02-27 00:17:52', '2025-02-27 00:17:52'),
+(1, 'Lot', 'Standard', 50000.00, '2025-02-27 00:17:52', '2025-03-01 11:04:53'),
 (2, 'Lot', 'Cremation', 30000.00, '2025-02-27 00:17:52', '2025-02-27 00:17:52'),
 (3, 'Lot', 'Bone Transfer', 20000.00, '2025-02-27 00:17:52', '2025-02-27 00:17:52'),
-(4, 'Estate', 'Standard', 100000.00, '2025-02-27 00:17:52', '2025-02-27 00:17:52'),
+(4, 'Estate', 'Standard', 100000.00, '2025-02-27 00:17:52', '2025-03-01 11:05:52'),
 (5, 'Estate', 'Mausoleum', 200000.00, '2025-02-27 00:17:52', '2025-02-27 00:17:52'),
 (6, 'Estate', 'Bone Transfer', 50000.00, '2025-02-27 00:17:52', '2025-02-27 00:17:52');
 
@@ -105,6 +105,7 @@ CREATE TABLE `burial_reservations` (
   `id` int(11) NOT NULL,
   `reservee_id` int(11) NOT NULL,
   `asset_id` varchar(50) NOT NULL,
+  `burial_type` enum('Standard','Cremation','Mausoleum','Bone Transfer') NOT NULL,
   `relationship` enum('Spouse','Child','Parent','Sibling','Other') NOT NULL,
   `first_name` varchar(100) NOT NULL,
   `middle_name` varchar(100) DEFAULT NULL,
@@ -115,6 +116,9 @@ CREATE TABLE `burial_reservations` (
   `obituary` text NOT NULL,
   `date_time` datetime NOT NULL,
   `status` enum('Pending','Approved','Completed','Cancelled') DEFAULT 'Pending',
+  `payment_amount` decimal(10,2) NOT NULL,
+  `payment_status` enum('Pending','Paid','Overdue','') NOT NULL DEFAULT 'Pending',
+  `reference_number` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -122,9 +126,8 @@ CREATE TABLE `burial_reservations` (
 -- Dumping data for table `burial_reservations`
 --
 
-INSERT INTO `burial_reservations` (`id`, `reservee_id`, `asset_id`, `relationship`, `first_name`, `middle_name`, `last_name`, `suffix`, `date_of_birth`, `date_of_death`, `obituary`, `date_time`, `status`, `created_at`) VALUES
-(2, 1, '1C1-3', 'Spouse', 'test', 'test', 'test', 'Sr.', '2025-02-26', '2025-01-29', 'test', '2025-02-26 22:48:00', 'Pending', '2025-02-25 14:48:04'),
-(3, 1, '1C1-3', 'Child', 'qwerty', '', 'qwerty', '', '2025-02-27', '2025-02-27', 'qwerty qwerty qwerty qwerty', '2025-02-26 08:03:00', 'Cancelled', '2025-02-26 00:03:55');
+INSERT INTO `burial_reservations` (`id`, `reservee_id`, `asset_id`, `burial_type`, `relationship`, `first_name`, `middle_name`, `last_name`, `suffix`, `date_of_birth`, `date_of_death`, `obituary`, `date_time`, `status`, `payment_amount`, `payment_status`, `reference_number`, `created_at`) VALUES
+(11, 1, '1C1-3', 'Standard', 'Parent', 'test', 'test', 'test', 'I', '2025-03-02', '2025-03-02', 'test', '2025-03-02 21:49:00', 'Approved', 50000.00, 'Pending', '3XMBjqc', '2025-03-02 13:49:36');
 
 -- --------------------------------------------------------
 
@@ -1248,7 +1251,7 @@ ALTER TABLE `burial_pricing`
 -- AUTO_INCREMENT for table `burial_reservations`
 --
 ALTER TABLE `burial_reservations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `cash_sales`

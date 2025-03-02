@@ -6,6 +6,7 @@ use App\Models\BurialReservationsModel;
 use App\Utils\Formatter;
 use App\Utils\Calculator;
 use App\Core\View;
+use Exception;
 
 class BurialReservationsController extends BaseController {
     public function index() {
@@ -29,9 +30,11 @@ class BurialReservationsController extends BaseController {
             $fullName = $event["first_name"] . $middleName . $event["last_name"] . $suffix;
 
             $events[] = [
+                "id" => $event["id"],
                 "title" => $fullName,
                 "start" => date('c', strtotime($event["date_time"])), // Convert to ISO 8601
-                "end" => date('c', strtotime($event["date_time"]))
+                "end" => date('c', strtotime($event["date_time"])),
+                "status" => $event["status"]
             ];
         }
 
@@ -44,4 +47,36 @@ class BurialReservationsController extends BaseController {
         header('Content-Type: application/json');
         echo $json;        
     }
+
+    public function markDone() {
+        header('Content-Type: application/json');
+        
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+    
+        try {
+            $data = json_decode(file_get_contents("php://input"), true);
+    
+            if (!isset($data["event_id"])) {
+                echo json_encode(["success" => false, "message" => "Invalid event ID."]);
+                return;
+            }
+    
+            $eventId = $data["event_id"];
+    
+            $burialReservationsModel = new BurialReservationsModel();
+            $reservation = $burialReservationsModel->findById($eventId);
+            if (!$reservation) {
+                echo json_encode(["success" => false, "message" => "Event not found."]);
+                return;
+            }
+    
+            $result = $burialReservationsModel->updateStatusById($eventId, "Completed");
+    
+            echo json_encode(["success" => $result]);
+        } catch (Exception $e) {
+            echo json_encode(["success" => false, "message" => "An error occurred: " . $e->getMessage()]);
+        }
+    }
+    
 }
