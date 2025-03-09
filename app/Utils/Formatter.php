@@ -171,7 +171,7 @@ class Formatter
 
     public static function formatDateTime($dateTime)
     {
-        return date("d/m/Y h:i:s A", strtotime($dateTime));
+        return date("F j, Y h:i A", strtotime($dateTime));
     }
 
     // Format file name for database restore

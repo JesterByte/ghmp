@@ -6,6 +6,7 @@ use App\Models\EstatePricingModel;
 use App\Utils\Calculator;
 use App\Utils\Formatter;
 use App\Core\View;
+use App\Helpers\DisplayHelper;
 
 class EstatePricingController extends BaseController {
     public function index() {
@@ -53,7 +54,9 @@ class EstatePricingController extends BaseController {
 
             $estatePricingModel->updatePrice($estate, $newEstatePrice, $newTotalPurchasePrice, $newCashSale, $newSixMonths, $newDownPayment, $newBalance, $newMonthlyAmortizations);
 
-            $this->redirectBack();
+            // $this->redirectBack();
+            $this->redirect(BASE_URL . "/estate-pricing", DisplayHelper::$checkIcon, "Pricing has been updated successfully!", "Operation Successful");
+
         }
     }
 
@@ -78,7 +81,9 @@ class EstatePricingController extends BaseController {
             $estatePricingModel = new EstatePricingModel();
             $estatePricingModel->updateRates($vat, $mcf, $discounts, $downPaymentRate, $amortizationRates);
 
-            $this->redirectBack();
+            // $this->redirectBack();
+            $this->redirect(BASE_URL . "/estate-pricing", DisplayHelper::$checkIcon, "Rates has been updated successfully!", "Operation Successful");
+
         }
     }
 

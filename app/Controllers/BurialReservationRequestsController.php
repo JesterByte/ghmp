@@ -6,6 +6,7 @@ use App\Models\BurialReservationsModel;
 use App\Utils\Formatter;
 use App\Utils\Calculator;
 use App\Core\View;
+use App\Helpers\DisplayHelper;
 
 class BurialReservationRequestsController extends BaseController {
     public function index() {
@@ -29,7 +30,9 @@ class BurialReservationRequestsController extends BaseController {
 
             $burialReservationsModel = new BurialReservationsModel();
             $burialReservationsModel->updateStatus($assetId, $status);
-            $this->redirect(BASE_URL . "/burial-reservation-requests");
+            // $this->redirect(BASE_URL . "/burial-reservation-requests");
+            $this->redirect(BASE_URL . "/burial-reservation-requests", DisplayHelper::$checkIcon, "Burial reservation has been aprroved.", "Operation Successful");
+
         }
     }
 }

@@ -1,28 +1,36 @@
-<?php 
-    use App\Helpers\TableHelper;
-    use App\Helpers\DateHelper;
-    use App\Helpers\DisplayHelper;
-    use App\Utils\Formatter;
+<?php
 
-    $snakeCasePageTitle = Formatter::convertToSnakeCase($pageTitle);
-    $timeStamp = DateHelper::getTimestamp();
-    $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
+use App\Helpers\TableHelper;
+use App\Helpers\DateHelper;
+use App\Helpers\DisplayHelper;
+use App\Utils\Formatter;
 
-    $formattedAvailableLots = [];
-    foreach ($availableLots as $availableLot) {
-        $formattedAvailableLots["available_lot"][] = Formatter::formatLotId($availableLot["lot_id"]);  
-        $formattedAvailableLots["lot_id"][] = $availableLot["lot_id"];
-    }
+$snakeCasePageTitle = Formatter::convertToSnakeCase($pageTitle);
+$timeStamp = DateHelper::getTimestamp();
+$fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
 
-    $formattedCustomers = [];
-    foreach ($customers as $customer) {
-        $formattedCustomers["customer"][] = Formatter::formatFullName($customer["first_name"], $customer["middle_name"], $customer["last_name"], $customer["suffix_name"]);
-        $formattedCustomers["customer_id"][] = $customer["id"];
-    }
+$formattedAvailableLots = [];
+foreach ($availableLots as $availableLot) {
+    $formattedAvailableLots["available_lot"][] = Formatter::formatLotId($availableLot["lot_id"]);
+    $formattedAvailableLots["lot_id"][] = $availableLot["lot_id"];
+}
+
+$formattedCustomers = [];
+foreach ($customers as $customer) {
+    $formattedCustomers["customer"][] = Formatter::formatFullName($customer["first_name"], $customer["middle_name"], $customer["last_name"], $customer["suffix_name"]);
+    $formattedCustomers["customer_id"][] = $customer["id"];
+}
 ?>
-<div class="row">
+<div class="row mb-1">
     <div class="col d-flex justify-content-end">
-        <a href="<?= BASE_URL . "/reservation-requests" ?>" role="button" class="btn btn-primary">Reservation Requests</a>
+        <a href="<?= BASE_URL . "/lot-reservation-requests" ?>" role="button" class="btn btn-primary position-relative"><i class="bi bi-list"></i> Reservation Requests
+            <?php if ($lotReservationRequests != 0): ?>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    <?= $lotReservationRequests ?>
+                    <span class="visually-hidden">unread messages</span>
+                </span>
+            <?php endif; ?>
+        </a>
     </div>
 </div>
 <div class="row">
@@ -51,24 +59,24 @@
             </tr>
         </thead>
         <tbody>
-            <?php 
-                foreach ($lotReservationsTable as $lotReservationsRow) {
-                    if (!empty($lotReservationsTable)) {
-                        $lotId = Formatter::formatLotId($lotReservationsRow["lot_id"]);
-                        $reservee = Formatter::formatFullName($lotReservationsRow["first_name"], $lotReservationsRow["middle_name"], $lotReservationsRow["last_name"], $lotReservationsRow["suffix_name"]);
-                        $reservationDate = Formatter::formatDateTime($lotReservationsRow["created_at"]);
+            <?php
+            foreach ($lotReservationsTable as $lotReservationsRow) {
+                if (!empty($lotReservationsTable)) {
+                    $lotId = Formatter::formatLotId($lotReservationsRow["lot_id"]);
+                    $reservee = Formatter::formatFullName($lotReservationsRow["first_name"], $lotReservationsRow["middle_name"], $lotReservationsRow["last_name"], $lotReservationsRow["suffix_name"]);
+                    $reservationDate = Formatter::formatDateTime($lotReservationsRow["created_at"]);
 
-                        TableHelper::startRow();
-                        TableHelper::cell($reservationDate);
-                        TableHelper::cell($lotId);
-                        TableHelper::cell($reservee);
-                        TableHelper::cell($lotReservationsRow["lot_type"]);
-                        TableHelper::cell($lotReservationsRow["reservation_status"]);
-                        // TableHelper::cell($lotReservationsRow["payment_status"]);
-                        TableHelper::cell('');
-                        TableHelper::endRow();
-                    }
+                    TableHelper::startRow();
+                    TableHelper::cell($reservationDate);
+                    TableHelper::cell($lotId);
+                    TableHelper::cell($reservee);
+                    TableHelper::cell($lotReservationsRow["lot_type"]);
+                    TableHelper::cell($lotReservationsRow["reservation_status"]);
+                    // TableHelper::cell($lotReservationsRow["payment_status"]);
+                    TableHelper::cell('');
+                    TableHelper::endRow();
                 }
+            }
             ?>
         </tbody>
     </table>

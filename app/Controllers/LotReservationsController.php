@@ -33,6 +33,7 @@ class LotReservationsController extends BaseController {
         $lotReservationsTable = $lotReservationsModel->getCashSaleLotReservations();
         $availableLots = $lotReservationsModel->getAvailableLots();
         $customers = $lotReservationsModel->getCustomers();
+        $lotReservationRequests = $lotReservationsModel->getReservationRequestsBadge();
 
         $data = [
             "pageTitle" => "Lot Reservations",
@@ -41,6 +42,7 @@ class LotReservationsController extends BaseController {
             "lotReservationsTable" => $lotReservationsTable,
             "availableLots" => $availableLots,
             "customers" => $customers,
+            "lotReservationRequests" => $lotReservationRequests,
             "view" => "lot-reservations/index"
         ];
 
@@ -54,6 +56,8 @@ class LotReservationsController extends BaseController {
         $lotReservationsTable = $lotReservationsModel->getSixMonthsLotReservations();
         $availableLots = $lotReservationsModel->getAvailableLots();
         $customers = $lotReservationsModel->getCustomers();
+        $lotReservationRequests = $lotReservationsModel->getReservationRequestsBadge();
+
 
         $data = [
             "pageTitle" => "Lot Reservations",
@@ -62,6 +66,7 @@ class LotReservationsController extends BaseController {
             "lotReservationsTable" => $lotReservationsTable,
             "availableLots" => $availableLots,
             "customers" => $customers,
+            "lotReservationRequests" => $lotReservationRequests,
             "view" => "lot-reservations/index"
         ];
 
@@ -75,6 +80,7 @@ class LotReservationsController extends BaseController {
         $lotReservationsTable = $lotReservationsModel->getInstallmentLotReservations();
         $availableLots = $lotReservationsModel->getAvailableLots();
         $customers = $lotReservationsModel->getCustomers();
+        $lotReservationRequests = $lotReservationsModel->getReservationRequestsBadge();
 
         $data = [
             "pageTitle" => "Lot Reservations",
@@ -83,6 +89,7 @@ class LotReservationsController extends BaseController {
             "lotReservationsTable" => $lotReservationsTable,
             "availableLots" => $availableLots,
             "customers" => $customers,
+            "lotReservationRequests" => $lotReservationRequests,
             "view" => "lot-reservations/index"
         ];
 

@@ -20,10 +20,16 @@ class BurialReservationsModel extends Model
     //     return $stmt->fetchAll(PDO::FETCH_ASSOC);
     // }
 
+    public function getBurialReservationRequestsBadge() {
+        $stmt = $this->db->prepare("SELECT COUNT(*) AS total_burial_reservation_requests FROM burial_reservations WHERE status = :status");
+        $stmt->execute([':status' => 'Pending']);
+        return $stmt->fetch(PDO::FETCH_ASSOC)["total_burial_reservation_requests"];
+    }
+
     public function getEvents()
     {
-        $stmt = $this->db->prepare("SELECT * FROM burial_reservations");
-        $stmt->execute();
+        $stmt = $this->db->prepare("SELECT * FROM burial_reservations WHERE status != :status");
+        $stmt->execute([':status' => 'Pending']);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 

@@ -6,6 +6,7 @@ use App\Models\PhasePricingModel;
 use App\Utils\Calculator;
 use App\Utils\Formatter;
 use App\Core\View;
+use App\Helpers\DisplayHelper;
 
 class PhasePricingController extends BaseController
 {
@@ -58,7 +59,7 @@ class PhasePricingController extends BaseController
             $phasePricingModel->updatePrice($phase, $lotType, $newLotPrice, $newTotalPurchasePrice, $newCashSale, $newSixMonths, $newDownPayment, $newBalance, $newMonthlyAmortizations);
 
             // $this->redirectBack();
-            $this->redirect(BASE_URL . "/phase-pricing", '<i class="bi bi-check-lg text-success"></i>', "Pricing has been updated successfully", "Operation Successful");
+            $this->redirect(BASE_URL . "/phase-pricing", DisplayHelper::$checkIcon, "Pricing has been updated successfully!", "Operation Successful");
         }
     }
 
@@ -85,7 +86,7 @@ class PhasePricingController extends BaseController
             $phasePricingModel->updateRates($vat, $mcf, $discounts, $downPaymentRate, $amortizationRates);
 
             // $this->redirectBack();
-            $this->redirect(BASE_URL . "/phase-pricing", '<i class="bi bi-check-lg text-success"></i>', "Rates has been updated successfully", "Operation Successful");
+            $this->redirect(BASE_URL . "/phase-pricing", DisplayHelper::$checkIcon, "Rates has been updated successfully!", "Operation Successful");
         }
     }
 }

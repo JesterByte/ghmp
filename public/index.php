@@ -27,9 +27,12 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute("GET", "/map", ['App\Controllers\MapController', 'index']);
     $r->addRoute("GET", "/fetch-lots", ['App\Controllers\MapController', 'fetchLots']);
 
-    $r->addRoute("GET", "/reservation-requests", ['App\Controllers\ReservationRequestsController', 'index']);
-    $r->addRoute("GET", "/verify-lot-type/{lotId:[A-Za-z0-9\+\/=]+}", ['App\Controllers\ReservationRequestsController', 'verifyLotType']);
-    $r->addRoute("POST", "/verify-lot-type-submit", ["App\Controllers\ReservationRequestsController", "setLotType"]);
+    $r->addRoute("GET", "/lot-reservation-requests", ['App\Controllers\LotReservationRequestsController', 'index']);
+    $r->addRoute("GET", "/verify-lot-type/{lotId:[A-Za-z0-9\+\/=]+}", ['App\Controllers\LotReservationRequestsController', 'verifyLotType']);
+    $r->addRoute("POST", "/verify-lot-type-submit", ["App\Controllers\LotReservationRequestsController", "setLotType"]);
+
+    $r->addRoute("GET", "/estate-reservation-requests", ['App\Controllers\EstateReservationRequestsController', 'index']);
+    $r->addRoute("POST", "/estate-reservation-confirmation", ['App\Controllers\EstateReservationRequestsController', 'submitBurialReservationConfirmation']);
 
     $r->addRoute("GET", "/burial-reservations", ['App\Controllers\BurialReservationsController', 'index']);
     $r->addRoute("GET", "/burial-reservations/get-events", ['App\Controllers\BurialReservationsController', 'getEvents']);

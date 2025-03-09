@@ -1,25 +1,38 @@
-<?php 
-    use App\Helpers\TableHelper;
-    use App\Helpers\DateHelper;
-    use App\Helpers\DisplayHelper;
-    use App\Utils\Formatter;
+<?php
 
-    $snakeCasePageTitle = Formatter::convertToSnakeCase($pageTitle);
-    $timeStamp = DateHelper::getTimestamp();
-    $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
+use App\Helpers\TableHelper;
+use App\Helpers\DateHelper;
+use App\Helpers\DisplayHelper;
+use App\Utils\Formatter;
 
-    $formattedAvailableEstates = [];
-    foreach ($availableEstates as $availableEstate) {
-        $formattedAvailableEstates["available_estate"][] = Formatter::formatEstateId($availableEstate["estate_id"]);  
-        $formattedAvailableEstates["estate_id"][] = $availableEstate["estate_id"];
-    }
+$snakeCasePageTitle = Formatter::convertToSnakeCase($pageTitle);
+$timeStamp = DateHelper::getTimestamp();
+$fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
 
-    $formattedCustomers = [];
-    foreach ($customers as $customer) {
-        $formattedCustomers["customer"][] = Formatter::formatFullName($customer["first_name"], $customer["middle_name"], $customer["last_name"], $customer["suffix_name"]);
-        $formattedCustomers["customer_id"][] = $customer["id"];
-    }
+$formattedAvailableEstates = [];
+foreach ($availableEstates as $availableEstate) {
+    $formattedAvailableEstates["available_estate"][] = Formatter::formatEstateId($availableEstate["estate_id"]);
+    $formattedAvailableEstates["estate_id"][] = $availableEstate["estate_id"];
+}
+
+$formattedCustomers = [];
+foreach ($customers as $customer) {
+    $formattedCustomers["customer"][] = Formatter::formatFullName($customer["first_name"], $customer["middle_name"], $customer["last_name"], $customer["suffix_name"]);
+    $formattedCustomers["customer_id"][] = $customer["id"];
+}
 ?>
+<div class="row mb-1">
+    <div class="col d-flex justify-content-end">
+        <a href="<?= BASE_URL . "/estate-reservation-requests" ?>" role="button" class="btn btn-primary position-relative"><i class="bi bi-list"></i> Reservation Requests
+            <?php if ($estateReservationRequests != 0): ?>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    <?= $estateReservationRequests ?>
+                    <span class="visually-hidden">unread messages</span>
+                </span>
+            <?php endif; ?>
+        </a>
+    </div>
+</div>
 <div class="row">
     <div class="col d-flex justify-content-between">
         <div class="btn-group">
@@ -45,23 +58,23 @@
             </tr>
         </thead>
         <tbody>
-            <?php 
-                foreach ($estateReservationsTable as $estateReservationsRow) {
-                    if (!empty($estateReservationsTable)) {
-                        $estateId = Formatter::formatEstateId($estateReservationsRow["estate_id"]);
-                        $reservee = Formatter::formatFullName($estateReservationsRow["first_name"], $estateReservationsRow["middle_name"], $estateReservationsRow["last_name"], $estateReservationsRow["suffix_name"]);
-                        $reservationDate = Formatter::formatDateTime($estateReservationsRow["created_at"]);
+            <?php
+            foreach ($estateReservationsTable as $estateReservationsRow) {
+                if (!empty($estateReservationsTable)) {
+                    $estateId = Formatter::formatEstateId($estateReservationsRow["estate_id"]);
+                    $reservee = Formatter::formatFullName($estateReservationsRow["first_name"], $estateReservationsRow["middle_name"], $estateReservationsRow["last_name"], $estateReservationsRow["suffix_name"]);
+                    $reservationDate = Formatter::formatDateTime($estateReservationsRow["created_at"]);
 
-                        TableHelper::startRow();
-                        TableHelper::cell($reservationDate);
-                        TableHelper::cell($estateId);
-                        TableHelper::cell($reservee);
-                        TableHelper::cell($estateReservationsRow["reservation_status"]);
-                        // TableHelper::cell($estateReservationsRow["payment_status"]);
-                        TableHelper::cell('');
-                        TableHelper::endRow();
-                    }
+                    TableHelper::startRow();
+                    TableHelper::cell($reservationDate);
+                    TableHelper::cell($estateId);
+                    TableHelper::cell($reservee);
+                    TableHelper::cell($estateReservationsRow["reservation_status"]);
+                    // TableHelper::cell($estateReservationsRow["payment_status"]);
+                    TableHelper::cell('');
+                    TableHelper::endRow();
                 }
+            }
             ?>
         </tbody>
     </table>

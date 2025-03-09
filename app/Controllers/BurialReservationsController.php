@@ -6,14 +6,19 @@ use App\Models\BurialReservationsModel;
 use App\Utils\Formatter;
 use App\Utils\Calculator;
 use App\Core\View;
+use App\Helpers\DisplayHelper;
 use Exception;
 
 class BurialReservationsController extends BaseController {
     public function index() {
         $this->checkSession();
 
+        $burialReservationsModel = new BurialReservationsModel();
+        $burialReservationRequests = $burialReservationsModel->getBurialReservationRequestsBadge();
+
         $data = [
             "pageTitle" => "Burial Reservations",
+            "burialReservationRequests" => $burialReservationRequests,
             "view" => "burial-reservations/index"
         ];
 
@@ -85,8 +90,16 @@ class BurialReservationsController extends BaseController {
                     break;
             }
     
-            echo json_encode(["success" => $result]);
-        } catch (Exception $e) {
+            if ($result) {
+                echo json_encode([
+                    "success" => true,
+                    "message" => "Reservation marked as completed successfully!",
+                    "icon" => DisplayHelper::$checkIcon,
+                    "title" => "Operation Successful"
+                ]);
+            } else {
+                echo json_encode(["success" => false, "message" => "Failed to update reservation."]);
+            }        } catch (Exception $e) {
             echo json_encode(["success" => false, "message" => "An error occurred: " . $e->getMessage()]);
         }
     }

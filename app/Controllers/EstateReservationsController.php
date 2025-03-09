@@ -33,6 +33,7 @@ class EstateReservationsController extends BaseController {
         $estateReservationsTable = $estatetReservationsModel->getCashSaleEstateReservations();
         $availableEstates = $estatetReservationsModel->getAvailableEstates();
         $customers = $estatetReservationsModel->getCustomers();
+        $estateReservationRequests = $estatetReservationsModel->getEstateReservationRequestsBadge();
 
         $data = [
             "pageTitle" => "Estate Reservations",
@@ -41,6 +42,7 @@ class EstateReservationsController extends BaseController {
             "estateReservationsTable" => $estateReservationsTable,
             "availableEstates" => $availableEstates,
             "customers" => $customers,
+            "estateReservationRequests" => $estateReservationRequests,
             "view" => "estate-reservations/index"
         ];
 
@@ -54,6 +56,8 @@ class EstateReservationsController extends BaseController {
         $estateReservationsTable = $estatetReservationsModel->getSixMonthsEstateReservations();
         $availableEstates = $estatetReservationsModel->getAvailableEstates();
         $customers = $estatetReservationsModel->getCustomers();
+        $estateReservationRequests = $estatetReservationsModel->getEstateReservationRequestsBadge();
+
 
         $data = [
             "pageTitle" => "Estate Reservations",
@@ -62,6 +66,7 @@ class EstateReservationsController extends BaseController {
             "estateReservationsTable" => $estateReservationsTable,
             "availableEstates" => $availableEstates,
             "customers" => $customers,
+            "estateReservationRequests" => $estateReservationRequests,
             "view" => "estate-reservations/index"
         ];
 
@@ -75,6 +80,8 @@ class EstateReservationsController extends BaseController {
         $estateReservationsTable = $estatetReservationsModel->getInstallmentEstateReservations();
         $availableEstates = $estatetReservationsModel->getAvailableEstates();
         $customers = $estatetReservationsModel->getCustomers();
+        $estateReservationRequests = $estatetReservationsModel->getEstateReservationRequestsBadge();
+
 
         $data = [
             "pageTitle" => "Estate Reservations",
@@ -83,6 +90,7 @@ class EstateReservationsController extends BaseController {
             "estateReservationsTable" => $estateReservationsTable,
             "availableEstates" => $availableEstates,
             "customers" => $customers,
+            "estateReservationRequests" => $estateReservationRequests,
             "view" => "estate-reservations/index"
         ];
 
