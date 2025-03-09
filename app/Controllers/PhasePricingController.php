@@ -7,8 +7,11 @@ use App\Utils\Calculator;
 use App\Utils\Formatter;
 use App\Core\View;
 
-class PhasePricingController extends BaseController {
-    public function index() {
+class PhasePricingController extends BaseController
+{
+    public function index()
+    {
+        $this->checkSession();
 
         $phasePricingModel = new PhasePricingModel();
         $phasePricingTable = $phasePricingModel->getPricingData();
@@ -22,14 +25,15 @@ class PhasePricingController extends BaseController {
         View::render("templates/layout", $data);
     }
 
-    public function setPrice() {
+    public function setPrice()
+    {
         $phasePricingModel = new PhasePricingModel();
         $rates = $phasePricingModel->getRates();
         $interestRates = [
-            "one_year" => $rates["one_year_interest_rate"], 
-            "two_years" => $rates["two_years_interest_rate"], 
-            "three_years" => $rates["three_years_interest_rate"], 
-            "four_years" => $rates["four_years_interest_rate"], 
+            "one_year" => $rates["one_year_interest_rate"],
+            "two_years" => $rates["two_years_interest_rate"],
+            "three_years" => $rates["three_years_interest_rate"],
+            "four_years" => $rates["four_years_interest_rate"],
             "five_years" => $rates["five_years_interest_rate"]
         ];
 
@@ -49,7 +53,7 @@ class PhasePricingController extends BaseController {
             foreach ($interestRates as $term => $interestRate) {
                 $newMonthlyAmortizations[$term] = $calculator->getMonthlyAmortization($newBalance, $interestRate, $year);
                 $year++;
-            } 
+            }
 
             $phasePricingModel->updatePrice($phase, $lotType, $newLotPrice, $newTotalPurchasePrice, $newCashSale, $newSixMonths, $newDownPayment, $newBalance, $newMonthlyAmortizations);
 
@@ -58,7 +62,8 @@ class PhasePricingController extends BaseController {
         }
     }
 
-    public function setRates() {
+    public function setRates()
+    {
         if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["update-rates-submit"])) {
             $vat = Formatter::formatDecimal($_POST["vat"]);
             $mcf = $_POST["mcf"];
@@ -81,7 +86,6 @@ class PhasePricingController extends BaseController {
 
             // $this->redirectBack();
             $this->redirect(BASE_URL . "/phase-pricing", '<i class="bi bi-check-lg text-success"></i>', "Rates has been updated successfully", "Operation Successful");
-
         }
     }
 }

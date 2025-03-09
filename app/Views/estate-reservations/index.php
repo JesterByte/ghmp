@@ -36,12 +36,12 @@
     <table class="table table-striped table-hover table-bordered" id="table">
         <thead>
             <tr>
-                <th>Reservation Date</th>
-                <th>Estate</th>
-                <th>Reservee</th>
-                <!-- <th>Payment Option</th> -->
-                <th>Reservation Status</th>
-                <th>Action</th>
+                <th class="text-center">Reservation Date</th>
+                <th class="text-center">Estate</th>
+                <th class="text-center">Reservee</th>
+                <!-- <th class="text-center">Payment Option</th> -->
+                <th class="text-center">Reservation Status</th>
+                <th class="text-center">Action</th>
             </tr>
         </thead>
         <tbody>

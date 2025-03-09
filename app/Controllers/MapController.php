@@ -7,6 +7,8 @@ use App\Core\View;
 
 class MapController extends BaseController {
     public function index() {
+        $this->checkSession();
+
         $data = [
             "pageTitle" => "Map",
             "usesDataTables" => false,

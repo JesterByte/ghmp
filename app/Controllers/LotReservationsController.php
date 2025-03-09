@@ -27,6 +27,8 @@ class LotReservationsController extends BaseController {
     // }
 
     public function indexCashSale() {
+        $this->checkSession();
+
         $lotReservationsModel = new LotReservationsModel();
         $lotReservationsTable = $lotReservationsModel->getCashSaleLotReservations();
         $availableLots = $lotReservationsModel->getAvailableLots();
@@ -46,6 +48,8 @@ class LotReservationsController extends BaseController {
     }
 
     public function indexSixMonths() {
+        $this->checkSession();
+
         $lotReservationsModel = new LotReservationsModel();
         $lotReservationsTable = $lotReservationsModel->getSixMonthsLotReservations();
         $availableLots = $lotReservationsModel->getAvailableLots();
@@ -65,6 +69,8 @@ class LotReservationsController extends BaseController {
     }
 
     public function indexInstallments() {
+        $this->checkSession();
+
         $lotReservationsModel = new LotReservationsModel();
         $lotReservationsTable = $lotReservationsModel->getInstallmentLotReservations();
         $availableLots = $lotReservationsModel->getAvailableLots();

@@ -7,6 +7,8 @@ use App\Core\View;
 
 class CashSalesController extends BaseController {
     public function index() {
+        $this->checkSession();
+
         $cashSalesModel = new CashSalesModel();
         $cashSalesTable = $cashSalesModel->getCashSales();
         $reservationsTable = $cashSalesModel->getReservations();

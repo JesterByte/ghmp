@@ -25,6 +25,8 @@ class BurialPricingController extends BaseController
 
     public function indexLot()
     {
+        $this->checkSession();
+
         $burialPricingModel = new BurialPricingModel();
         $burialPricingTable = $burialPricingModel->getLotPricingData();
         $lotStandardPrice = $burialPricingModel->getPrice("Lot", "Standard")["price"];
@@ -47,6 +49,8 @@ class BurialPricingController extends BaseController
 
     public function indexEstate()
     {
+        $this->checkSession();
+
         $burialPricingModel = new BurialPricingModel();
         $burialPricingTable = $burialPricingModel->getEstatePricingData();
 

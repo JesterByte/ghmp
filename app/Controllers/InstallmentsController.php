@@ -7,6 +7,8 @@ use App\Core\View;
 
 class InstallmentsController extends BaseController {
     public function index() {
+        $this->checkSession();
+
         $installmentsModel = new InstallmentsModel();
         $installmentsTable = $installmentsModel->getInstallments();
         $pendingDownPayments = $installmentsModel->getPendingDownPayments();

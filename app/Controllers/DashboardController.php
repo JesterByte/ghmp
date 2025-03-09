@@ -30,6 +30,7 @@ class DashboardController extends BaseController {
     // }
 
     public function index() {
+        $this->checkSession();
 
         $data = [
             "pageTitle" => "Dashboard",

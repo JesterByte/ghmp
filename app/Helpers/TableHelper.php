@@ -12,6 +12,6 @@ class TableHelper {
     }
 
     public static function cell($data) {
-        echo "<td>" . $data . "</td>";
+        echo "<td class='text-center'>" . $data . "</td>";
     }
 }

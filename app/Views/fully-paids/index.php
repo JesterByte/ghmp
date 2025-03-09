@@ -26,11 +26,11 @@
     <table class="table table-striped table-hover table-bordered" id="table">
         <thead>
             <tr>
-                <th>Completed On</th>
-                <th>Asset</th>
-                <th>Reservee</th>
-                <th>Payment Amount</th>
-                <th>Action</th>
+                <th class="text-center">Completed On</th>
+                <th class="text-center">Asset</th>
+                <th class="text-center">Reservee</th>
+                <th class="text-center">Payment Amount</th>
+                <th class="text-center">Action</th>
             </tr>
         </thead>
         <tbody>

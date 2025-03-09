@@ -35,9 +35,9 @@ $firstRow = reset($burialPricingTable);
     <table class="table table-striped table-hover table-bordered" id="table">
         <thead>
             <tr>
-                <th>Category</th>
-                <th>Burial Type</th>
-                <th>Price</th>
+                <th class="text-center">Category</th>
+                <th class="text-center">Burial Type</th>
+                <th class="text-center">Price</th>
             </tr>
         </thead>
         <tbody>

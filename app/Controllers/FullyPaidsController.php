@@ -21,6 +21,8 @@ class FullyPaidsController extends BaseController {
     // }
 
     public function indexCashSale() {
+        $this->checkSession();
+
         $fullyPaidsModel = new FullyPaidsModel();
         $fullyPaidsTable = $fullyPaidsModel->getFullyPaidsCashSale();
 
@@ -36,6 +38,8 @@ class FullyPaidsController extends BaseController {
     }
 
     public function indexSixMonths() {
+        $this->checkSession();
+
         $fullyPaidsModel = new FullyPaidsModel();
         $fullyPaidsTable = $fullyPaidsModel->getFullyPaidsSixMonths();
 
@@ -51,6 +55,8 @@ class FullyPaidsController extends BaseController {
     }
 
     public function indexInstallment() {
+        $this->checkSession();
+
         $fullyPaidsModel = new FullyPaidsModel();
         $fullyPaidsTable = $fullyPaidsModel->getFullyPaidsInstallment();
 

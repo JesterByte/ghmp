@@ -23,37 +23,37 @@
     <table class="table table-striped table-hover table-bordered" id="table">
         <thead>
             <tr>
-                <th rowspan="4">Phase</th>
-                <th rowspan="4">Lot Type</th>
-                <th rowspan="4">Number of Lot(s)</th>
-                <th rowspan="4">Lot Price</th>
-                <th rowspan="4">Total Purchase Price (VAT & MCF Included)</th>
-                <th rowspan="1">Option 1</th>
-                <th rowspan="1">Option 2</th>
-                <th rowspan="1" colspan="7">Option 3 (Installment)</th>
+                <th class="text-center" rowspan="4">Phase</th>
+                <th class="text-center" rowspan="4">Lot Type</th>
+                <th class="text-center" rowspan="4">Number of Lot(s)</th>
+                <th class="text-center" rowspan="4">Lot Price</th>
+                <th class="text-center" rowspan="4">Total Purchase Price (VAT & MCF Included)</th>
+                <th class="text-center" rowspan="1">Option 1</th>
+                <th class="text-center" rowspan="1">Option 2</th>
+                <th class="text-center" rowspan="1" colspan="7">Option 3 (Installment)</th>
             </tr>
             <tr>
-                <th rowspan="1">Cash Sale</th>
-                <th rowspan="1">6 Months</th>
-                <th rowspan="3"><?= Formatter::formatPercentage($firstRow["down_payment_rate"], 0) ?> Down Payment</th>
-                <th rowspan="3">Balance</th>
-                <th>1 Year</th>
-                <th>2 Years</th>
-                <th>3 Years</th>
-                <th>4 Years</th>
-                <th>5 Years</th>
+                <th class="text-center" rowspan="1">Cash Sale</th>
+                <th class="text-center" rowspan="1">6 Months</th>
+                <th class="text-center" rowspan="3"><?= Formatter::formatPercentage($firstRow["down_payment_rate"], 0) ?> Down Payment</th>
+                <th class="text-center" rowspan="3">Balance</th>
+                <th class="text-center">1 Year</th>
+                <th class="text-center">2 Years</th>
+                <th class="text-center">3 Years</th>
+                <th class="text-center">4 Years</th>
+                <th class="text-center">5 Years</th>
             </tr>
             <tr>
-                <th rowspan="2"><?= Formatter::formatPercentage($firstRow["cash_sale_discount"], 0) ?> Discount</th>
-                <th rowspan="2"><?= Formatter::formatPercentage($firstRow["six_months_discount"], 0) ?> Discount</th>
-                <th rowspan="1"><?= Formatter::formatPercentage($firstRow["one_year_interest_rate"], 0) ?> Interest</th>
-                <th rowspan="1"><?= Formatter::formatPercentage($firstRow["two_years_interest_rate"], 0) ?> Interest</th>
-                <th rowspan="1"><?= Formatter::formatPercentage($firstRow["three_years_interest_rate"], 0) ?> Interest</th>
-                <th rowspan="1"><?= Formatter::formatPercentage($firstRow["four_years_interest_rate"], 0) ?> Interest</th>
-                <th rowspan="1"><?= Formatter::formatPercentage($firstRow["five_years_interest_rate"], 0) ?> Interest</th>
+                <th class="text-center" rowspan="2"><?= Formatter::formatPercentage($firstRow["cash_sale_discount"], 0) ?> Discount</th>
+                <th class="text-center" rowspan="2"><?= Formatter::formatPercentage($firstRow["six_months_discount"], 0) ?> Discount</th>
+                <th class="text-center" rowspan="1"><?= Formatter::formatPercentage($firstRow["one_year_interest_rate"], 0) ?> Interest</th>
+                <th class="text-center" rowspan="1"><?= Formatter::formatPercentage($firstRow["two_years_interest_rate"], 0) ?> Interest</th>
+                <th class="text-center" rowspan="1"><?= Formatter::formatPercentage($firstRow["three_years_interest_rate"], 0) ?> Interest</th>
+                <th class="text-center" rowspan="1"><?= Formatter::formatPercentage($firstRow["four_years_interest_rate"], 0) ?> Interest</th>
+                <th class="text-center" rowspan="1"><?= Formatter::formatPercentage($firstRow["five_years_interest_rate"], 0) ?> Interest</th>
             </tr>
             <tr>
-                <th colspan="5">Monthly Amortization</th>
+                <th class="text-center" colspan="5">Monthly Amortization</th>
             </tr>
         </thead>
         <tbody>

@@ -23,11 +23,11 @@
     <table class="table table-striped table-hover table-bordered" id="table">
         <thead>
             <tr>
-                <th>Preferred Burial Date</th>
-                <th>Location</th>
-                <th>Interred</th>
-                <th>Reservee</th>
-                <th>Action</th>
+                <th class="text-center">Preferred Burial Date</th>
+                <th class="text-center">Location</th>
+                <th class="text-center">Interred</th>
+                <th class="text-center">Reservee</th>
+                <th class="text-center">Action</th>
             </tr>
         </thead>
         <tbody>

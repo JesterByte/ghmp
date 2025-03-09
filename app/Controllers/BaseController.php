@@ -75,4 +75,9 @@ class BaseController {
         }
     }
     
+    protected function checkSession() {
+        if (!isset($_SESSION["user_id"])) {
+            $this->redirect(BASE_URL . "/sign-in");
+        }
+    }
 }

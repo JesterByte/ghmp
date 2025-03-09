@@ -9,6 +9,8 @@ use App\Core\View;
 
 class EstatePricingController extends BaseController {
     public function index() {
+        $this->checkSession();
+
         $estatePricingModel = new EstatePricingModel();
         $estatePricingTable = $estatePricingModel->getPricingData();
         $data = [

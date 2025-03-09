@@ -10,6 +10,7 @@ use Exception;
 
 class BurialReservationsController extends BaseController {
     public function index() {
+        $this->checkSession();
 
         $data = [
             "pageTitle" => "Burial Reservations",
@@ -72,6 +73,17 @@ class BurialReservationsController extends BaseController {
             }
     
             $result = $burialReservationsModel->updateStatusById($eventId, "Completed");
+
+            $assetType = Formatter::determineIdType($reservation["asset_id"]);
+
+            switch ($assetType) {
+                case "estate":
+                    $burialReservationsModel->updateEstateOccupancy($reservation["asset_id"], $reservation["reservee_id"]);
+                    break;
+                case "lot":
+                    $burialReservationsModel->updateLotOccupancy($reservation["asset_id"], $reservation["reservee_id"]);
+                    break;
+            }
     
             echo json_encode(["success" => $result]);
         } catch (Exception $e) {

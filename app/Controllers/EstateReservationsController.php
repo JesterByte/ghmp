@@ -27,6 +27,8 @@ class EstateReservationsController extends BaseController {
     // }
 
     public function indexCashSale() {
+        $this->checkSession();
+
         $estatetReservationsModel = new EstateReservationsModel();
         $estateReservationsTable = $estatetReservationsModel->getCashSaleEstateReservations();
         $availableEstates = $estatetReservationsModel->getAvailableEstates();
@@ -46,6 +48,8 @@ class EstateReservationsController extends BaseController {
     }
 
     public function indexSixMonths() {
+        $this->checkSession();
+
         $estatetReservationsModel = new EstateReservationsModel();
         $estateReservationsTable = $estatetReservationsModel->getSixMonthsEstateReservations();
         $availableEstates = $estatetReservationsModel->getAvailableEstates();
@@ -65,6 +69,8 @@ class EstateReservationsController extends BaseController {
     }
 
     public function indexInstallments() {
+        $this->checkSession();
+
         $estatetReservationsModel = new EstateReservationsModel();
         $estateReservationsTable = $estatetReservationsModel->getInstallmentEstateReservations();
         $availableEstates = $estatetReservationsModel->getAvailableEstates();

@@ -7,6 +7,8 @@ use App\Core\View;
 
 class SixMonthsController extends BaseController {
     public function index() {
+        $this->checkSession();
+
         $sixMonthsModel = new SixMonthsModel();
         $sixMonthsTable = $sixMonthsModel->getSixMonths();
         $reservationsTable = $sixMonthsModel->getReservations();
