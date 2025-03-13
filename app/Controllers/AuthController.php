@@ -3,8 +3,9 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
+use App\Helpers\DisplayHelper;
 
-class AuthController {
+class AuthController extends BaseController {
     public function signIn() {
         $pageTitle = "Home";
 
@@ -19,9 +20,16 @@ class AuthController {
                 // Login successful
                 session_start();
                 $_SESSION["user_id"] = $user["id"];
+                
+                $middleName = !empty($user["middle_name"]) ? " " . $user["middle_name"] . " " : " ";
+                $suffixName = !empty($user["suffix_name"]) ? ", " . $user["suffix_name"] : "";
+                $fullName = $user["first_name"] . $middleName . $user["last_name"] . $suffixName;
 
-                header("Location: " . BASE_URL . "/dashboard");
-                exit();
+                $_SESSION["user_full_name"] = $fullName;
+
+                // header("Location: " . BASE_URL . "/dashboard");
+                // exit();
+                $this->redirect(BASE_URL . "/dashboard", DisplayHelper::$checkIcon, "Welcome, $fullName!", "Signin Successful");
             } else {
                 // Login failed
                 $_SESSION["error"] = "Invalid email or password";

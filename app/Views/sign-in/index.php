@@ -6,11 +6,12 @@
     <img class="mb-4" src="<?= BASE_URL . "/images/brand.png" ?>" alt="" width="300" height="150">
     <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
-    <?php if (isset($error)): ?>
+    <?php if (isset($_SESSION["error"])): ?>
       <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <i class="bi bi-exclamation-circle-fill"></i> <?= $error ?>
+        <i class="bi bi-exclamation-circle-fill"></i> <?= $_SESSION["error"] ?>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
+    <?php unset($_SESSION["error"]) ?>
     <?php endif; ?>
 
     <div class="form-floating">

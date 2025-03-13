@@ -53,7 +53,7 @@ $lotNumber = $lotIdComponents["lot"];
                         </div>
                         <div class="d-flex justify-content-between">
                             <button type="submit" class="btn btn-primary">Submit</button>
-                            <a href="<?= BASE_URL . "/reservation-requests" ?>" class="btn btn-danger">Cancel</a>
+                            <a href="<?= BASE_URL . "/lot-reservation-requests" ?>" class="btn btn-danger">Cancel</a>
 
                         </div>
                     </form>

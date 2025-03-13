@@ -33,20 +33,24 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
         </thead>
         <tbody>
             <?php
-            foreach ($reservationRequestsTable as $reservationRequestsRow) {
+            foreach ($reservationRequestsTable as $row) {
                 if (!empty($reservationRequestsTable)) {
-                    $lotId = Formatter::formatLotId($reservationRequestsRow["lot_id"]);
-                    $reservee = Formatter::formatFullName($reservationRequestsRow["first_name"], $reservationRequestsRow["middle_name"], $reservationRequestsRow["last_name"], $reservationRequestsRow["suffix_name"]);
-                    $requestDate = Formatter::formatDateTime($reservationRequestsRow["created_at"]);
+                    $formattedLotId = Formatter::formatLotId($row["lot_id"]);
+                    $lotId = $row["lot_id"];
+                    $reservee = Formatter::formatFullName($row["first_name"], $row["middle_name"], $row["last_name"], $row["suffix_name"]);
+                    $reserveeId = $row["reservee_id"];
+                    $requestDate = Formatter::formatDateTime($row["created_at"]);
 
                     TableHelper::startRow();
                     TableHelper::cell($requestDate);
-                    TableHelper::cell($lotId);
+                    TableHelper::cell($formattedLotId);
                     TableHelper::cell($reservee);
-                    TableHelper::cell($reservationRequestsRow["lot_type"]);
+                    TableHelper::cell($row["lot_type"]);
                     TableHelper::cell('<div class="btn-group" role="group" aria-label="Basic example">
-                        <a role="button" href="verify-lot-type/' . Encryption::encrypt($reservationRequestsRow["lot_id"], $secretKey) . '" class="btn btn-success"><i class="bi bi-check"></i> Verify Lot Type</a>
-                        <button type="button" class="btn btn-danger"
+                        <a role="button" href="verify-lot-type/' . Encryption::encrypt($row["lot_id"], $secretKey) . '" class="btn btn-success"><i class="bi bi-check"></i> Verify Lot Type</a>
+                        <button type="button" class="cancel-btn btn btn-danger"
+                        data-bs-lot-id="' . $lotId . '"
+                        data-bs-reservee-id="' . $reserveeId . '"
                         data-bs-toggle="modal"
                         data-bs-target="#lot-reservation-cancellation">
                         <i class="bi bi-x"></i> 
@@ -68,4 +72,22 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
 
 <script>
     createDataTable("#table", "<?= $fileName ?>");
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const cancelModal = document.getElementById("lot-reservation-cancellation");
+        const lotIdHidden = document.getElementById("lot-id");
+        const reserveeIdHidden = document.getElementById("reservee-id");
+
+        cancelModal.addEventListener("show.bs.modal", function(event) {
+            const button = event.relatedTarget;
+
+            const lotId = button.getAttribute("data-bs-lot-id");
+            const reserveeId = button.getAttribute("data-bs-reservee-id");
+
+            lotIdHidden.value = lotId;
+            reserveeIdHidden.value = reserveeId;
+        });
+    });
 </script>

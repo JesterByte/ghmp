@@ -30,6 +30,7 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute("GET", "/lot-reservation-requests", ['App\Controllers\LotReservationRequestsController', 'index']);
     $r->addRoute("GET", "/verify-lot-type/{lotId:[A-Za-z0-9\+\/=]+}", ['App\Controllers\LotReservationRequestsController', 'verifyLotType']);
     $r->addRoute("POST", "/verify-lot-type-submit", ["App\Controllers\LotReservationRequestsController", "setLotType"]);
+    $r->addRoute("POST", "/lot-reservation-cancellation", ["App\Controllers\LotReservationRequestsController", "cancelLotReservation"]);
 
     $r->addRoute("GET", "/estate-reservation-requests", ['App\Controllers\EstateReservationRequestsController', 'index']);
     $r->addRoute("POST", "/estate-reservation-confirmation", ['App\Controllers\EstateReservationRequestsController', 'submitBurialReservationConfirmation']);

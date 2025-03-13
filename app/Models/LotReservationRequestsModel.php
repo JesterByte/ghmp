@@ -8,7 +8,7 @@ use PDO;
 class LotReservationRequestsModel extends Model {
     public function getReservationRequests() {
         $stmt = $this->db->prepare("SELECT 
-        lr.lot_id, lr.lot_type, lr.reservation_status, lr.created_at, c.first_name, c.middle_name, c.last_name, c.suffix_name
+        lr.lot_id, lr.reservee_id, lr.lot_type, lr.reservation_status, lr.created_at, c.first_name, c.middle_name, c.last_name, c.suffix_name
         FROM lot_reservations AS lr 
         INNER JOIN customers AS c ON lr.reservee_id = c.id
         INNER JOIN lots AS l ON lr.lot_id = l.lot_id 

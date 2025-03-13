@@ -8,8 +8,10 @@ use App\Core\View;
 use App\Utils\Encryption;
 use App\Helpers\DisplayHelper;
 
-class LotReservationRequestsController extends BaseController {
-    public function index() {
+class LotReservationRequestsController extends BaseController
+{
+    public function index()
+    {
         $lotReservationRequestsModel = new LotReservationRequestsModel();
         $reservationRequestsTable = $lotReservationRequestsModel->getReservationRequests();
 
@@ -24,7 +26,8 @@ class LotReservationRequestsController extends BaseController {
         View::render("templates/layout", $data);
     }
 
-    public function verifyLotType($lotId) {
+    public function verifyLotType($lotId)
+    {
         $lotId = Encryption::decrypt($lotId, $this->secretKey);
 
         $lotReservationRequestsModel = new LotReservationRequestsModel();
@@ -40,7 +43,8 @@ class LotReservationRequestsController extends BaseController {
         View::render("templates/layout", $data);
     }
 
-    public function setLotType() {
+    public function setLotType()
+    {
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $lotId = $_POST["lot-id"];
             $lotType = $_POST["lot-type"];
@@ -49,11 +53,21 @@ class LotReservationRequestsController extends BaseController {
 
             $lotReservationRequestsModel->setLotType($lotId, $lotType);
             // $this->redirect(BASE_URL . "/reservation-requests");
-            $this->redirect(BASE_URL . "/reservation-requests", DisplayHelper::$checkIcon, "The lot type has been assigned.", "Operation Successful");
+            $this->redirect(BASE_URL . "/lot-reservation-requests", DisplayHelper::$checkIcon, "The lot type has been assigned.", "Operation Successful");
         }
     }
 
-    public function cancelLotReservation() {
+    public function cancelLotReservation()
+    {
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            $lotId = $_POST["lot_id"];
+            $reserveeId = $_POST["reservee_id"];
 
+            $lotReservationRequestsModel = new LotReservationRequestsModel();
+
+            $lotReservationRequestsModel->setLotType($lotId, $lotType);
+            // $this->redirect(BASE_URL . "/reservation-requests");
+            $this->redirect(BASE_URL . "/lot-reservation-requests", DisplayHelper::$checkIcon, "The lot type has been assigned.", "Operation Successful");
+        }
     }
 }
