@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 14, 2025 at 01:58 PM
+-- Generation Time: Mar 18, 2025 at 01:14 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -55,6 +55,7 @@ CREATE TABLE `beneficiaries` (
   `contact_number` varchar(15) NOT NULL,
   `email_address` varchar(100) DEFAULT NULL,
   `relationship_to_customer` varchar(50) NOT NULL,
+  `status` enum('Inactive','Active','','') NOT NULL DEFAULT 'Inactive',
   `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -63,10 +64,10 @@ CREATE TABLE `beneficiaries` (
 -- Dumping data for table `beneficiaries`
 --
 
-INSERT INTO `beneficiaries` (`id`, `customer_id`, `first_name`, `middle_name`, `last_name`, `suffix_name`, `contact_number`, `email_address`, `relationship_to_customer`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Mary', 'C.', 'Doe', NULL, '1122334455', 'mary.doe@example.com', 'Spouse', '2025-01-26 16:55:33', '2025-01-26 16:55:33'),
-(2, 1, 'James', NULL, 'Doe', NULL, '5566778899', NULL, 'Son', '2025-01-26 16:55:33', '2025-01-26 16:55:33'),
-(3, 2, 'Robert', 'D.', 'Smith', NULL, '6677889900', 'robert.smith@example.com', 'Brother', '2025-01-26 16:55:33', '2025-01-26 16:55:33');
+INSERT INTO `beneficiaries` (`id`, `customer_id`, `first_name`, `middle_name`, `last_name`, `suffix_name`, `contact_number`, `email_address`, `relationship_to_customer`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Mary', 'C.', 'Doe', NULL, '1122334455', 'mary.doe@example.com', 'Spouse', 'Inactive', '2025-01-26 16:55:33', '2025-01-26 16:55:33'),
+(2, 1, 'James', NULL, 'Doe', NULL, '5566778899', NULL, 'Son', 'Inactive', '2025-01-26 16:55:33', '2025-01-26 16:55:33'),
+(3, 2, 'Robert', 'D.', 'Smith', NULL, '6677889900', 'robert.smith@example.com', 'Brother', 'Inactive', '2025-01-26 16:55:33', '2025-01-26 16:55:33');
 
 -- --------------------------------------------------------
 
@@ -122,6 +123,13 @@ CREATE TABLE `burial_reservations` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `burial_reservations`
+--
+
+INSERT INTO `burial_reservations` (`id`, `reservee_id`, `asset_id`, `burial_type`, `relationship`, `first_name`, `middle_name`, `last_name`, `suffix`, `date_of_birth`, `date_of_death`, `obituary`, `date_time`, `status`, `payment_amount`, `payment_status`, `reference_number`, `created_at`) VALUES
+(19, 1, '1C1-3', 'Standard', 'Other', 'Test', 'Test', 'Test', 'Sr.', '2025-03-15', '2025-03-15', 'Test', '2025-03-15 09:45:00', 'Approved', 50000.00, 'Pending', 'LCn7hR3', '2025-03-15 01:45:14');
+
 -- --------------------------------------------------------
 
 --
@@ -139,6 +147,13 @@ CREATE TABLE `cash_sales` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `cash_sales`
+--
+
+INSERT INTO `cash_sales` (`id`, `lot_id`, `payment_amount`, `payment_date`, `payment_status`, `receipt_path`, `created_at`, `updated_at`) VALUES
+(21, '1C1-3', 76988.02, NULL, 'Pending', '', '2025-03-15 01:48:06', '2025-03-15 01:48:06');
+
 -- --------------------------------------------------------
 
 --
@@ -152,6 +167,13 @@ CREATE TABLE `cash_sale_due_dates` (
   `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `cash_sale_due_dates`
+--
+
+INSERT INTO `cash_sale_due_dates` (`id`, `lot_id`, `due_date`, `created_at`, `updated_at`) VALUES
+(16, '1C1-3', '2025-03-22', '2025-03-15 09:48:06', '2025-03-15 09:48:06');
 
 -- --------------------------------------------------------
 
@@ -181,6 +203,7 @@ CREATE TABLE `customers` (
   `contact_number` varchar(15) NOT NULL,
   `email_address` varchar(100) NOT NULL,
   `password_hashed` varchar(255) NOT NULL,
+  `status` enum('Active','Transferred Ownership','Deactivated') NOT NULL,
   `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -189,9 +212,41 @@ CREATE TABLE `customers` (
 -- Dumping data for table `customers`
 --
 
-INSERT INTO `customers` (`id`, `first_name`, `middle_name`, `last_name`, `suffix_name`, `contact_number`, `email_address`, `password_hashed`, `created_at`, `updated_at`) VALUES
-(1, 'John', 'A.', 'Doe', NULL, '1234567890', 'test@test.com', '123', '2025-01-26 16:55:27', '2025-02-04 14:00:22'),
-(2, 'Jane', 'B.', 'Smith', 'Jr.', '0987654321', 'jane.smith@example.com', 'hashed_password_2', '2025-01-26 16:55:27', '2025-01-26 16:55:27');
+INSERT INTO `customers` (`id`, `first_name`, `middle_name`, `last_name`, `suffix_name`, `contact_number`, `email_address`, `password_hashed`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'John', 'A.', 'Doe', NULL, '1234567890', 'johndoe@mail.com', '123', 'Active', '2025-01-26 16:55:27', '2025-03-15 09:17:54'),
+(2, 'Jane', 'B.', 'Smith', 'Jr.', '0987654321', 'jane.smith@example.com', 'hashed_password_2', 'Active', '2025-01-26 16:55:27', '2025-01-26 16:55:27');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `deceased`
+--
+
+CREATE TABLE `deceased` (
+  `id` int(11) NOT NULL,
+  `full_name` varchar(255) DEFAULT NULL,
+  `first_name` varchar(50) NOT NULL,
+  `middle_name` varchar(50) DEFAULT NULL,
+  `last_name` varchar(50) NOT NULL,
+  `suffix` varchar(10) DEFAULT NULL,
+  `birth_date` date DEFAULT NULL,
+  `death_date` date DEFAULT NULL,
+  `burial_date` date DEFAULT NULL,
+  `location` varchar(50) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `deceased`
+--
+
+INSERT INTO `deceased` (`id`, `full_name`, `first_name`, `middle_name`, `last_name`, `suffix`, `birth_date`, `death_date`, `burial_date`, `location`, `created_at`, `updated_at`) VALUES
+(1, 'John A. Doe', 'John', 'A.', 'Doe', NULL, '1950-01-15', '2023-10-01', '2023-10-05', '1C1-4', '2025-01-20 11:05:58', '2025-03-15 01:23:39'),
+(2, 'Jane B. Smith', 'Jane', 'B.', 'Smith', NULL, '1965-06-20', '2022-12-15', '2022-12-20', '1C6-1', '2025-01-20 11:05:58', '2025-03-15 01:23:47'),
+(3, 'Robert C. Johnson', 'Robert', 'C.', 'Johnson', 'Sr.', '1942-03-10', '2021-05-12', '2021-05-18', '1C6-4', '2025-01-20 11:05:58', '2025-03-15 01:23:54'),
+(4, 'Emily D. Davis', 'Emily', 'D.', 'Davis', NULL, '1980-09-25', '2023-03-10', '2023-03-15', '1C6-8', '2025-01-20 11:05:58', '2025-03-15 01:24:01'),
+(5, 'Michael E. Brown', 'Michael', 'E.', 'Brown', 'Jr.', '1975-02-14', '2020-08-25', '2020-08-30', '1C2-3', '2025-01-20 11:05:58', '2025-03-15 01:24:08');
 
 -- --------------------------------------------------------
 
@@ -451,7 +506,7 @@ CREATE TABLE `lots` (
 INSERT INTO `lots` (`id`, `lot_id`, `owner_id`, `latitude_start`, `longitude_start`, `latitude_end`, `longitude_end`, `status`, `created_at`, `updated_at`) VALUES
 (2228, '1C1-1', NULL, 14.87157650, 120.97704960, 14.87159450, 120.97705860, 'Reserved', '2025-01-26 03:36:58', '2025-01-26 03:36:58'),
 (2229, '1C1-2', NULL, 14.87159950, 120.97704960, 14.87161750, 120.97705860, 'Reserved', '2025-01-26 03:36:58', '2025-01-26 03:36:58'),
-(2230, '1C1-3', NULL, 14.87162250, 120.97704960, 14.87164050, 120.97705860, 'Reserved', '2025-01-26 03:36:58', '2025-03-13 00:30:36'),
+(2230, '1C1-3', 1, 14.87162250, 120.97704960, 14.87164050, 120.97705860, 'Sold', '2025-01-26 03:36:58', '2025-03-15 01:44:31'),
 (2231, '1C1-4', NULL, 14.87164550, 120.97704960, 14.87166350, 120.97705860, 'Sold and Occupied', '2025-01-26 03:36:58', '2025-01-26 03:36:58'),
 (2232, '1C1-5', NULL, 14.87166850, 120.97704960, 14.87168650, 120.97705860, 'Available', '2025-01-26 03:36:58', '2025-02-22 11:04:00'),
 (2233, '1C1-6', NULL, 14.87169150, 120.97704960, 14.87170950, 120.97705860, 'Sold', '2025-01-26 03:36:58', '2025-01-26 03:36:58'),
@@ -923,7 +978,7 @@ CREATE TABLE `lot_reservations` (
 --
 
 INSERT INTO `lot_reservations` (`id`, `lot_id`, `reservee_id`, `lot_type`, `payment_option`, `reservation_status`, `reference_number`, `created_at`, `updated_at`) VALUES
-(68, '1C1-3', 1, 'Pending', 'Pending', 'Pending', '', '2025-03-13 00:30:36', '2025-03-13 00:30:36');
+(69, '1C1-3', 1, 'Supreme', 'Cash Sale', 'Confirmed', 'CdKb7JL', '2025-03-15 01:18:24', '2025-03-15 01:48:07');
 
 -- --------------------------------------------------------
 
@@ -1091,6 +1146,13 @@ ALTER TABLE `customers`
   ADD UNIQUE KEY `email_address` (`email_address`);
 
 --
+-- Indexes for table `deceased`
+--
+ALTER TABLE `deceased`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `grave_id` (`location`);
+
+--
 -- Indexes for table `estates`
 --
 ALTER TABLE `estates`
@@ -1236,25 +1298,31 @@ ALTER TABLE `burial_pricing`
 -- AUTO_INCREMENT for table `burial_reservations`
 --
 ALTER TABLE `burial_reservations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `cash_sales`
 --
 ALTER TABLE `cash_sales`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `cash_sale_due_dates`
 --
 ALTER TABLE `cash_sale_due_dates`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `deceased`
+--
+ALTER TABLE `deceased`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `estates`
@@ -1332,7 +1400,7 @@ ALTER TABLE `lots`
 -- AUTO_INCREMENT for table `lot_reservations`
 --
 ALTER TABLE `lot_reservations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT for table `phase_pricing`
