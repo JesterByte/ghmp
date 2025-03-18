@@ -29,12 +29,37 @@ use App\Helpers\DisplayHelper;
                     </a>
                     <div class="collapse <?= DisplayHelper::isPageInList($pageTitle, $reservationsList, "show") ?>" id="reservationsSubmenu">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="<?= BASE_URL . "/burial-reservations" ?>" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isPageInList($pageTitle, ["Burial Reservations", "Burial Reservation Requests"], "-fill text-bg-primary") ?>" <?= DisplayHelper::isPageInList($pageTitle, ["Burial Reservations", "Burial Reservation Requests"], "aria-current='page'") ?>><i class="bi bi-caret-right<?= DisplayHelper::isPageInList($pageTitle, ["Burial Reservations", "Burial Reservation Requests"], "-fill") ?>"></i> Burial Reservations</a></li>
+                            <li>
+                                <a href="<?= BASE_URL . "/burial-reservations" ?>" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isPageInList($pageTitle, ["Burial Reservations", "Burial Reservation Requests"], "-fill text-bg-primary") ?>" <?= DisplayHelper::isPageInList($pageTitle, ["Burial Reservations", "Burial Reservation Requests"], "aria-current='page'") ?>>
+                                    <i class="bi bi-caret-right<?= DisplayHelper::isPageInList($pageTitle, ["Burial Reservations", "Burial Reservation Requests"], "-fill") ?>"></i>
+                                    Burial Reservations
 
-                            <!-- <li><a href="<?= BASE_URL . "/reservation-requests"  ?>" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isActivePage($pageTitle, "Reservation Requests", "-fill text-bg-primary") ?>" <?= DisplayHelper::isActivePage($pageTitle, "Reservation Requests", "aria-current='page'") ?>><i class="bi bi-caret-right<?= DisplayHelper::isActivePage($pageTitle, "Reservation Requests", "-fill") ?>"></i> Reservation Requests</a></li> -->
-                            <!-- <li><a href="lot-reservations" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isActivePage($pageTitle, "Lot Reservations", "-fill text-bg-primary") ?>" <?= DisplayHelper::isActivePage($pageTitle, "Lot Reservations", "aria-current='page'") ?>><i class="bi bi-caret-right<?= DisplayHelper::isActivePage($pageTitle, "Lot Reservations", "-fill") ?>"></i> Lot Reservations</a></li> -->
-                            <li><a href="<?= BASE_URL . "/lot-reservations" ?>" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isPageInList($pageTitle, ["Lot Reservations", "Lot Reservation Requests"], "-fill text-bg-primary") ?>" <?= DisplayHelper::isPageInList($pageTitle, ["Lot Reservations", "Lot Reservation Requests"], "aria-current='page'") ?>><i class="bi bi-caret-right<?= DisplayHelper::isPageInList($pageTitle, ["Lot Reservations", "Lot Reservation Requests"], "-fill") ?>"></i> Lot Reservations</a></li>
-                            <li><a href="<?= BASE_URL . "/estate-reservations" ?>" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isPageInList($pageTitle, ["Estate Reservations", "Estate Reservation Requests"], "-fill text-bg-primary") ?>" <?= DisplayHelper::isPageInList($pageTitle, ["Estate Reservations", "Estate Reservation Requests"], "aria-current='page'") ?>><i class="bi bi-caret-right<?= DisplayHelper::isPageInList($pageTitle, ["Estate Reservations", "Estate Reservation Requests"], "-fill") ?>"></i> Estate Reservations</a></li>
+                                    <?php if ($pendingBurialReservations != 0): ?>
+                                        <span class="badge text-bg-danger"><?= $pendingBurialReservations ?></span>
+                                    <?php endif; ?>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="<?= BASE_URL . "/lot-reservations" ?>" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isPageInList($pageTitle, ["Lot Reservations", "Lot Reservation Requests"], "-fill text-bg-primary") ?>" <?= DisplayHelper::isPageInList($pageTitle, ["Lot Reservations", "Lot Reservation Requests"], "aria-current='page'") ?>>
+                                    <i class="bi bi-caret-right<?= DisplayHelper::isPageInList($pageTitle, ["Lot Reservations", "Lot Reservation Requests"], "-fill") ?>"></i>
+                                    Lot Reservations
+
+                                    <?php if ($pendingLotReservations != 0): ?>
+                                        <span class="badge text-bg-danger"><?= $pendingLotReservations ?></span>
+                                    <?php endif; ?>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="<?= BASE_URL . "/estate-reservations" ?>" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isPageInList($pageTitle, ["Estate Reservations", "Estate Reservation Requests"], "-fill text-bg-primary") ?>" <?= DisplayHelper::isPageInList($pageTitle, ["Estate Reservations", "Estate Reservation Requests"], "aria-current='page'") ?>>
+                                    <i class="bi bi-caret-right<?= DisplayHelper::isPageInList($pageTitle, ["Estate Reservations", "Estate Reservation Requests"], "-fill") ?>"></i>
+                                    Estate Reservations
+
+                                    <?php if ($pendingEstateReservations != 0): ?>
+                                        <span class="badge text-bg-danger"><?= $pendingEstateReservations ?></span>
+                                    <?php endif; ?>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </li>

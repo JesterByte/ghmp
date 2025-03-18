@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\BadgeModel;
 use App\Models\UserModel;
 use App\Core\View;
 
@@ -30,10 +31,18 @@ class DashboardController extends BaseController {
     // }
 
     public function index() {
+        $badgeModel = new BadgeModel();
+        $pendingBurialReservations = $badgeModel->getPendingBurialReservations();
+        $pendingLotReservations = $badgeModel->getPendingLotReservations();
+        $pendingEstateReservations = $badgeModel->getPendingEstateReservations();
+
         $this->checkSession();
 
         $data = [
             "pageTitle" => "Dashboard",
+            "pendingBurialReservations" => $pendingBurialReservations,
+            "pendingLotReservations" => $pendingLotReservations,
+            "pendingEstateReservations" => $pendingEstateReservations,
             "usesDataTables" => false,
             "phasePricingTable" => [],
             "view" => "dashboard/index"
