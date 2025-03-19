@@ -8,21 +8,17 @@ use App\Core\View;
 
 class MapController extends BaseController {
     public function index() {
-        $badgeModel = new BadgeModel();
-        $pendingBurialReservations = $badgeModel->getPendingBurialReservations();
-        $pendingLotReservations = $badgeModel->getPendingLotReservations();
-        $pendingEstateReservations = $badgeModel->getPendingEstateReservations();
-
         $this->checkSession();
 
         $data = [
             "pageTitle" => "Map",
-            "pendingBurialReservations" => $pendingBurialReservations,
-            "pendingLotReservations" => $pendingLotReservations,
-            "pendingEstateReservations" => $pendingEstateReservations,
             "usesDataTables" => false,
             "map" => [],
-            "view" => "map/index"
+            "view" => "map/index",
+
+            "pendingBurialReservations" => $this->pendingBurialReservations,
+            "pendingLotReservations" => $this->pendingLotReservations,
+            "pendingEstateReservations" => $this->pendingEstateReservations
         ];
 
         View::render("templates/layout", $data);

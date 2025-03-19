@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\BadgeModel;
 use App\Models\SixMonthsModel;
 use App\Core\View;
 
@@ -18,7 +19,11 @@ class SixMonthsController extends BaseController {
             "usesDataTables" => true,
             "sixMonthsTable" => $sixMonthsTable,
             "reservationsTable" => $reservationsTable,
-            "view" => "six-months/index"
+            "view" => "six-months/index",
+
+            "pendingBurialReservations" => $this->pendingBurialReservations,
+            "pendingLotReservations" => $this->pendingLotReservations,
+            "pendingEstateReservations" => $this->pendingEstateReservations
         ];
 
         View::render("templates/layout", $data);

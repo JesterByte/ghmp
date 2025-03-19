@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\BadgeModel;
 use App\Models\LotReservationsModel;
 use App\Utils\Formatter;
 use App\Utils\Calculator;
@@ -28,7 +29,7 @@ class LotReservationsController extends BaseController {
 
     public function indexCashSale() {
         $this->checkSession();
-
+    
         $lotReservationsModel = new LotReservationsModel();
         $lotReservationsTable = $lotReservationsModel->getCashSaleLotReservations();
         $availableLots = $lotReservationsModel->getAvailableLots();
@@ -43,7 +44,11 @@ class LotReservationsController extends BaseController {
             "availableLots" => $availableLots,
             "customers" => $customers,
             "lotReservationRequests" => $lotReservationRequests,
-            "view" => "lot-reservations/index"
+            "view" => "lot-reservations/index",
+
+            "pendingBurialReservations" => $this->pendingBurialReservations,
+            "pendingLotReservations" => $this->pendingLotReservations,
+            "pendingEstateReservations" => $this->pendingEstateReservations
         ];
 
         View::render("templates/layout", $data);
@@ -58,7 +63,6 @@ class LotReservationsController extends BaseController {
         $customers = $lotReservationsModel->getCustomers();
         $lotReservationRequests = $lotReservationsModel->getReservationRequestsBadge();
 
-
         $data = [
             "pageTitle" => "Lot Reservations",
             "usesDataTables" => true,
@@ -67,7 +71,11 @@ class LotReservationsController extends BaseController {
             "availableLots" => $availableLots,
             "customers" => $customers,
             "lotReservationRequests" => $lotReservationRequests,
-            "view" => "lot-reservations/index"
+            "view" => "lot-reservations/index",
+
+            "pendingBurialReservations" => $this->pendingBurialReservations,
+            "pendingLotReservations" => $this->pendingLotReservations,
+            "pendingEstateReservations" => $this->pendingEstateReservations
         ];
 
         View::render("templates/layout", $data);
@@ -90,7 +98,38 @@ class LotReservationsController extends BaseController {
             "availableLots" => $availableLots,
             "customers" => $customers,
             "lotReservationRequests" => $lotReservationRequests,
-            "view" => "lot-reservations/index"
+            "view" => "lot-reservations/index",
+
+            "pendingBurialReservations" => $this->pendingBurialReservations,
+            "pendingLotReservations" => $this->pendingLotReservations,
+            "pendingEstateReservations" => $this->pendingEstateReservations
+        ];
+
+        View::render("templates/layout", $data);
+    }
+
+    public function indexCancelled() {
+        $this->checkSession();
+
+        $lotReservationsModel = new LotReservationsModel();
+        $lotReservationsTable = $lotReservationsModel->getCancelledLotReservations();
+        $availableLots = $lotReservationsModel->getAvailableLots();
+        $customers = $lotReservationsModel->getCustomers();
+        $lotReservationRequests = $lotReservationsModel->getReservationRequestsBadge();
+
+        $data = [
+            "pageTitle" => "Lot Reservations",
+            "usesDataTables" => true,
+            "currentTable" => "Cancelled",
+            "lotReservationsTable" => $lotReservationsTable,
+            "availableLots" => $availableLots,
+            "customers" => $customers,
+            "lotReservationRequests" => $lotReservationRequests,
+            "view" => "lot-reservations/index",
+
+            "pendingBurialReservations" => $this->pendingBurialReservations,
+            "pendingLotReservations" => $this->pendingLotReservations,
+            "pendingEstateReservations" => $this->pendingEstateReservations
         ];
 
         View::render("templates/layout", $data);

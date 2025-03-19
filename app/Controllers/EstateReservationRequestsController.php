@@ -2,8 +2,10 @@
 
 namespace App\Controllers;
 
+use App\Models\BadgeModel;
 use App\Models\EstateReservationRequestsModel;
 use App\Core\View;
+use App\Helpers\DisplayHelper;
 
 use App\Utils\Encryption;
 
@@ -19,13 +21,17 @@ class EstateReservationRequestsController extends BaseController
             "usesDataTables" => true,
             "secretKey" => $this->secretKey,
             "estateReservationRequestsTable" => $estateReservationRequestsTable,
-            "view" => "estate-reservation-requests/index"
+            "view" => "estate-reservation-requests/index",
+
+            "pendingBurialReservations" => $this->pendingBurialReservations,
+            "pendingLotReservations" => $this->pendingLotReservations,
+            "pendingEstateReservations" => $this->pendingEstateReservations
         ];
 
         View::render("templates/layout", $data);
     }
 
-    public function submitBurialReservationConfirmation()
+    public function submitEstateReservationConfirmation()
     {
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $estateId = $_POST["estate_id"];
@@ -34,7 +40,18 @@ class EstateReservationRequestsController extends BaseController
 
             $estateReservationRequestsModel = new EstateReservationRequestsModel();
             $estateReservationRequestsModel->setEstateReservationStatus($estateId, $reserveeId, $status);
-            $this->redirect(BASE_URL . "/estate-reservation-requests");
+
+            switch ($status) {
+                case "Confirmed":
+                    $message = "The estate reservation has been approved successfully!";
+                    break;
+                case "Cancelled":
+                    $message = "The estate reservation has been cancelled successfully!";
+                    break;
+            }
+           
+            // $this->redirect(BASE_URL . "/estate-reservation-requests");
+            $this->redirect(BASE_URL . "/estate-reservation-requests", DisplayHelper::$checkIcon, $message, "Operation Successful");
         }
     }
 }

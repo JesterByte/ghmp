@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\BadgeModel;
 use App\Models\BurialPricingModel;
 use App\Utils\Calculator;
 use App\Utils\Formatter;
@@ -41,7 +42,11 @@ class BurialPricingController extends BaseController
             "boneTransferPrice" => $lotBoneTransferPrice,
             "usesDataTables" => true,
             "burialPricingTable" => $burialPricingTable,
-            "view" => "burial-pricing/index"
+            "view" => "burial-pricing/index",
+
+            "pendingBurialReservations" => $this->pendingBurialReservations,
+            "pendingLotReservations" => $this->pendingLotReservations,
+            "pendingEstateReservations" => $this->pendingEstateReservations
         ];
 
         View::render("templates/layout", $data);
@@ -57,7 +62,7 @@ class BurialPricingController extends BaseController
         $estateStandardPrice = $burialPricingModel->getPrice("Estate", "Standard")["price"];
         $estateMausoleumPrice = $burialPricingModel->getPrice("Estate", "Mausoleum")["price"];
         $estateBoneTransferPrice = $burialPricingModel->getPrice("Estate", "Bone Transfer")["price"];
-
+        
         $data = [
             "pageTitle" => "Burial Pricing List",
             "category" => "Estate",
@@ -66,7 +71,11 @@ class BurialPricingController extends BaseController
             "boneTransferPrice" => $estateBoneTransferPrice,
             "usesDataTables" => true,
             "burialPricingTable" => $burialPricingTable,
-            "view" => "burial-pricing/index"
+            "view" => "burial-pricing/index",
+
+            "pendingBurialReservations" => $this->pendingBurialReservations,
+            "pendingLotReservations" => $this->pendingLotReservations,
+            "pendingEstateReservations" => $this->pendingEstateReservations
         ];
 
         View::render("templates/layout", $data);

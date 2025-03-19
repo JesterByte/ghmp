@@ -35,7 +35,11 @@ class BackupAndRestoreController extends BaseController
             "usesDataTables" => false,
             "backupFiles" => $backupFiles,
             "backupSettings" => $backupSettings,
-            "view" => "backup-and-restore/index"
+            "view" => "backup-and-restore/index",
+
+            "pendingBurialReservations" => $this->pendingBurialReservations,
+            "pendingLotReservations" => $this->pendingLotReservations,
+            "pendingEstateReservations" => $this->pendingEstateReservations
         ];
 
         View::render("templates/layout", $data);

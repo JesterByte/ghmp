@@ -45,8 +45,8 @@
                         </div>';
 
                         TableHelper::startRow();
+                        TableHelper::cell($requestDate);
                         TableHelper::cell($formattedEstateId);
-                        TableHelper::cell($estateId);
                         TableHelper::cell($reservee);
                         TableHelper::cell($action);
                         TableHelper::endRow();

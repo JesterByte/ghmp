@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\BadgeModel;
 use App\Models\FullyPaidsModel;
 use App\Core\View;
 
@@ -31,7 +32,11 @@ class FullyPaidsController extends BaseController {
             "currentTable" => "Cash Sale",
             "usesDataTables" => true,
             "fullyPaidsTable" => $fullyPaidsTable,
-            "view" => "fully-paids/index"
+            "view" => "fully-paids/index",
+
+            "pendingBurialReservations" => $this->pendingBurialReservations,
+            "pendingLotReservations" => $this->pendingLotReservations,
+            "pendingEstateReservations" => $this->pendingEstateReservations
         ];
 
         View::render("templates/layout", $data);
@@ -48,7 +53,11 @@ class FullyPaidsController extends BaseController {
             "currentTable" => "6 Months",
             "usesDataTables" => true,
             "fullyPaidsTable" => $fullyPaidsTable,
-            "view" => "fully-paids/index"
+            "view" => "fully-paids/index",
+
+            "pendingBurialReservations" => $this->pendingBurialReservations,
+            "pendingLotReservations" => $this->pendingLotReservations,
+            "pendingEstateReservations" => $this->pendingEstateReservations
         ];
 
         View::render("templates/layout", $data);
@@ -65,7 +74,11 @@ class FullyPaidsController extends BaseController {
             "currentTable" => "Installment",
             "usesDataTables" => true,
             "fullyPaidsTable" => $fullyPaidsTable,
-            "view" => "fully-paids/index"
+            "view" => "fully-paids/index",
+
+            "pendingBurialReservations" => $this->pendingBurialReservations,
+            "pendingLotReservations" => $this->pendingLotReservations,
+            "pendingEstateReservations" => $this->pendingEstateReservations
         ];
 
         View::render("templates/layout", $data);

@@ -2,11 +2,13 @@
 
 namespace App\Controllers;
 
+use App\Models\BadgeModel;
 use App\Models\LotReservationRequestsModel;
 use App\Core\View;
 
 use App\Utils\Encryption;
 use App\Helpers\DisplayHelper;
+use App\Models\LotReservationsModel;
 
 class LotReservationRequestsController extends BaseController
 {
@@ -20,7 +22,11 @@ class LotReservationRequestsController extends BaseController
             "usesDataTables" => true,
             "secretKey" => $this->secretKey,
             "reservationRequestsTable" => $reservationRequestsTable,
-            "view" => "lot-reservation-requests/index"
+            "view" => "lot-reservation-requests/index",
+
+            "pendingBurialReservations" => $this->pendingBurialReservations,
+            "pendingLotReservations" => $this->pendingLotReservations,
+            "pendingEstateReservations" => $this->pendingEstateReservations
         ];
 
         View::render("templates/layout", $data);
@@ -65,9 +71,12 @@ class LotReservationRequestsController extends BaseController
 
             $lotReservationRequestsModel = new LotReservationRequestsModel();
 
-            $lotReservationRequestsModel->setLotType($lotId, $lotType);
+            $lotReservationRequestsModel->cancelLotReservation($lotId, $reserveeId);
+
+            $lotReservationsModel = new LotReservationsModel();
+            $lotReservationsModel->setLotStatus($lotId, "Available");
             // $this->redirect(BASE_URL . "/reservation-requests");
-            $this->redirect(BASE_URL . "/lot-reservation-requests", DisplayHelper::$checkIcon, "The lot type has been assigned.", "Operation Successful");
+            $this->redirect(BASE_URL . "/lot-reservation-requests", DisplayHelper::$checkIcon, "The lot reservation has been cancelled.", "Operation Successful");
         }
     }
 }

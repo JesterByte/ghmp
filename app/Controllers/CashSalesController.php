@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\BadgeModel;
 use App\Models\CashSalesModel;
 use App\Core\View;
 
@@ -18,7 +19,11 @@ class CashSalesController extends BaseController {
             "usesDataTables" => true,
             "cashSalesTable" => $cashSalesTable,
             "reservationsTable" => $reservationsTable,
-            "view" => "cash-sales/index"
+            "view" => "cash-sales/index",
+
+            "pendingBurialReservations" => $this->pendingBurialReservations,
+            "pendingLotReservations" => $this->pendingLotReservations,
+            "pendingEstateReservations" => $this->pendingEstateReservations
         ];
 
         View::render("templates/layout", $data);

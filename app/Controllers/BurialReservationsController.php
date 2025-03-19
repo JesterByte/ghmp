@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\BadgeModel;
 use App\Models\BurialReservationsModel;
 use App\Utils\Formatter;
 use App\Utils\Calculator;
@@ -19,7 +20,11 @@ class BurialReservationsController extends BaseController {
         $data = [
             "pageTitle" => "Burial Reservations",
             "burialReservationRequests" => $burialReservationRequests,
-            "view" => "burial-reservations/index"
+            "view" => "burial-reservations/index",
+
+            "pendingBurialReservations" => $this->pendingBurialReservations,
+            "pendingLotReservations" => $this->pendingLotReservations,
+            "pendingEstateReservations" => $this->pendingEstateReservations
         ];
 
         View::render("templates/layout", $data);

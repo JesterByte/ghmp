@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\BadgeModel;
 use App\Models\InstallmentsModel;
 use App\Core\View;
 
@@ -20,7 +21,11 @@ class InstallmentsController extends BaseController {
             "installmentsTable" => $installmentsTable,
             "pendingDownPayments" => $pendingDownPayments,
             "ongoingInstallments" => $ongoingInstallments,
-            "view" => "installments/index"
+            "view" => "installments/index",
+
+            "pendingBurialReservations" => $this->pendingBurialReservations,
+            "pendingLotReservations" => $this->pendingLotReservations,
+            "pendingEstateReservations" => $this->pendingEstateReservations
         ];
 
         View::render("templates/layout", $data);

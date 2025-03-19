@@ -39,6 +39,8 @@ foreach ($customers as $customer) {
             <a href="lot-reservations-cash-sale" class="btn btn-primary <?= DisplayHelper::isActivePage($currentTable, "Cash Sale", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "Cash Sale", "aria-current='page'") ?>>Cash Sale</a>
             <a href="lot-reservations-six-months" class="btn btn-primary <?= DisplayHelper::isActivePage($currentTable, "6 Months", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "6 Months", "aria-current='page'") ?>>6 Months</a>
             <a href="lot-reservations-installment" class="btn btn-primary <?= DisplayHelper::isActivePage($currentTable, "Installment", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "Installment", "aria-current='page'") ?>>Installment</a>
+            <a href="lot-reservations-cancelled" class="btn btn-danger <?= DisplayHelper::isActivePage($currentTable, "Cancelled", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "Cancelled", "aria-current='page'") ?>><i class="bi bi-trash<?= DisplayHelper::isActivePage($currentTable, "Cancelled", "-fill") ?>"></i> Cancelled</a>
+
         </div>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-lot-reservation-modal"><i class="bi bi-plus"></i> Add New Reservation</button>
     </div>
@@ -52,10 +54,7 @@ foreach ($customers as $customer) {
                 <th class="text-center">Reservation Date</th>
                 <th class="text-center">Lot</th>
                 <th class="text-center">Reservee</th>
-                <th class="text-center">Lot Type</th>
-                <!-- <th class="text-center">Payment Option</th> -->
-                <th class="text-center">Reservation Status</th>
-                <th class="text-center">Action</th>
+                <th class="text-center">Cancelled On</th>
             </tr>
         </thead>
         <tbody>
@@ -65,15 +64,13 @@ foreach ($customers as $customer) {
                     $lotId = Formatter::formatLotId($lotReservationsRow["lot_id"]);
                     $reservee = Formatter::formatFullName($lotReservationsRow["first_name"], $lotReservationsRow["middle_name"], $lotReservationsRow["last_name"], $lotReservationsRow["suffix_name"]);
                     $reservationDate = Formatter::formatDateTime($lotReservationsRow["created_at"]);
+                    $cancelledOn = Formatter::formatDateTime($lotReservationsRow["updated_at"]);
 
                     TableHelper::startRow();
                     TableHelper::cell($reservationDate);
                     TableHelper::cell($lotId);
                     TableHelper::cell($reservee);
-                    TableHelper::cell($lotReservationsRow["lot_type"]);
-                    TableHelper::cell($lotReservationsRow["reservation_status"]);
-                    // TableHelper::cell($lotReservationsRow["payment_status"]);
-                    TableHelper::cell('');
+                    TableHelper::cell($cancelledOn);
                     TableHelper::endRow();
                 }
             }

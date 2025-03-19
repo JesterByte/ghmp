@@ -13,7 +13,7 @@ class LotReservationsModel extends Model
         $stmt->execute([':reservation_status' => 'Pending']);
         return $stmt->fetch(PDO::FETCH_ASSOC)["total_lot_reservation_requests"];
     }
-    
+
     public function getCashSaleLotReservations()
     {
         $stmt = $this->db->prepare("SELECT lr.lot_id, lr.lot_type, lr.reservation_status, lr.payment_option, lr.created_at, c.first_name, c.middle_name, c.last_name, c.suffix_name, cs.payment_status
@@ -44,6 +44,16 @@ class LotReservationsModel extends Model
         INNER JOIN installments AS i ON lr.lot_id = i.lot_id
         WHERE lr.reservation_status != :reservation_status");
         $stmt->execute([':reservation_status' => 'Pending']);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getCancelledLotReservations()
+    {
+        $stmt = $this->db->prepare("SELECT lr.lot_id, lr.created_at, lr.updated_at, c.first_name, c.middle_name, c.last_name, c.suffix_name
+        FROM lot_reservations AS lr 
+        INNER JOIN customers AS c ON lr.reservee_id = c.id 
+        WHERE lr.reservation_status = :reservation_status");
+        $stmt->execute([':reservation_status' => 'Cancelled']);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -138,10 +148,9 @@ class LotReservationsModel extends Model
         return $stmt->execute();
     }
 
-    public function setLotStatus($lotId)
+    public function setLotStatus($lotId, $status = "Reserved")
     {
         $stmt = $this->db->prepare("UPDATE lots SET status = :status WHERE lot_id = :lot_id");
-        $status = "Reserved";
         $stmt->bindParam(':status', $status);
         $stmt->bindParam(':lot_id', $lotId);
         return $stmt->execute();

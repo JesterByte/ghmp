@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\BadgeModel;
 use App\Models\EstateReservationsModel;
 use App\Utils\Formatter;
 use App\Utils\Calculator;
@@ -43,7 +44,11 @@ class EstateReservationsController extends BaseController {
             "availableEstates" => $availableEstates,
             "customers" => $customers,
             "estateReservationRequests" => $estateReservationRequests,
-            "view" => "estate-reservations/index"
+            "view" => "estate-reservations/index",
+
+            "pendingBurialReservations" => $this->pendingBurialReservations,
+            "pendingLotReservations" => $this->pendingLotReservations,
+            "pendingEstateReservations" => $this->pendingEstateReservations
         ];
 
         View::render("templates/layout", $data);
@@ -58,7 +63,6 @@ class EstateReservationsController extends BaseController {
         $customers = $estatetReservationsModel->getCustomers();
         $estateReservationRequests = $estatetReservationsModel->getEstateReservationRequestsBadge();
 
-
         $data = [
             "pageTitle" => "Estate Reservations",
             "usesDataTables" => true,
@@ -67,7 +71,11 @@ class EstateReservationsController extends BaseController {
             "availableEstates" => $availableEstates,
             "customers" => $customers,
             "estateReservationRequests" => $estateReservationRequests,
-            "view" => "estate-reservations/index"
+            "view" => "estate-reservations/index",
+
+            "pendingBurialReservations" => $this->pendingBurialReservations,
+            "pendingLotReservations" => $this->pendingLotReservations,
+            "pendingEstateReservations" => $this->pendingEstateReservations
         ];
 
         View::render("templates/layout", $data);
@@ -82,7 +90,6 @@ class EstateReservationsController extends BaseController {
         $customers = $estatetReservationsModel->getCustomers();
         $estateReservationRequests = $estatetReservationsModel->getEstateReservationRequestsBadge();
 
-
         $data = [
             "pageTitle" => "Estate Reservations",
             "usesDataTables" => true,
@@ -91,7 +98,11 @@ class EstateReservationsController extends BaseController {
             "availableEstates" => $availableEstates,
             "customers" => $customers,
             "estateReservationRequests" => $estateReservationRequests,
-            "view" => "estate-reservations/index"
+            "view" => "estate-reservations/index",
+
+            "pendingBurialReservations" => $this->pendingBurialReservations,
+            "pendingLotReservations" => $this->pendingLotReservations,
+            "pendingEstateReservations" => $this->pendingEstateReservations
         ];
 
         View::render("templates/layout", $data);

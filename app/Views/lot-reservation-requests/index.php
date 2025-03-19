@@ -47,7 +47,11 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
                     TableHelper::cell($reservee);
                     TableHelper::cell($row["lot_type"]);
                     TableHelper::cell('<div class="btn-group" role="group" aria-label="Basic example">
-                        <a role="button" href="verify-lot-type/' . Encryption::encrypt($row["lot_id"], $secretKey) . '" class="btn btn-success"><i class="bi bi-check"></i> Verify Lot Type</a>
+                        <a role="button" href="verify-lot-type/' . Encryption::encrypt($row["lot_id"], $secretKey) . '" class="btn btn-success">
+                        <i class="bi bi-check"></i>
+                        Verify Lot Type
+                        </a>
+                        
                         <button type="button" class="cancel-btn btn btn-danger"
                         data-bs-lot-id="' . $lotId . '"
                         data-bs-reservee-id="' . $reserveeId . '"

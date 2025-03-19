@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\BadgeModel;
 use App\Models\PhasePricingModel;
 use App\Utils\Calculator;
 use App\Utils\Formatter;
@@ -20,7 +21,11 @@ class PhasePricingController extends BaseController
             "pageTitle" => "Phase Pricing List",
             "usesDataTables" => true,
             "phasePricingTable" => $phasePricingTable,
-            "view" => "phase-pricing/index"
+            "view" => "phase-pricing/index",
+
+            "pendingBurialReservations" => $this->pendingBurialReservations,
+            "pendingLotReservations" => $this->pendingLotReservations,
+            "pendingEstateReservations" => $this->pendingEstateReservations
         ];
 
         View::render("templates/layout", $data);

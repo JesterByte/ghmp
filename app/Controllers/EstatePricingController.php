@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\BadgeModel;
 use App\Models\EstatePricingModel;
 use App\Utils\Calculator;
 use App\Utils\Formatter;
@@ -14,11 +15,16 @@ class EstatePricingController extends BaseController {
 
         $estatePricingModel = new EstatePricingModel();
         $estatePricingTable = $estatePricingModel->getPricingData();
+
         $data = [
             "pageTitle" => "Estate Pricing List",
             "usesDataTables" => true,
             "estatePricingTable" => $estatePricingTable,
-            "view" => "estate-pricing/index"
+            "view" => "estate-pricing/index",
+
+            "pendingBurialReservations" => $this->pendingBurialReservations,
+            "pendingLotReservations" => $this->pendingLotReservations,
+            "pendingEstateReservations" => $this->pendingEstateReservations
         ];
 
         View::render("templates/layout", $data);

@@ -3,13 +3,22 @@
 namespace App\Controllers;
 
 use App\Core\View;
+use App\Models\BadgeModel;
 
 class BaseController {
     protected $secretKey = "123";
+    protected $pendingBurialReservations;
+    protected $pendingLotReservations;
+    protected $pendingEstateReservations;
 
     public function __construct() {
         session_start();
         date_default_timezone_set("Asia/Manila");
+
+        $badgeModel = new BadgeModel();
+        $this->pendingBurialReservations = $badgeModel->getPendingBurialReservations();
+        $this->pendingLotReservations = $badgeModel->getPendingLotReservations();
+        $this->pendingEstateReservations = $badgeModel->getPendingEstateReservations();
     }
 
     // Sanitize string input to prevent XSS attacks
