@@ -108,6 +108,33 @@ class EstateReservationsController extends BaseController {
         View::render("templates/layout", $data);
     }
 
+    public function indexCancelled() {
+        $this->checkSession();
+
+        $estateReservationsModel = new EstateReservationsModel();
+        $estateReservationsTable = $estateReservationsModel->getCancelledEstateReservations();
+        $availableEstates = $estateReservationsModel->getAvailableEstates();
+        $customers = $estateReservationsModel->getCustomers();
+        $estateReservationRequests = $estateReservationsModel->getEstateReservationRequestsBadge();
+
+        $data = [
+            "pageTitle" => "Estate Reservations",
+            "usesDataTables" => true,
+            "currentTable" => "Cancelled",
+            "estateReservationsTable" => $estateReservationsTable,
+            "availableEstates" => $availableEstates,
+            "customers" => $customers,
+            "estateReservationRequests" => $estateReservationRequests,
+            "view" => "estate-reservations/index",
+
+            "pendingBurialReservations" => $this->pendingBurialReservations,
+            "pendingLotReservations" => $this->pendingLotReservations,
+            "pendingEstateReservations" => $this->pendingEstateReservations
+        ];
+
+        View::render("templates/layout", $data);
+    }
+
     public function setReservation() {
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $estatetReservationsModel = new EstateReservationsModel();

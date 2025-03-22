@@ -39,6 +39,7 @@ foreach ($customers as $customer) {
             <a href="estate-reservations-cash-sale" class="btn btn-primary <?= DisplayHelper::isActivePage($currentTable, "Cash Sale", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "Cash Sale", "aria-current='page'") ?>>Cash Sale</a>
             <a href="estate-reservations-six-months" class="btn btn-primary <?= DisplayHelper::isActivePage($currentTable, "6 Months", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "6 Months", "aria-current='page'") ?>>6 Months</a>
             <a href="estate-reservations-installment" class="btn btn-primary <?= DisplayHelper::isActivePage($currentTable, "Installment", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "Installment", "aria-current='page'") ?>>Installment</a>
+            <a href="estate-reservations-cancelled" class="btn btn-danger <?= DisplayHelper::isActivePage($currentTable, "Cancelled", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "Cancelled", "aria-current='page'") ?>><i class="bi bi-trash<?= DisplayHelper::isActivePage($currentTable, "Cancelled", "-fill") ?>"></i> Cancelled</a>
         </div>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-estate-reservation-modal"><i class="bi bi-plus"></i> Add New Reservation</button>
     </div>
@@ -53,25 +54,33 @@ foreach ($customers as $customer) {
                 <th class="text-center">Estate</th>
                 <th class="text-center">Reservee</th>
                 <!-- <th class="text-center">Payment Option</th> -->
-                <th class="text-center">Reservation Status</th>
-                <th class="text-center">Action</th>
+                <?php if ($currentTable == "Cancelled"): ?>
+                    <th class="text-center">Cancelled On</th>
+                <?php else: ?>
+                    <th class="text-center">Action</th>
+                <?php endif; ?>
             </tr>
         </thead>
         <tbody>
             <?php
-            foreach ($estateReservationsTable as $estateReservationsRow) {
+            foreach ($estateReservationsTable as $row) {
                 if (!empty($estateReservationsTable)) {
-                    $estateId = Formatter::formatEstateId($estateReservationsRow["estate_id"]);
-                    $reservee = Formatter::formatFullName($estateReservationsRow["first_name"], $estateReservationsRow["middle_name"], $estateReservationsRow["last_name"], $estateReservationsRow["suffix_name"]);
-                    $reservationDate = Formatter::formatDateTime($estateReservationsRow["created_at"]);
+                    $estateId = Formatter::formatEstateId($row["estate_id"]);
+                    $reservee = Formatter::formatFullName($row["first_name"], $row["middle_name"], $row["last_name"], $row["suffix_name"]);
+                    $reservationDate = Formatter::formatDateTime($row["created_at"]);
 
                     TableHelper::startRow();
                     TableHelper::cell($reservationDate);
                     TableHelper::cell($estateId);
                     TableHelper::cell($reservee);
-                    TableHelper::cell($estateReservationsRow["reservation_status"]);
                     // TableHelper::cell($estateReservationsRow["payment_status"]);
-                    TableHelper::cell('');
+                    if ($currentTable == "Cancelled") {
+                        $cancelledOn = Formatter::formatDateTime($row["updated_at"]);
+
+                        TableHelper::cell($cancelledOn);
+                    } else {
+                        TableHelper::cell("");
+                    }
                     TableHelper::endRow();
                 }
             }

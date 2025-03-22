@@ -46,6 +46,16 @@ class EstateReservationsModel extends Model
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getCancelledEstateReservations()
+    {
+        $stmt = $this->db->prepare("SELECT er.estate_id, er.created_at, er.updated_at, c.first_name, c.middle_name, c.last_name, c.suffix_name
+        FROM estate_reservations AS er 
+        INNER JOIN customers AS c ON er.reservee_id = c.id 
+        WHERE er.reservation_status = :reservation_status");
+        $stmt->execute([':reservation_status' => 'Cancelled']);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getAvailableEstates()
     {
         $stmt = $this->db->prepare("SELECT * FROM estates WHERE status = :status");

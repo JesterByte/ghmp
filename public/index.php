@@ -54,6 +54,8 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute("GET", "/estate-reservations-cash-sale", ['App\Controllers\EstateReservationsController', 'indexCashSale']);
     $r->addRoute("GET", "/estate-reservations-six-months", ['App\Controllers\EstateReservationsController', 'indexSixMonths']);
     $r->addRoute("GET", "/estate-reservations-installment", ['App\Controllers\EstateReservationsController', 'indexInstallments']);   
+    $r->addRoute("GET", "/estate-reservations-cancelled", ['App\Controllers\EstateReservationsController', 'indexCancelled']);
+
     $r->addRoute('POST', '/add-reservation-estate', ['App\Controllers\EstateReservationsController', 'setReservation']);
 
     $r->addRoute("GET", "/cash-sales", ['App\Controllers\CashSalesController', 'index']);

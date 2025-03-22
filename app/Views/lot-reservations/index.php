@@ -54,7 +54,11 @@ foreach ($customers as $customer) {
                 <th class="text-center">Reservation Date</th>
                 <th class="text-center">Lot</th>
                 <th class="text-center">Reservee</th>
-                <th class="text-center">Cancelled On</th>
+                <?php if ($currentTable == "Cancelled"): ?>
+                    <th class="text-center">Cancelled On</th>    
+                <?php else: ?>
+                    <th class="text-center">Action</th>
+                <?php endif; ?>
             </tr>
         </thead>
         <tbody>
@@ -64,13 +68,17 @@ foreach ($customers as $customer) {
                     $lotId = Formatter::formatLotId($lotReservationsRow["lot_id"]);
                     $reservee = Formatter::formatFullName($lotReservationsRow["first_name"], $lotReservationsRow["middle_name"], $lotReservationsRow["last_name"], $lotReservationsRow["suffix_name"]);
                     $reservationDate = Formatter::formatDateTime($lotReservationsRow["created_at"]);
-                    $cancelledOn = Formatter::formatDateTime($lotReservationsRow["updated_at"]);
 
                     TableHelper::startRow();
                     TableHelper::cell($reservationDate);
                     TableHelper::cell($lotId);
                     TableHelper::cell($reservee);
-                    TableHelper::cell($cancelledOn);
+                    if ($currentTable == "Cancelled") {
+                        $cancelledOn = Formatter::formatDateTime($lotReservationsRow["updated_at"]);
+                        TableHelper::cell($cancelledOn);
+                    } else {
+                        TableHelper::cell("");
+                    }
                     TableHelper::endRow();
                 }
             }
