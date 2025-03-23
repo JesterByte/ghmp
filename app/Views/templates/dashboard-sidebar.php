@@ -21,7 +21,7 @@ use App\Helpers\DisplayHelper;
                         Map
                     </a>
                 </li>
-                <?php $reservationsList = ["Burial Reservations", "Burial Reservation Requests", "Lot Reservations", "Lot Reservation Requests", "Estate Reservations", "Estate Reservation Requests"]; ?>
+                <?php $reservationsList = ["Burial Reservations", "Burial Reservation Requests", "Lot Reservations", "Lot Reservation Requests", "Verify Lot Type", "Estate Reservations", "Estate Reservation Requests"]; ?>
                 <li class="nav-item">
                     <a class="nav-link d-flex align-items-center gap-2" data-bs-toggle="collapse" href="#reservationsSubmenu" role="button" aria-expanded="<?= DisplayHelper::isPageInList($pageTitle, $reservationsList, "true", "false") ?>" aria-controls="reservationsSubmenu">
                         <i class="bi bi-calendar<?= DisplayHelper::isPageInList($pageTitle, $reservationsList, "-fill") ?>"></i> Reservations <i class="bi bi-caret-down<?= DisplayHelper::isPageInList($pageTitle, $reservationsList, "-fill") ?>"></i>
@@ -40,8 +40,8 @@ use App\Helpers\DisplayHelper;
                             </li>
 
                             <li>
-                                <a href="<?= BASE_URL . "/lot-reservations" ?>" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isPageInList($pageTitle, ["Lot Reservations", "Lot Reservation Requests"], "-fill text-bg-primary") ?>" <?= DisplayHelper::isPageInList($pageTitle, ["Lot Reservations", "Lot Reservation Requests"], "aria-current='page'") ?>>
-                                    <i class="bi bi-caret-right<?= DisplayHelper::isPageInList($pageTitle, ["Lot Reservations", "Lot Reservation Requests"], "-fill") ?>"></i>
+                                <a href="<?= BASE_URL . "/lot-reservations" ?>" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isPageInList($pageTitle, ["Lot Reservations", "Lot Reservation Requests", "Verify Lot Type"], "-fill text-bg-primary") ?>" <?= DisplayHelper::isPageInList($pageTitle, ["Lot Reservations", "Lot Reservation Requests", "Verify Lot Type"], "aria-current='page'") ?>>
+                                    <i class="bi bi-caret-right<?= DisplayHelper::isPageInList($pageTitle, ["Lot Reservations", "Lot Reservation Requests", "Verify Lot Type"], "-fill") ?>"></i>
                                     Lot Reservations
 
                                     <?php if ($pendingLotReservations != 0): ?>

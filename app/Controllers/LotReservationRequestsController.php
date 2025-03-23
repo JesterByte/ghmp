@@ -43,7 +43,11 @@ class LotReservationRequestsController extends BaseController
             "pageTitle" => "Verify Lot Type",
             "usesDataTables" => false,
             "lot" => $lot,
-            "view" => "verify-lot-type/index"
+            "view" => "verify-lot-type/index",
+
+            "pendingBurialReservations" => $this->pendingBurialReservations,
+            "pendingLotReservations" => $this->pendingLotReservations,
+            "pendingEstateReservations" => $this->pendingEstateReservations
         ];
 
         View::render("templates/layout", $data);
