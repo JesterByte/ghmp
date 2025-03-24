@@ -24,11 +24,11 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
     <table class="table table-striped table-hover table-bordered" id="table">
         <thead>
             <tr>
-                <th>Request Date</th>
-                <th>Lot</th>
-                <th>Reservee</th>
-                <th>Lot Type</th>
-                <th>Action</th>
+                <th class="text-center">Request Date</th>
+                <th class="text-center">Lot</th>
+                <th class="text-center">Reservee</th>
+                <th class="text-center">Lot Type</th>
+                <th class="text-center">Action</th>
             </tr>
         </thead>
         <tbody>

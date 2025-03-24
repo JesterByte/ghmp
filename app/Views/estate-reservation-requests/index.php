@@ -23,10 +23,10 @@
     <table class="table table-striped table-hover table-bordered" id="table">
         <thead>
             <tr>
-                <th>Request Date</th>
-                <th>Estate</th>
-                <th>Reservee</th>
-                <th>Action</th>
+                <th class="text-center">Request Date</th>
+                <th class="text-center">Estate</th>
+                <th class="text-center">Reservee</th>
+                <th class="text-center">Action</th>
             </tr>
         </thead>
         <tbody>
