@@ -28,6 +28,7 @@ class BackupAndRestoreModel extends Model {
 
         // Corrected command (without hanging issue)
         $command = "C:/xampp/mysql/bin/mysqldump -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
+        // $command = "mysqldump -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
         
         exec($command . " 2>&1", $output, $returnVar);
 
@@ -55,6 +56,7 @@ class BackupAndRestoreModel extends Model {
 
         // Corrected command (without hanging issue)
         $command = "C:/xampp/mysql/bin/mysqldump -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
+        // $command = "mysqldump -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
         
         exec($command . " 2>&1", $output, $returnVar);
     }

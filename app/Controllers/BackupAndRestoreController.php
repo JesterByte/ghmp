@@ -131,10 +131,12 @@ class BackupAndRestoreController extends BaseController
             $backupTime = $_POST["backup-time"];
             $backupAndRestoreModel = new BackupAndRestoreModel();
 
+            $formattedBackupTime = date("h:i A", strtotime($backupTime));
+
             if ($backupAndRestoreModel->setBackupTime($backupTime)) {
                 $icon = '<i class="bi bi-check-lg text-success"></i>';
                 $message = "Backup time updated successfully!";
-                $title = "Operation Successful";
+                $title = "Backup Time: $formattedBackupTime";
             } else {
                 $icon = '<i class="bi bi-x-lg text-danger"></i>';
                 $message = "Failed to update backup time!";

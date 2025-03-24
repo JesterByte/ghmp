@@ -23,7 +23,7 @@ foreach ($customers as $customer) {
 ?>
 <div class="row mb-1">
     <div class="col d-flex justify-content-end">
-        <a href="<?= BASE_URL . "/estate-reservation-requests" ?>" role="button" class="btn btn-primary position-relative"><i class="bi bi-list"></i> Reservation Requests
+        <a href="<?= BASE_URL . "/estate-reservation-requests" ?>" role="button" class="btn btn-primary position-relative"><i class="bi bi-list"></i> Requests
             <?php if ($estateReservationRequests != 0): ?>
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                     <?= $estateReservationRequests ?>

@@ -174,6 +174,11 @@ class Formatter
         return date("F j, Y h:i A", strtotime($dateTime));
     }
 
+    public static function formatDate($date)
+    {
+        return date("F j, Y", strtotime($date));
+    }
+
     // Format file name for database restore
     public static function formatDatabaseVersion($filename)
     {

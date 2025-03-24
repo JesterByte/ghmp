@@ -36,7 +36,18 @@ class BurialReservationRequestsController extends BaseController {
             $burialReservationsModel = new BurialReservationsModel();
             $burialReservationsModel->updateStatus($assetId, $status);
             // $this->redirect(BASE_URL . "/burial-reservation-requests");
-            $this->redirect(BASE_URL . "/burial-reservation-requests", DisplayHelper::$checkIcon, "Burial reservation has been aprroved.", "Operation Successful");
+            switch ($status) {
+                case "Approved":
+                    $toastIcon = DisplayHelper::$checkIcon;
+                    $message = "Burial reservation has been approved.";
+                    break;
+                case "Cancelled":
+                    $toastIcon = DisplayHelper::$warningIcon;
+                    $message = "Burial reservation has been cancelled.";
+                    break;
+            }
+
+            $this->redirect(BASE_URL . "/burial-reservation-requests", $toastIcon, $message, "Operation Successful");
 
         }
     }

@@ -6,7 +6,12 @@ $username = "root";
 $password = "";
 $db = "ghmp_db";
 
-$dbConnection = mysqli_connect("localhost", "root", "", "ghmp_db");
+// $host = "localhost";
+// $username = "u714551035_ghmp";
+// $password = "P~t5GTVnuaZ";
+// $db = "u714551035_ghmp_db";
+
+$dbConnection = mysqli_connect($host, $username, $password, $db);
 
 $getBackupTime = mysqli_prepare($dbConnection, "SELECT backup_time FROM backup_settings");
 mysqli_stmt_execute($getBackupTime);
@@ -25,10 +30,12 @@ if ($currentTimeTimestamp >= $backupTimeTimestamp && $currentTimeTimestamp <= $b
     $dbPass = $password; // Change if needed
     $dbName = $db; 
     
-    $backupFile = 'C:/xampp/htdocs/ghmp/storage/backups/ghmp_db_backup_' . date('Y-m-d_h-i-s-a') . '.sql';
+    $backupFile = __DIR__ . '/../../storage/backups/ghmp_db_backup_' . date('Y-m-d_h-i-s-a') . '.sql';
+    // $backupFile = 'C:/xampp/htdocs/ghmp/storage/backups/ghmp_db_backup_' . date('Y-m-d_h-i-s-a') . '.sql';
     
     // Corrected command (without hanging issue)
     $command = "C:/xampp/mysql/bin/mysqldump -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
+    // $command = "mysqldump -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
     
     exec($command . " 2>&1", $output, $returnVar);
 }

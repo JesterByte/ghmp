@@ -14,7 +14,7 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="<?= BASE_URL . "/lot-reservations" ?>">Lot Reservations</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Reservation Requests</li>
+            <li class="breadcrumb-item active" aria-current="page">Requests</li>
         </ol>
     </nav>
 </div>

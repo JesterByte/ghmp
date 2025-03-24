@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 18, 2025 at 01:14 PM
+-- Generation Time: Mar 24, 2025 at 04:09 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -37,7 +37,7 @@ CREATE TABLE `backup_settings` (
 --
 
 INSERT INTO `backup_settings` (`id`, `backup_time`) VALUES
-(1, '20:20:00');
+(1, '09:07:00');
 
 -- --------------------------------------------------------
 
@@ -54,8 +54,9 @@ CREATE TABLE `beneficiaries` (
   `suffix_name` varchar(10) DEFAULT NULL,
   `contact_number` varchar(15) NOT NULL,
   `email_address` varchar(100) DEFAULT NULL,
+  `password_hashed` varchar(255) DEFAULT NULL,
+  `status` enum('Active','Inactive') DEFAULT 'Inactive',
   `relationship_to_customer` varchar(50) NOT NULL,
-  `status` enum('Inactive','Active','','') NOT NULL DEFAULT 'Inactive',
   `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -64,10 +65,10 @@ CREATE TABLE `beneficiaries` (
 -- Dumping data for table `beneficiaries`
 --
 
-INSERT INTO `beneficiaries` (`id`, `customer_id`, `first_name`, `middle_name`, `last_name`, `suffix_name`, `contact_number`, `email_address`, `relationship_to_customer`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Mary', 'C.', 'Doe', NULL, '1122334455', 'mary.doe@example.com', 'Spouse', 'Inactive', '2025-01-26 16:55:33', '2025-01-26 16:55:33'),
-(2, 1, 'James', NULL, 'Doe', NULL, '5566778899', NULL, 'Son', 'Inactive', '2025-01-26 16:55:33', '2025-01-26 16:55:33'),
-(3, 2, 'Robert', 'D.', 'Smith', NULL, '6677889900', 'robert.smith@example.com', 'Brother', 'Inactive', '2025-01-26 16:55:33', '2025-01-26 16:55:33');
+INSERT INTO `beneficiaries` (`id`, `customer_id`, `first_name`, `middle_name`, `last_name`, `suffix_name`, `contact_number`, `email_address`, `password_hashed`, `status`, `relationship_to_customer`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Mary', 'C.', 'Doe', NULL, '1122334455', 'mary.doe@example.com', NULL, 'Inactive', 'Spouse', '2025-01-26 16:55:33', '2025-01-26 16:55:33'),
+(2, 1, 'James', NULL, 'Doe', NULL, '5566778899', NULL, NULL, 'Inactive', 'Son', '2025-01-26 16:55:33', '2025-01-26 16:55:33'),
+(3, 2, 'Robert', 'D.', 'Smith', NULL, '6677889900', 'robert.smith@example.com', NULL, 'Inactive', 'Brother', '2025-01-26 16:55:33', '2025-01-26 16:55:33');
 
 -- --------------------------------------------------------
 
@@ -107,7 +108,7 @@ CREATE TABLE `burial_reservations` (
   `reservee_id` int(11) NOT NULL,
   `asset_id` varchar(50) NOT NULL,
   `burial_type` enum('Standard','Cremation','Mausoleum','Bone Transfer') NOT NULL,
-  `relationship` enum('Spouse','Child','Parent','Sibling','Other') NOT NULL,
+  `relationship` varchar(255) NOT NULL,
   `first_name` varchar(100) NOT NULL,
   `middle_name` varchar(100) DEFAULT NULL,
   `last_name` varchar(100) NOT NULL,
@@ -123,13 +124,6 @@ CREATE TABLE `burial_reservations` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `burial_reservations`
---
-
-INSERT INTO `burial_reservations` (`id`, `reservee_id`, `asset_id`, `burial_type`, `relationship`, `first_name`, `middle_name`, `last_name`, `suffix`, `date_of_birth`, `date_of_death`, `obituary`, `date_time`, `status`, `payment_amount`, `payment_status`, `reference_number`, `created_at`) VALUES
-(19, 1, '1C1-3', 'Standard', 'Other', 'Test', 'Test', 'Test', 'Sr.', '2025-03-15', '2025-03-15', 'Test', '2025-03-15 09:45:00', 'Approved', 50000.00, 'Pending', 'LCn7hR3', '2025-03-15 01:45:14');
-
 -- --------------------------------------------------------
 
 --
@@ -142,17 +136,9 @@ CREATE TABLE `cash_sales` (
   `payment_amount` decimal(10,2) NOT NULL,
   `payment_date` timestamp NULL DEFAULT NULL,
   `payment_status` enum('Pending','Paid','Overdue') NOT NULL DEFAULT 'Pending',
-  `receipt_path` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `cash_sales`
---
-
-INSERT INTO `cash_sales` (`id`, `lot_id`, `payment_amount`, `payment_date`, `payment_status`, `receipt_path`, `created_at`, `updated_at`) VALUES
-(21, '1C1-3', 76988.02, NULL, 'Pending', '', '2025-03-15 01:48:06', '2025-03-15 01:48:06');
 
 -- --------------------------------------------------------
 
@@ -167,13 +153,6 @@ CREATE TABLE `cash_sale_due_dates` (
   `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `cash_sale_due_dates`
---
-
-INSERT INTO `cash_sale_due_dates` (`id`, `lot_id`, `due_date`, `created_at`, `updated_at`) VALUES
-(16, '1C1-3', '2025-03-22', '2025-03-15 09:48:06', '2025-03-15 09:48:06');
 
 -- --------------------------------------------------------
 
@@ -203,7 +182,8 @@ CREATE TABLE `customers` (
   `contact_number` varchar(15) NOT NULL,
   `email_address` varchar(100) NOT NULL,
   `password_hashed` varchar(255) NOT NULL,
-  `status` enum('Active','Transferred Ownership','Deactivated') NOT NULL,
+  `active_beneficiary` int(11) DEFAULT NULL,
+  `status` enum('Active','Transferred Ownership','Deactivated') NOT NULL DEFAULT 'Active',
   `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -212,9 +192,9 @@ CREATE TABLE `customers` (
 -- Dumping data for table `customers`
 --
 
-INSERT INTO `customers` (`id`, `first_name`, `middle_name`, `last_name`, `suffix_name`, `contact_number`, `email_address`, `password_hashed`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'John', 'A.', 'Doe', NULL, '1234567890', 'johndoe@mail.com', '123', 'Active', '2025-01-26 16:55:27', '2025-03-15 09:17:54'),
-(2, 'Jane', 'B.', 'Smith', 'Jr.', '0987654321', 'jane.smith@example.com', 'hashed_password_2', 'Active', '2025-01-26 16:55:27', '2025-01-26 16:55:27');
+INSERT INTO `customers` (`id`, `first_name`, `middle_name`, `last_name`, `suffix_name`, `contact_number`, `email_address`, `password_hashed`, `active_beneficiary`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'John', 'Smith', 'Doe', NULL, '1234567890', 'johndoe@mail.com', '123', NULL, 'Active', '2025-01-26 16:55:27', '2025-03-24 23:08:29'),
+(2, 'Jane', NULL, 'Smith', 'Jr.', '0987654321', 'jane.smith@example.com', 'hashed_password_2', NULL, 'Active', '2025-01-26 16:55:27', '2025-03-24 23:08:33');
 
 -- --------------------------------------------------------
 
@@ -386,7 +366,7 @@ CREATE TABLE `estate_pricing` (
 --
 
 INSERT INTO `estate_pricing` (`id`, `estate`, `sqm`, `number_of_lots`, `lot_price`, `vat`, `memorial_care_fee`, `total_purchase_price`, `cash_sale`, `cash_sale_discount`, `six_months`, `six_months_discount`, `down_payment`, `down_payment_rate`, `balance`, `monthly_amortization_one_year`, `one_year_interest_rate`, `monthly_amortization_two_years`, `two_years_interest_rate`, `monthly_amortization_three_years`, `three_years_interest_rate`, `monthly_amortization_four_years`, `four_years_interest_rate`, `monthly_amortization_five_years`, `five_years_interest_rate`) VALUES
-(1, 'Estate A', 20.00, 8, 531016.00, 0.12, 10000.00, 605937.92, 545344.13, 0.10, 575641.02, 0.05, 131187.58, 0.20, 474750.34, 39562.53, 0.00, 21907.32, 0.10, 16457.38, 0.15, 14446.82, 0.20, 13934.55, 0.25),
+(1, 'Estate A', 20.00, 8, 400.00, 0.12, 10000.00, 11648.00, 10483.20, 0.10, 11065.60, 0.05, 12329.60, 0.20, -681.60, -56.80, 0.00, -31.45, 0.10, -23.63, 0.15, -20.74, 0.20, -20.01, 0.25),
 (2, 'Estate B', 17.50, 7, 449134.00, 0.12, 10000.00, 573030.08, 522727.00, 0.10, 547879.00, 0.05, 170606.00, 0.20, 402424.06, 33535.34, 0.00, 18444.42, 0.10, 12855.21, 0.15, 10060.60, 0.20, 8383.83, 0.25),
 (3, 'Estate C', 16.00, 6, 406342.40, 0.12, 10000.00, 519103.49, 473593.00, 0.10, 496348.00, 0.05, 155021.00, 0.20, 364082.79, 30340.23, 0.00, 16687.13, 0.10, 11630.42, 0.15, 9102.07, 0.20, 7585.06, 0.25);
 
@@ -452,13 +432,10 @@ CREATE TABLE `installments` (
   `down_payment` decimal(10,2) NOT NULL,
   `down_payment_status` enum('Pending','Paid') DEFAULT 'Pending',
   `down_payment_date` date DEFAULT NULL,
-  `down_payment_receipt_path` varchar(255) NOT NULL,
   `down_payment_due_date` date NOT NULL,
-  `down_reference_number` varchar(255) NOT NULL,
   `next_due_date` date DEFAULT NULL,
   `total_amount` decimal(10,2) NOT NULL,
   `monthly_payment` decimal(10,2) NOT NULL,
-  `reference_number` varchar(255) NOT NULL,
   `interest_rate` decimal(5,2) NOT NULL,
   `payment_status` enum('Pending','Ongoing','Completed') DEFAULT 'Pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -476,8 +453,7 @@ CREATE TABLE `installment_payments` (
   `installment_id` int(11) NOT NULL,
   `payment_amount` decimal(10,2) NOT NULL,
   `payment_date` datetime DEFAULT current_timestamp(),
-  `payment_status` enum('Pending','Paid') DEFAULT 'Paid',
-  `receipt_path` varchar(255) NOT NULL
+  `payment_status` enum('Pending','Paid') DEFAULT 'Paid'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -506,9 +482,9 @@ CREATE TABLE `lots` (
 INSERT INTO `lots` (`id`, `lot_id`, `owner_id`, `latitude_start`, `longitude_start`, `latitude_end`, `longitude_end`, `status`, `created_at`, `updated_at`) VALUES
 (2228, '1C1-1', NULL, 14.87157650, 120.97704960, 14.87159450, 120.97705860, 'Reserved', '2025-01-26 03:36:58', '2025-01-26 03:36:58'),
 (2229, '1C1-2', NULL, 14.87159950, 120.97704960, 14.87161750, 120.97705860, 'Reserved', '2025-01-26 03:36:58', '2025-01-26 03:36:58'),
-(2230, '1C1-3', 1, 14.87162250, 120.97704960, 14.87164050, 120.97705860, 'Sold', '2025-01-26 03:36:58', '2025-03-15 01:44:31'),
+(2230, '1C1-3', NULL, 14.87162250, 120.97704960, 14.87164050, 120.97705860, 'Available', '2025-01-26 03:36:58', '2025-01-29 05:21:54'),
 (2231, '1C1-4', NULL, 14.87164550, 120.97704960, 14.87166350, 120.97705860, 'Sold and Occupied', '2025-01-26 03:36:58', '2025-01-26 03:36:58'),
-(2232, '1C1-5', NULL, 14.87166850, 120.97704960, 14.87168650, 120.97705860, 'Available', '2025-01-26 03:36:58', '2025-02-22 11:04:00'),
+(2232, '1C1-5', NULL, 14.87166850, 120.97704960, 14.87168650, 120.97705860, 'Available', '2025-01-26 03:36:58', '2025-01-29 05:21:53'),
 (2233, '1C1-6', NULL, 14.87169150, 120.97704960, 14.87170950, 120.97705860, 'Sold', '2025-01-26 03:36:58', '2025-01-26 03:36:58'),
 (2234, '1C6-1', NULL, 14.87140650, 120.97711710, 14.87142450, 120.97712610, 'Sold and Occupied', '2025-01-26 03:36:58', '2025-01-26 03:36:58'),
 (2235, '1C6-2', NULL, 14.87142950, 120.97711710, 14.87144750, 120.97712610, 'Available', '2025-01-26 03:36:58', '2025-01-26 03:36:58'),
@@ -869,9 +845,9 @@ INSERT INTO `lots` (`id`, `lot_id`, `owner_id`, `latitude_start`, `longitude_sta
 (2590, '1C23-2', NULL, 14.87142400, 120.97734660, 14.87144200, 120.97735560, 'Sold', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
 (2591, '1C23-3', NULL, 14.87144700, 120.97734660, 14.87146500, 120.97735560, 'Sold', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
 (2592, '1C23-4', NULL, 14.87147000, 120.97734660, 14.87148800, 120.97735560, 'Reserved', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
-(2593, '1C23-5', NULL, 14.87149300, 120.97734660, 14.87151100, 120.97735560, 'Sold', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
-(2594, '1C23-6', NULL, 14.87151600, 120.97734660, 14.87153400, 120.97735560, 'Reserved', '2025-01-26 03:36:59', '2025-01-26 03:36:59');
+(2593, '1C23-5', NULL, 14.87149300, 120.97734660, 14.87151100, 120.97735560, 'Sold', '2025-01-26 03:36:59', '2025-01-26 03:36:59');
 INSERT INTO `lots` (`id`, `lot_id`, `owner_id`, `latitude_start`, `longitude_start`, `latitude_end`, `longitude_end`, `status`, `created_at`, `updated_at`) VALUES
+(2594, '1C23-6', NULL, 14.87151600, 120.97734660, 14.87153400, 120.97735560, 'Reserved', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
 (2595, '1C23-7', NULL, 14.87153900, 120.97734660, 14.87155700, 120.97735560, 'Available', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
 (2596, '1C23-8', NULL, 14.87156200, 120.97734660, 14.87158000, 120.97735560, 'Available', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
 (2597, '1C23-9', NULL, 14.87158500, 120.97734660, 14.87160300, 120.97735560, 'Sold and Occupied', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
@@ -945,7 +921,7 @@ INSERT INTO `lots` (`id`, `lot_id`, `owner_id`, `latitude_start`, `longitude_sta
 (2665, '1C20-13', NULL, 14.87167700, 120.97730610, 14.87169500, 120.97731510, 'Reserved', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
 (2666, '1C20-14', NULL, 14.87170000, 120.97730610, 14.87171800, 120.97731510, 'Sold and Occupied', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
 (2667, '1C20-15', NULL, 14.87172300, 120.97730610, 14.87174100, 120.97731510, 'Sold', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
-(2668, '1C31-1', NULL, 14.87157100, 120.97745460, 14.87158900, 120.97746360, 'Available', '2025-01-26 03:36:59', '2025-02-17 14:42:05'),
+(2668, '1C31-1', NULL, 14.87157100, 120.97745460, 14.87158900, 120.97746360, 'Available', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
 (2669, '1C31-2', NULL, 14.87159400, 120.97745460, 14.87161200, 120.97746360, 'Sold', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
 (2670, '1C31-3', NULL, 14.87161700, 120.97745460, 14.87163500, 120.97746360, 'Sold', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
 (2671, '1C31-4', NULL, 14.87164000, 120.97745460, 14.87165800, 120.97746360, 'Sold', '2025-01-26 03:36:59', '2025-01-26 03:36:59'),
@@ -965,20 +941,29 @@ CREATE TABLE `lot_reservations` (
   `id` int(11) NOT NULL,
   `lot_id` varchar(255) NOT NULL,
   `reservee_id` int(11) NOT NULL,
-  `lot_type` enum('Supreme','Special','Standard','Pending') NOT NULL DEFAULT 'Pending',
-  `payment_option` enum('Cash Sale','6 Months','Installment: 1 Year','Installment: 2 Years','Installment: 3 Years','Installment: 4 Years','Installment: 5 Years','Pending') NOT NULL DEFAULT 'Pending',
-  `reservation_status` enum('Pending','Confirmed','Cancelled','Completed') NOT NULL DEFAULT 'Pending',
-  `reference_number` varchar(255) NOT NULL,
+  `lot_type` enum('Supreme','Special','Standard','Pending') NOT NULL,
+  `payment_option` enum('Cash Sale','6 Months','Installment: 1 Year','Installment: 2 Years','Installment: 3 Years','Installment: 4 Years','Installment: 5 Years','Pending') NOT NULL,
+  `reservation_status` enum('Pending','Confirmed','Cancelled','Completed') NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `lot_reservations`
+-- Table structure for table `ownership_transfer_requests`
 --
 
-INSERT INTO `lot_reservations` (`id`, `lot_id`, `reservee_id`, `lot_type`, `payment_option`, `reservation_status`, `reference_number`, `created_at`, `updated_at`) VALUES
-(69, '1C1-3', 1, 'Supreme', 'Cash Sale', 'Confirmed', 'CdKb7JL', '2025-03-15 01:18:24', '2025-03-15 01:48:07');
+CREATE TABLE `ownership_transfer_requests` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `new_owner_email` varchar(255) NOT NULL,
+  `otp_code` varchar(10) DEFAULT NULL,
+  `otp_expires_at` datetime DEFAULT NULL,
+  `status` enum('Pending','Verified','Completed','Expired') DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1020,17 +1005,17 @@ CREATE TABLE `phase_pricing` (
 --
 
 INSERT INTO `phase_pricing` (`id`, `phase`, `lot_type`, `number_of_lots`, `lot_price`, `vat`, `memorial_care_fee`, `total_purchase_price`, `cash_sale`, `cash_sale_discount`, `six_months`, `six_months_discount`, `down_payment`, `down_payment_rate`, `balance`, `monthly_amortization_one_year`, `one_year_interest_rate`, `monthly_amortization_two_years`, `two_years_interest_rate`, `monthly_amortization_three_years`, `three_years_interest_rate`, `monthly_amortization_four_years`, `four_years_interest_rate`, `monthly_amortization_five_years`, `five_years_interest_rate`, `updated_at`) VALUES
-(1, 'Phase 1', 'Supreme', 1, 66377.00, 0.12, 10000.00, 85542.24, 76988.02, 0.10, 81265.13, 0.05, 27108.45, 0.20, 58433.79, 4869.48, 0.00, 2696.42, 0.10, 2025.63, 0.15, 1626.26, 0.20, 1715.11, 0.25, '2025-03-09 08:59:19'),
-(2, 'Phase 1', 'Special', 1, 64162.00, 0.12, 10000.00, 81861.44, 74675.30, 0.10, 78268.37, 0.05, 24372.29, 0.20, 57489.15, 4790.76, 0.00, 2634.92, 0.10, 1836.46, 0.15, 1437.23, 0.20, 1197.69, 0.25, '2025-03-09 08:59:19'),
-(3, 'Phase 1', 'Standard', 1, 61945.00, 0.12, 10000.00, 79378.40, 72441.00, 0.10, 75909.00, 0.05, 23786.00, 0.20, 55503.00, 4625.23, 0.00, 2543.87, 0.10, 1773.00, 0.15, 1387.57, 0.20, 1156.31, 0.25, '2025-03-09 08:59:19'),
-(4, 'Phase 2', 'Supreme', 1, 64162.00, 0.12, 10000.00, 81861.44, 74675.30, 0.10, 78268.37, 0.05, 24372.29, 0.20, 57489.15, 4790.76, 0.00, 2634.92, 0.10, 1836.46, 0.15, 1437.23, 0.20, 1197.69, 0.25, '2025-03-09 08:59:19'),
-(5, 'Phase 2', 'Standard', 1, 61945.00, 0.12, 10000.00, 79378.40, 72441.00, 0.10, 75909.00, 0.05, 23786.00, 0.20, 55503.00, 4625.23, 0.00, 2543.87, 0.10, 1773.00, 0.15, 1387.57, 0.20, 1156.31, 0.25, '2025-03-09 08:59:19'),
-(6, 'Phase 3', 'Supreme', 1, 63491.00, 0.12, 10000.00, 81109.92, 73999.00, 0.10, 77554.00, 0.05, 24222.00, 0.20, 56888.00, 4740.66, 0.00, 2607.36, 0.10, 1817.25, 0.15, 1422.20, 0.20, 1185.17, 0.25, '2025-03-09 08:59:19'),
-(7, 'Phase 3', 'Special', 1, 61372.00, 0.12, 10000.00, 78736.64, 71863.00, 0.10, 75300.00, 0.05, 23747.00, 0.20, 54989.00, 4582.44, 0.00, 2520.34, 0.10, 1756.60, 0.15, 1374.73, 0.20, 1145.61, 0.25, '2025-03-09 08:59:19'),
-(8, 'Phase 3', 'Standard', 1, 59256.00, 0.12, 10000.00, 76366.72, 69730.00, 0.10, 73048.00, 0.05, 23273.00, 0.20, 53093.00, 4424.45, 0.00, 2433.45, 0.10, 1696.04, 0.15, 1327.33, 0.20, 1106.11, 0.25, '2025-03-09 08:59:19'),
-(9, 'Phase 4', 'Supreme', 1, 63491.00, 0.12, 10000.00, 81109.92, 73999.00, 0.10, 77554.00, 0.05, 24222.00, 0.20, 56888.00, 4740.66, 0.00, 2607.36, 0.10, 1817.25, 0.15, 1422.20, 0.20, 1185.17, 0.25, '2025-03-09 08:59:19'),
-(10, 'Phase 4', 'Special', 1, 61372.00, 0.12, 10000.00, 78736.64, 71863.00, 0.10, 75300.00, 0.05, 23747.00, 0.20, 54989.00, 4582.44, 0.00, 2520.34, 0.10, 1756.60, 0.15, 1374.73, 0.20, 1145.61, 0.25, '2025-03-09 08:59:19'),
-(11, 'Phase 4', 'Standard', 1, 59256.00, 0.12, 10000.00, 76366.72, 69730.00, 0.10, 73048.00, 0.05, 23273.00, 0.20, 53093.00, 4424.45, 0.00, 2433.45, 0.10, 1696.04, 0.15, 1327.33, 0.20, 1106.11, 0.25, '2025-03-09 08:59:19');
+(1, 'Phase 1', 'Supreme', 1, 66377.00, 0.12, 10000.00, 85542.24, 76988.02, 0.10, 81265.13, 0.05, 27108.45, 0.20, 58433.79, 4869.48, 0.00, 2696.42, 0.10, 2025.63, 0.15, 1626.26, 0.15, 1715.11, 0.25, '2025-01-24 12:18:33'),
+(2, 'Phase 1', 'Special', 1, 64162.00, 0.12, 10000.00, 81861.44, 74675.30, 0.10, 78268.37, 0.05, 24372.29, 0.20, 57489.15, 4790.76, 0.00, 2634.92, 0.10, 1836.46, 0.15, 1437.23, 0.15, 1197.69, 0.25, '2025-01-24 12:18:33'),
+(3, 'Phase 1', 'Standard', 1, 61945.00, 0.12, 10000.00, 79378.40, 72441.00, 0.10, 75909.00, 0.05, 23786.00, 0.20, 55503.00, 4625.23, 0.00, 2543.87, 0.10, 1773.00, 0.15, 1387.57, 0.15, 1156.31, 0.25, '2025-01-24 12:18:33'),
+(4, 'Phase 2', 'Supreme', 1, 64162.00, 0.12, 10000.00, 81861.44, 74675.30, 0.10, 78268.37, 0.05, 24372.29, 0.20, 57489.15, 4790.76, 0.00, 2634.92, 0.10, 1836.46, 0.15, 1437.23, 0.15, 1197.69, 0.25, '2025-01-24 12:18:33'),
+(5, 'Phase 2', 'Standard', 1, 61945.00, 0.12, 10000.00, 79378.40, 72441.00, 0.10, 75909.00, 0.05, 23786.00, 0.20, 55503.00, 4625.23, 0.00, 2543.87, 0.10, 1773.00, 0.15, 1387.57, 0.15, 1156.31, 0.25, '2025-01-24 12:18:33'),
+(6, 'Phase 3', 'Supreme', 1, 63491.00, 0.12, 10000.00, 81109.92, 73999.00, 0.10, 77554.00, 0.05, 24222.00, 0.20, 56888.00, 4740.66, 0.00, 2607.36, 0.10, 1817.25, 0.15, 1422.20, 0.15, 1185.17, 0.25, '2025-01-24 12:18:33'),
+(7, 'Phase 3', 'Special', 1, 61372.00, 0.12, 10000.00, 78736.64, 71863.00, 0.10, 75300.00, 0.05, 23747.00, 0.20, 54989.00, 4582.44, 0.00, 2520.34, 0.10, 1756.60, 0.15, 1374.73, 0.15, 1145.61, 0.25, '2025-01-24 12:18:33'),
+(8, 'Phase 3', 'Standard', 1, 59256.00, 0.12, 10000.00, 76366.72, 69730.00, 0.10, 73048.00, 0.05, 23273.00, 0.20, 53093.00, 4424.45, 0.00, 2433.45, 0.10, 1696.04, 0.15, 1327.33, 0.15, 1106.11, 0.25, '2025-01-24 12:18:33'),
+(9, 'Phase 4', 'Supreme', 1, 63491.00, 0.12, 10000.00, 81109.92, 73999.00, 0.10, 77554.00, 0.05, 24222.00, 0.20, 56888.00, 4740.66, 0.00, 2607.36, 0.10, 1817.25, 0.15, 1422.20, 0.15, 1185.17, 0.25, '2025-01-24 12:18:33'),
+(10, 'Phase 4', 'Special', 1, 61372.00, 0.12, 10000.00, 78736.64, 71863.00, 0.10, 75300.00, 0.05, 23747.00, 0.20, 54989.00, 4582.44, 0.00, 2520.34, 0.10, 1756.60, 0.15, 1374.73, 0.15, 1145.61, 0.25, '2025-01-24 12:18:33'),
+(11, 'Phase 4', 'Standard', 1, 59256.00, 0.12, 10000.00, 76366.72, 69730.00, 0.10, 73048.00, 0.05, 23273.00, 0.20, 53093.00, 4424.45, 0.00, 2433.45, 0.10, 1696.04, 0.15, 1327.33, 0.15, 1106.11, 0.25, '2025-01-24 12:18:33');
 
 -- --------------------------------------------------------
 
@@ -1045,8 +1030,7 @@ CREATE TABLE `six_months` (
   `payment_date` datetime DEFAULT NULL,
   `payment_status` enum('Pending','Paid','Overdue') DEFAULT 'Pending',
   `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `receipt_path` varchar(255) NOT NULL
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -1071,10 +1055,6 @@ CREATE TABLE `six_months_due_dates` (
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
-  `first_name` varchar(255) NOT NULL,
-  `middle_name` varchar(255) NOT NULL,
-  `last_name` varchar(255) NOT NULL,
-  `suffix_name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password_hash` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
@@ -1084,8 +1064,8 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `first_name`, `middle_name`, `last_name`, `suffix_name`, `email`, `password_hash`, `created_at`) VALUES
-(1, 'John', '', 'Doe', '', 'admin@mail.com', '$2b$12$CXsdriK0Qd2Qd3GCHEf.Zey4jvnoxSPWxwkyYDTE3.DLbj0M6YGrC', '2025-01-22 09:09:12');
+INSERT INTO `users` (`id`, `email`, `password_hash`, `created_at`) VALUES
+(1, 'admin@mail.com', '$2b$12$CXsdriK0Qd2Qd3GCHEf.Zey4jvnoxSPWxwkyYDTE3.DLbj0M6YGrC', '2025-01-22 09:09:12');
 
 --
 -- Indexes for dumped tables
@@ -1143,7 +1123,8 @@ ALTER TABLE `ci_sessions`
 --
 ALTER TABLE `customers`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email_address` (`email_address`);
+  ADD UNIQUE KEY `email_address` (`email_address`),
+  ADD KEY `fk_active_beneficiary` (`active_beneficiary`);
 
 --
 -- Indexes for table `deceased`
@@ -1246,6 +1227,13 @@ ALTER TABLE `lot_reservations`
   ADD KEY `lot_id` (`lot_id`);
 
 --
+-- Indexes for table `ownership_transfer_requests`
+--
+ALTER TABLE `ownership_transfer_requests`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- Indexes for table `phase_pricing`
 --
 ALTER TABLE `phase_pricing`
@@ -1298,19 +1286,19 @@ ALTER TABLE `burial_pricing`
 -- AUTO_INCREMENT for table `burial_reservations`
 --
 ALTER TABLE `burial_reservations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `cash_sales`
 --
 ALTER TABLE `cash_sales`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `cash_sale_due_dates`
 --
 ALTER TABLE `cash_sale_due_dates`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `customers`
@@ -1382,7 +1370,7 @@ ALTER TABLE `estate_six_months_due_dates`
 -- AUTO_INCREMENT for table `installments`
 --
 ALTER TABLE `installments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `installment_payments`
@@ -1400,7 +1388,13 @@ ALTER TABLE `lots`
 -- AUTO_INCREMENT for table `lot_reservations`
 --
 ALTER TABLE `lot_reservations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+
+--
+-- AUTO_INCREMENT for table `ownership_transfer_requests`
+--
+ALTER TABLE `ownership_transfer_requests`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `phase_pricing`
@@ -1412,13 +1406,13 @@ ALTER TABLE `phase_pricing`
 -- AUTO_INCREMENT for table `six_months`
 --
 ALTER TABLE `six_months`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `six_months_due_dates`
 --
 ALTER TABLE `six_months_due_dates`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -1453,6 +1447,12 @@ ALTER TABLE `cash_sales`
 --
 ALTER TABLE `cash_sale_due_dates`
   ADD CONSTRAINT `cash_sale_due_dates_ibfk_1` FOREIGN KEY (`lot_id`) REFERENCES `lot_reservations` (`lot_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `customers`
+--
+ALTER TABLE `customers`
+  ADD CONSTRAINT `fk_active_beneficiary` FOREIGN KEY (`active_beneficiary`) REFERENCES `beneficiaries` (`id`);
 
 --
 -- Constraints for table `estates`
@@ -1520,6 +1520,12 @@ ALTER TABLE `installment_payments`
 --
 ALTER TABLE `lot_reservations`
   ADD CONSTRAINT `lot_reservations_ibfk_1` FOREIGN KEY (`lot_id`) REFERENCES `lots` (`lot_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `ownership_transfer_requests`
+--
+ALTER TABLE `ownership_transfer_requests`
+  ADD CONSTRAINT `ownership_transfer_requests_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `six_months`

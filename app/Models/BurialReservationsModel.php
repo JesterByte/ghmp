@@ -9,7 +9,31 @@ class BurialReservationsModel extends Model
 {
     public function getBurialReservationRequests()
     {
-        $stmt = $this->db->prepare("SELECT * FROM burial_reservations WHERE status = :status");
+        // $stmt = $this->db->prepare("SELECT * FROM burial_reservations WHERE status = :status");
+        $stmt = $this->db->prepare("SELECT
+        br.id,
+        br.asset_id,
+        br.reservee_id,
+        br.burial_type,
+        br.relationship,
+        br.first_name AS interred_first_name,
+        br.middle_name AS interred_middle_name,
+        br.last_name AS interred_last_name,
+        br.suffix AS interred_suffix_name,
+        br.date_of_birth,
+        br.date_of_death,
+        br.obituary,
+        br.date_time,
+        br.created_at,
+
+        c.first_name AS reservee_first_name,
+        c.middle_name AS reservee_middle_name,
+        c.last_name AS reservee_last_name,
+        c.suffix_name AS reservee_suffix_name
+
+        FROM burial_reservations AS br
+        INNER JOIN customers AS c ON br.reservee_id = c.id
+        WHERE br.status = :status");
         $stmt->execute([':status' => 'Pending']);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -28,8 +52,37 @@ class BurialReservationsModel extends Model
 
     public function getEvents()
     {
-        $stmt = $this->db->prepare("SELECT * FROM burial_reservations WHERE status != :status");
-        $stmt->execute([':status' => 'Pending']);
+        // $stmt = $this->db->prepare("SELECT * FROM burial_reservations WHERE status != :status");
+        // $stmt->execute([':status' => 'Pending']);
+
+        // $stmt = $this->db->prepare("SELECT * FROM burial_reservations");
+        // $stmt->execute();
+
+        $stmt = $this->db->prepare("SELECT  
+        br.id,
+        br.asset_id, 
+        br.burial_type,
+        br.relationship,
+        br.first_name AS interred_first_name,
+        br.middle_name AS interred_middle_name,
+        br.last_name AS interred_last_name,
+        br.suffix AS interred_suffix_name,
+        br.date_of_birth,
+        br.date_of_death,
+        br.obituary,
+        br.date_time,
+        br.status,
+        br.payment_amount,
+        br.payment_status,
+        br.created_at,
+
+        c.first_name AS reservee_first_name,
+        c.middle_name AS reservee_middle_name,
+        c.last_name AS reservee_last_name,
+        c.suffix_name AS reservee_suffix_name
+        FROM burial_reservations AS br
+        INNER JOIN customers AS c ON br.reservee_id = c.id");
+        $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
