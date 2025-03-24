@@ -13,7 +13,7 @@ $firstRow = reset($burialPricingTable);
 ?>
 <?php include_once VIEW_PATH . "/templates/dataTables-styles.php" ?>
 
-<div class="d-flex justify-content-between">
+<div class="d-flex justify-content-between my-3">
     <div class="btn-group">
         <a href="<?= BASE_URL . "/burial-pricing-lot" ?>" class="btn btn-primary <?= DisplayHelper::isActivePage($category, "Lot", "active") ?>" <?= DisplayHelper::isActivePage($category, "Lot", 'aria-current="page"') ?>>Lot</a>
         <a href="<?= BASE_URL . "/burial-pricing-estate" ?>" class="btn btn-primary <?= DisplayHelper::isActivePage($category, "Estate", "active") ?>" <?= DisplayHelper::isActivePage($category, "Estate", 'aria-current="page"') ?>>Estate</a>

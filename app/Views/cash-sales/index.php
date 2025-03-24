@@ -15,11 +15,11 @@
         $formattedReservationsTable["payment_amount"][] = Formatter::formatCurrency($reservationRow["payment_amount"]);
     }
 ?>
-<div class="row">
+<!-- <div class="row">
     <div class="col d-flex justify-content-end">
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-cash-sale-payment-modal"><i class="bi bi-plus"></i> Add New Payment</button>
     </div>
-</div>
+</div> -->
 
 <?php include_once VIEW_PATH . "/templates/dataTables-styles.php" ?>
 <div class="table-responsive-sm shadow">

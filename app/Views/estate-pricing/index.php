@@ -11,7 +11,7 @@
 ?>
 <?php include_once VIEW_PATH . "/templates/dataTables-styles.php" ?>
 <div class="row">
-    <div class="col d-flex justify-content-end">
+    <div class="col d-flex justify-content-end my-3">
         <div class="btn-group" role="group" aria-label="Basic example">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pricing-update-estate-modal"><i class="bi bi-tag-fill"></i> Update Pricing</button>
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#rates-update-estate-modal"><i class="bi bi-percent"></i> Update Rates</button>

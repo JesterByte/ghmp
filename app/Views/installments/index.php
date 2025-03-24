@@ -22,14 +22,14 @@
         $formattedOngoingInstallments["monthly_payment"][] = Formatter::formatCurrency($ongoingInstallment["monthly_payment"]);
     }
 ?>
-<div class="row">
+<!-- <div class="row">
     <div class="col d-flex justify-content-end">
         <div class="btn-group" role="group" aria-label="Basic example">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-down-payment-modal"><i class="bi bi-plus"></i> Add Down Payment</button>
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-monthly-payment-modal"><i class="bi bi-plus"></i> Add Monthly Payment</button>
         </div>
     </div>
-</div>
+</div> -->
 
 <?php include_once VIEW_PATH . "/templates/dataTables-styles.php" ?>
 <div class="table-responsive-sm shadow">

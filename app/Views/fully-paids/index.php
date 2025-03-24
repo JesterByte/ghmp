@@ -9,7 +9,7 @@
     $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
 
 ?>
-<div class="row">
+<div class="row my-3">
     <div class="col">
         <div class="d-flex justify-content-end">
             <div class="btn-group">

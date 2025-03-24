@@ -33,7 +33,7 @@ foreach ($customers as $customer) {
         </a>
     </div>
 </div>
-<div class="row">
+<div class="row my-3">
     <div class="col d-flex justify-content-between">
         <div class="btn-group">
             <a href="lot-reservations-cash-sale" class="btn btn-primary <?= DisplayHelper::isActivePage($currentTable, "Cash Sale", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "Cash Sale", "aria-current='page'") ?>>Cash Sale</a>
@@ -42,7 +42,7 @@ foreach ($customers as $customer) {
             <a href="lot-reservations-cancelled" class="btn btn-danger <?= DisplayHelper::isActivePage($currentTable, "Cancelled", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "Cancelled", "aria-current='page'") ?>><i class="bi bi-trash<?= DisplayHelper::isActivePage($currentTable, "Cancelled", "-fill") ?>"></i> Cancelled</a>
 
         </div>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-lot-reservation-modal"><i class="bi bi-plus"></i> Add New Reservation</button>
+        <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-lot-reservation-modal"><i class="bi bi-plus"></i> Add New Reservation</button> -->
     </div>
 </div>
 
