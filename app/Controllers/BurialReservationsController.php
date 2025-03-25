@@ -25,6 +25,8 @@ class BurialReservationsController extends BaseController
             "burialReservationRequests" => $burialReservationRequests,
             "view" => "burial-reservations/index",
 
+            "userId" => $_SESSION["user_id"],
+
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
             "pendingEstateReservations" => $this->pendingEstateReservations

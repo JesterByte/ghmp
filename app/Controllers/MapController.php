@@ -16,6 +16,8 @@ class MapController extends BaseController {
             "map" => [],
             "view" => "map/index",
 
+            "userId" => $_SESSION["user_id"],
+            
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
             "pendingEstateReservations" => $this->pendingEstateReservations

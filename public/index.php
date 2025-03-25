@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . "/../config/constants.php";
 
-$dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
+$dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/', ['App\Controllers\HomeController', 'index']);
     $r->addRoute('GET', '/sign-in', ['App\Controllers\HomeController', 'index']);
     $r->addRoute('POST', '/sign-in', ['App\Controllers\AuthController', 'signIn']);
@@ -37,9 +37,9 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
 
     $r->addRoute("GET", "/burial-reservations", ['App\Controllers\BurialReservationsController', 'index']);
     $r->addRoute("GET", "/burial-reservations/get-events", ['App\Controllers\BurialReservationsController', 'getEvents']);
-    $r->addRoute("GET", "/burial-reservation-requests", ['App\Controllers\BurialReservationRequestsController', 'index']); 
-    $r->addRoute("POST", "/burial-reservation-confirmation", ['App\Controllers\BurialReservationRequestsController', 'submitBurialReservationConfirmation']); 
-    $r->addRoute("POST", "/burial-reservations/mark-done", ['App\Controllers\BurialReservationsController', 'markDone']); 
+    $r->addRoute("GET", "/burial-reservation-requests", ['App\Controllers\BurialReservationRequestsController', 'index']);
+    $r->addRoute("POST", "/burial-reservation-confirmation", ['App\Controllers\BurialReservationRequestsController', 'submitBurialReservationConfirmation']);
+    $r->addRoute("POST", "/burial-reservations/mark-done", ['App\Controllers\BurialReservationsController', 'markDone']);
 
 
     $r->addRoute("GET", "/lot-reservations", ['App\Controllers\LotReservationsController', 'indexCashSale']);
@@ -47,13 +47,13 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute("GET", "/lot-reservations-six-months", ['App\Controllers\LotReservationsController', 'indexSixMonths']);
     $r->addRoute("GET", "/lot-reservations-installment", ['App\Controllers\LotReservationsController', 'indexInstallments']);
     $r->addRoute("GET", "/lot-reservations-cancelled", ['App\Controllers\LotReservationsController', 'indexCancelled']);
-    
+
     $r->addRoute('POST', '/add-reservation', ['App\Controllers\LotReservationsController', 'setReservation']);
 
     $r->addRoute("GET", "/estate-reservations", ['App\Controllers\EstateReservationsController', 'indexCashSale']);
     $r->addRoute("GET", "/estate-reservations-cash-sale", ['App\Controllers\EstateReservationsController', 'indexCashSale']);
     $r->addRoute("GET", "/estate-reservations-six-months", ['App\Controllers\EstateReservationsController', 'indexSixMonths']);
-    $r->addRoute("GET", "/estate-reservations-installment", ['App\Controllers\EstateReservationsController', 'indexInstallments']);   
+    $r->addRoute("GET", "/estate-reservations-installment", ['App\Controllers\EstateReservationsController', 'indexInstallments']);
     $r->addRoute("GET", "/estate-reservations-cancelled", ['App\Controllers\EstateReservationsController', 'indexCancelled']);
 
     $r->addRoute('POST', '/add-reservation-estate', ['App\Controllers\EstateReservationsController', 'setReservation']);
@@ -78,7 +78,17 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute("GET", "/undo-restore", ['App\Controllers\BackupAndRestoreController', 'undoRestore']);
     $r->addRoute("POST", "/update-backup-time", ['App\Controllers\BackupAndRestoreController', 'updateBackupTime']);
 
+    // $r->addRoute("GET", "/notification/fetchNotifications/{adminId}", ['App\Controllers\NotificationController', 'fetchNotifications/$1']);
+    // $r->addRoute("GET", "/notification/markAsRead/{notificationId}", ['App\Controllers\NotificationController', 'markAsRead/$1']);
+    // $r->addRoute("GET", "/notification/markAllAsRead/{adminId}", ['App\Controllers\NotificationController', 'markAllAsRead/$1']);
 
+    $r->addRoute("GET", "/notification/fetchNotifications/{adminId}", ['App\Controllers\NotificationController', 'fetchNotifications']);
+    $r->addRoute("GET", "/notification/markAsRead/{notificationId}", ['App\Controllers\NotificationController', 'markAsRead']);
+    $r->addRoute("GET", "/notification/markAllAsRead/{adminId}", ['App\Controllers\NotificationController', 'markAllAsRead']);
+
+    // $r->addRoute("GET", "/notification/fetchNotifications/{adminId}", 'App\Controllers\NotificationController@fetchNotifications');
+    // $r->addRoute("GET", "/notification/markAsRead/{notificationId}", 'App\Controllers\NotificationController@markAsRead');
+    // $r->addRoute("GET", "/notification/markAllAsRead/{adminId}", 'App\Controllers\NotificationController@markAllAsRead');
 });
 
 $httpMethod = $_SERVER['REQUEST_METHOD'];
@@ -107,8 +117,8 @@ switch ($routeInfo[0]) {
         // Call the controller method, passing the parameters
         call_user_func_array([new $controller, $method], $vars);
         break;
-    // case FastRoute\Dispatcher::FOUND:
-    //     [$class, $method] = $routeInfo[1];
-    //     call_user_func([new $class, $method]);
-    //     break;
+        // case FastRoute\Dispatcher::FOUND:
+        //     [$class, $method] = $routeInfo[1];
+        //     call_user_func([new $class, $method]);
+        //     break;
 }

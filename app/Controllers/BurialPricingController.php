@@ -44,6 +44,8 @@ class BurialPricingController extends BaseController
             "burialPricingTable" => $burialPricingTable,
             "view" => "burial-pricing/index",
 
+            "userId" => $_SESSION["user_id"],
+
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
             "pendingEstateReservations" => $this->pendingEstateReservations
@@ -72,6 +74,8 @@ class BurialPricingController extends BaseController
             "usesDataTables" => true,
             "burialPricingTable" => $burialPricingTable,
             "view" => "burial-pricing/index",
+
+            "userId" => $_SESSION["user_id"],
 
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,

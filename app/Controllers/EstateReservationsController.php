@@ -46,6 +46,8 @@ class EstateReservationsController extends BaseController {
             "estateReservationRequests" => $estateReservationRequests,
             "view" => "estate-reservations/index",
 
+            "userId" => $_SESSION["user_id"],
+
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
             "pendingEstateReservations" => $this->pendingEstateReservations
@@ -72,6 +74,8 @@ class EstateReservationsController extends BaseController {
             "customers" => $customers,
             "estateReservationRequests" => $estateReservationRequests,
             "view" => "estate-reservations/index",
+
+            "userId" => $_SESSION["user_id"],
 
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
@@ -100,6 +104,8 @@ class EstateReservationsController extends BaseController {
             "estateReservationRequests" => $estateReservationRequests,
             "view" => "estate-reservations/index",
 
+            "userId" => $_SESSION["user_id"],
+
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
             "pendingEstateReservations" => $this->pendingEstateReservations
@@ -126,6 +132,8 @@ class EstateReservationsController extends BaseController {
             "customers" => $customers,
             "estateReservationRequests" => $estateReservationRequests,
             "view" => "estate-reservations/index",
+
+            "userId" => $_SESSION["user_id"],
 
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,

@@ -37,6 +37,8 @@ class BackupAndRestoreController extends BaseController
             "backupSettings" => $backupSettings,
             "view" => "backup-and-restore/index",
 
+            "userId" => $_SESSION["user_id"],
+
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
             "pendingEstateReservations" => $this->pendingEstateReservations

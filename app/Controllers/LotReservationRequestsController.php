@@ -24,6 +24,8 @@ class LotReservationRequestsController extends BaseController
             "reservationRequestsTable" => $reservationRequestsTable,
             "view" => "lot-reservation-requests/index",
 
+            "userId" => $_SESSION["user_id"],
+
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
             "pendingEstateReservations" => $this->pendingEstateReservations

@@ -23,6 +23,8 @@ class InstallmentsController extends BaseController {
             "ongoingInstallments" => $ongoingInstallments,
             "view" => "installments/index",
 
+            "userId" => $_SESSION["user_id"],
+
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
             "pendingEstateReservations" => $this->pendingEstateReservations

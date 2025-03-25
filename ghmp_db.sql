@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 24, 2025 at 06:46 PM
+-- Generation Time: Mar 25, 2025 at 04:36 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,30 @@ SET time_zone = "+00:00";
 --
 -- Database: `ghmp_db`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admin_notifications`
+--
+
+CREATE TABLE `admin_notifications` (
+  `id` int(11) NOT NULL,
+  `admin_id` int(11) DEFAULT NULL,
+  `message` text NOT NULL,
+  `link` varchar(255) DEFAULT NULL,
+  `is_read` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `admin_notifications`
+--
+
+INSERT INTO `admin_notifications` (`id`, `admin_id`, `message`, `link`, `is_read`, `created_at`) VALUES
+(1, 1, 'New customer registered.', 'burial-reservations', 0, '2025-03-25 14:04:45'),
+(2, 1, 'Payment received for Lot 3A1-2.', 'lot-reservations', 0, '2025-03-25 14:04:45'),
+(3, 1, 'A reservation has been cancelled.', 'estate-reservations', 0, '2025-03-25 14:04:45');
 
 -- --------------------------------------------------------
 
@@ -147,7 +171,7 @@ CREATE TABLE `cash_sales` (
 --
 
 INSERT INTO `cash_sales` (`id`, `reservation_id`, `lot_id`, `payment_amount`, `receipt_path`, `payment_date`, `payment_status`, `created_at`, `updated_at`) VALUES
-(13, 41, '1C1-3', 76988.02, NULL, '2025-03-24 17:27:49', 'Paid', '2025-03-24 17:26:17', '2025-03-24 17:27:55');
+(13, 41, '1C1-3', 76988.02, NULL, NULL, 'Pending', '2025-03-24 17:26:17', '2025-03-25 05:30:50');
 
 -- --------------------------------------------------------
 
@@ -169,7 +193,7 @@ CREATE TABLE `cash_sale_due_dates` (
 --
 
 INSERT INTO `cash_sale_due_dates` (`id`, `cash_sale_id`, `lot_id`, `due_date`, `created_at`, `updated_at`) VALUES
-(8, 13, '1C1-3', '2025-04-01', '2025-03-25 01:26:17', '2025-03-25 01:26:17');
+(8, 13, '1C1-3', '2025-03-28', '2025-03-25 01:26:17', '2025-03-25 13:53:26');
 
 -- --------------------------------------------------------
 
@@ -195,7 +219,7 @@ CREATE TABLE `customers` (
   `first_name` varchar(50) NOT NULL,
   `middle_name` varchar(50) DEFAULT NULL,
   `last_name` varchar(50) NOT NULL,
-  `suffix_name` varchar(10) DEFAULT NULL,
+  `suffix_name` enum('','Sr.','Jr.','I','II','III','IV','V') DEFAULT '',
   `contact_number` varchar(15) NOT NULL,
   `email_address` varchar(100) NOT NULL,
   `password_hashed` varchar(255) NOT NULL,
@@ -210,7 +234,7 @@ CREATE TABLE `customers` (
 --
 
 INSERT INTO `customers` (`id`, `first_name`, `middle_name`, `last_name`, `suffix_name`, `contact_number`, `email_address`, `password_hashed`, `active_beneficiary`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'John', 'Smith', 'Doe', NULL, '1234567890', 'johndoe@mail.com', '123', NULL, 'Active', '2025-01-26 16:55:27', '2025-03-24 23:08:29'),
+(1, 'John', 'Smith', 'Doe', NULL, '1234567890', 'ejjose94@gmail.com', '123', NULL, 'Active', '2025-01-26 16:55:27', '2025-03-25 02:34:20'),
 (2, 'Jane', NULL, 'Smith', 'Jr.', '0987654321', 'jane.smith@example.com', 'hashed_password_2', NULL, 'Active', '2025-01-26 16:55:27', '2025-03-24 23:08:33');
 
 -- --------------------------------------------------------
@@ -511,8 +535,8 @@ INSERT INTO `lots` (`id`, `lot_id`, `owner_id`, `latitude_start`, `longitude_sta
 (2228, '1C1-1', NULL, 14.87157650, 120.97704960, 14.87159450, 120.97705860, 'Reserved', '2025-01-26 03:36:58', '2025-01-26 03:36:58'),
 (2229, '1C1-2', NULL, 14.87159950, 120.97704960, 14.87161750, 120.97705860, 'Reserved', '2025-01-26 03:36:58', '2025-01-26 03:36:58'),
 (2230, '1C1-3', 1, 14.87162250, 120.97704960, 14.87164050, 120.97705860, 'Sold', '2025-01-26 03:36:58', '2025-03-24 17:28:11'),
-(2231, '1C1-4', NULL, 14.87164550, 120.97704960, 14.87166350, 120.97705860, 'Sold and Occupied', '2025-01-26 03:36:58', '2025-01-26 03:36:58'),
-(2232, '1C1-5', NULL, 14.87166850, 120.97704960, 14.87168650, 120.97705860, 'Available', '2025-01-26 03:36:58', '2025-01-29 05:21:53'),
+(2231, '1C1-4', NULL, 14.87164550, 120.97704960, 14.87166350, 120.97705860, 'Available', '2025-01-26 03:36:58', '2025-03-25 06:39:41'),
+(2232, '1C1-5', NULL, 14.87166850, 120.97704960, 14.87168650, 120.97705860, 'Available', '2025-01-26 03:36:58', '2025-03-25 06:39:44'),
 (2233, '1C1-6', NULL, 14.87169150, 120.97704960, 14.87170950, 120.97705860, 'Sold', '2025-01-26 03:36:58', '2025-01-26 03:36:58'),
 (2234, '1C6-1', NULL, 14.87140650, 120.97711710, 14.87142450, 120.97712610, 'Sold and Occupied', '2025-01-26 03:36:58', '2025-01-26 03:36:58'),
 (2235, '1C6-2', NULL, 14.87142950, 120.97711710, 14.87144750, 120.97712610, 'Available', '2025-01-26 03:36:58', '2025-01-26 03:36:58'),
@@ -982,7 +1006,34 @@ CREATE TABLE `lot_reservations` (
 --
 
 INSERT INTO `lot_reservations` (`id`, `lot_id`, `reservee_id`, `lot_type`, `payment_option`, `reservation_status`, `reference_number`, `created_at`, `updated_at`) VALUES
-(41, '1C1-3', 1, 'Supreme', 'Cash Sale', 'Confirmed', 'UytUNQK', '2025-03-24 16:38:09', '2025-03-24 17:26:18');
+(41, '1C1-3', 1, 'Supreme', 'Cash Sale', 'Confirmed', 'XykTHSW', '2025-03-24 16:38:09', '2025-03-25 15:13:38');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `id` int(11) NOT NULL,
+  `customer_id` int(11) DEFAULT NULL,
+  `message` text NOT NULL,
+  `link` varchar(255) DEFAULT NULL,
+  `is_read` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `notifications`
+--
+
+INSERT INTO `notifications` (`id`, `customer_id`, `message`, `link`, `is_read`, `created_at`) VALUES
+(8, 1, 'Your payment for Lot 2A1-3 is overdue. Please settle it soon.', 'dashboard', 0, '2025-03-25 15:08:07'),
+(9, 1, 'Your reservation for Estate B has been confirmed.', 'dashboard', 0, '2025-03-25 15:08:07'),
+(10, 1, 'Payment for Lot 3C2-1 is due in 3 days.', 'dashboard', 0, '2025-03-25 15:08:07'),
+(11, 1, 'Your maintenance request has been approved.', 'dashboard', 0, '2025-03-25 15:08:07'),
+(12, 1, 'Reminder: Cemetery visitation is scheduled for tomorrow.', 'dashboard', 0, '2025-03-25 15:08:07'),
+(13, 1, 'Your Lot Reservation with ID Phase 1 Lawn C Row 1 - Lot 3 has a Cash Sale payment due on March 28, 2025.', 'my_lots_and_estates', 0, '2025-03-25 15:08:50');
 
 -- --------------------------------------------------------
 
@@ -1094,6 +1145,10 @@ CREATE TABLE `six_months_due_dates` (
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `middle_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
+  `suffix_name` enum('Sr.','Jr.','I','II','III','IV','V','') NOT NULL DEFAULT '',
   `email` varchar(255) NOT NULL,
   `password_hash` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
@@ -1103,12 +1158,19 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `email`, `password_hash`, `created_at`) VALUES
-(1, 'admin@mail.com', '$2b$12$CXsdriK0Qd2Qd3GCHEf.Zey4jvnoxSPWxwkyYDTE3.DLbj0M6YGrC', '2025-01-22 09:09:12');
+INSERT INTO `users` (`id`, `first_name`, `middle_name`, `last_name`, `suffix_name`, `email`, `password_hash`, `created_at`) VALUES
+(1, 'John', 'Cena', 'Doe', '', 'admin@mail.com', '$2b$12$CXsdriK0Qd2Qd3GCHEf.Zey4jvnoxSPWxwkyYDTE3.DLbj0M6YGrC', '2025-01-22 09:09:12');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `admin_notifications`
+--
+ALTER TABLE `admin_notifications`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `admin_id` (`admin_id`);
 
 --
 -- Indexes for table `backup_settings`
@@ -1274,6 +1336,13 @@ ALTER TABLE `lot_reservations`
   ADD KEY `lot_id` (`lot_id`);
 
 --
+-- Indexes for table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `customer_id` (`customer_id`);
+
+--
 -- Indexes for table `ownership_transfer_requests`
 --
 ALTER TABLE `ownership_transfer_requests`
@@ -1312,6 +1381,12 @@ ALTER TABLE `users`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `admin_notifications`
+--
+ALTER TABLE `admin_notifications`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `backup_settings`
@@ -1419,7 +1494,7 @@ ALTER TABLE `estate_six_months_due_dates`
 -- AUTO_INCREMENT for table `installments`
 --
 ALTER TABLE `installments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `installment_payments`
@@ -1437,7 +1512,13 @@ ALTER TABLE `lots`
 -- AUTO_INCREMENT for table `lot_reservations`
 --
 ALTER TABLE `lot_reservations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+
+--
+-- AUTO_INCREMENT for table `notifications`
+--
+ALTER TABLE `notifications`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `ownership_transfer_requests`
@@ -1455,13 +1536,13 @@ ALTER TABLE `phase_pricing`
 -- AUTO_INCREMENT for table `six_months`
 --
 ALTER TABLE `six_months`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `six_months_due_dates`
 --
 ALTER TABLE `six_months_due_dates`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -1472,6 +1553,12 @@ ALTER TABLE `users`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `admin_notifications`
+--
+ALTER TABLE `admin_notifications`
+  ADD CONSTRAINT `admin_notifications_ibfk_1` FOREIGN KEY (`admin_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `beneficiaries`
@@ -1577,6 +1664,12 @@ ALTER TABLE `installment_payments`
 --
 ALTER TABLE `lot_reservations`
   ADD CONSTRAINT `lot_reservations_ibfk_1` FOREIGN KEY (`lot_id`) REFERENCES `lots` (`lot_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`);
 
 --
 -- Constraints for table `ownership_transfer_requests`
