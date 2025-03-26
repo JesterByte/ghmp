@@ -29,11 +29,33 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
                 $suffix = !empty($row["suffix"]) ? ", " . $row["suffix"] : "";
                 $fullName = $row["first_name"] . $middleName . $row["last_name"] . $suffix;
 
-                $buttonColor = $row["status"] == "Active" ? "btn-danger" : "btn-success";
-                $buttonText = $row["status"] == "Active" ? "Deactivate" : "Activate";
-                $buttonAction = $row["status"] == "Active" ? "deactivate" : "activate";
+                switch ($row["status"]) {
+                    case "Active":
+                        $buttonColor = "btn-danger";
+                        $buttonText = "Deactivate";
+                        $buttonAction = "deactivate";
+                        break;
+                    case "Deactivated":
+                        $buttonColor = "btn-success";
+                        $buttonText = "Activate";
+                        $buttonAction = "activate";
+                        break;
+                    default:
+                        $buttonColor = "btn-secondary";
+                        $buttonText = "Ownership Transferred";
+                        $buttonAction = "n/a";
+                        break;
+                }
 
-                $action = '<button type="button" class="customer-action-btn btn ' . $buttonColor . '" data-bs-first-name="' . $row["first_name"] . '" data-bs-customer-id="' . $row["id"] . '" data-bs-action="' . $buttonAction . '" data-bs-toggle="modal" data-bs-target="#customer-action">' . $buttonText . '</button>';
+                // $buttonColor = $row["status"] == "Active" ? "btn-danger" : "btn-success";
+                // $buttonText = $row["status"] == "Active" ? "Deactivate" : "Activate";
+                // $buttonAction = $row["status"] == "Active" ? "deactivate" : "activate";
+
+                if ($row["status"] === "Transferred Ownership") {
+                    $action = "";
+                } else {
+                    $action = '<button type="button" class="customer-action-btn btn ' . $buttonColor . '" data-bs-first-name="' . $row["first_name"] . '" data-bs-customer-id="' . $row["id"] . '" data-bs-action="' . $buttonAction . '" data-bs-toggle="modal" data-bs-target="#customer-action">' . $buttonText . '</button>';
+                }
 
                 TableHelper::startRow();
                 TableHelper::cell($fullName);

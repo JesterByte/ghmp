@@ -1,15 +1,15 @@
 <?php
 date_default_timezone_set("Asia/Manila");
 
-$host = "localhost";
-$username = "root";
-$password = "";
-$db = "ghmp_db";
-
 // $host = "localhost";
-// $username = "u714551035_ghmp";
-// $password = "P~t5GTVnuaZ";
-// $db = "u714551035_ghmp_db";
+// $username = "root";
+// $password = "";
+// $db = "ghmp_db";
+
+$host = "localhost";
+$username = "u714551035_ghmp";
+$password = "P~t5GTVnuaZ";
+$db = "u714551035_ghmp_db";
 
 $dbConnection = mysqli_connect($host, $username, $password, $db);
 

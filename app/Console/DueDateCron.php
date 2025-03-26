@@ -1,22 +1,25 @@
 <?php
 // Include PHPMailer
-require '../../vendor/autoload.php'; // Adjust the path if necessary"
-require "../Utils/Formatter.php";
+// require 'C:/xampp/htdocs/ghmp/vendor/autoload.php'; // Adjust the path if necessary"
+// require "C:/xampp/htdocs/ghmp/app/Utils/Formatter.php";
+
+require "/home/u714551035/domains/cs42a.com/public_html/group1/ghmp/vendor/autoload.php";
+require "/home/u714551035/domains/cs42a.com/public_html/group1/ghmp/app/Utils/Formatter.php";
 
 use App\Utils\Formatter;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 // Database connection
-$host = 'localhost';
-$username = 'root';
-$password = '';
-$dbname = 'ghmp_db';  // Change to your DB name
+// $host = 'localhost';
+// $username = 'root';
+// $password = '';
+// $dbname = 'ghmp_db';  // Change to your DB name
 
-// $host = "localhost";
-// $username = "u714551035_ghmp";
-// $password = "P~t5GTVnuaZ";
-// $dbname = "u714551035_ghmp_db";
+$host = "localhost";
+$username = "u714551035_ghmp";
+$password = "P~t5GTVnuaZ";
+$dbname = "u714551035_ghmp_db";
 
 $conn = new mysqli($host, $username, $password, $dbname);
 
