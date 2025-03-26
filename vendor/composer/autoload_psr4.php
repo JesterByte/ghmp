@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'PHPMailer\\PHPMailer\\' => array($vendorDir . '/phpmailer/phpmailer/src'),
     'FastRoute\\' => array($vendorDir . '/nikic/fast-route/src'),
     'App\\' => array($baseDir . '/app'),
 );

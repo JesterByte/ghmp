@@ -1,4 +1,5 @@
 <?php
+
 use App\Helpers\DisplayHelper;
 ?>
 <div class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary">
@@ -94,14 +95,19 @@ use App\Helpers\DisplayHelper;
             </ul>
             <hr class="my-3">
             <ul class="nav flex-column mb-auto">
-                <?php $lotPricingList = ["Backup & Restore"]; ?>
+                <?php $settingsList = ["Backup & Restore", "Customers"]; ?>
                 <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center gap-2" data-bs-toggle="collapse" href="#settingsSubmenu" role="button" aria-expanded="<?= DisplayHelper::isPageInList($pageTitle, $lotPricingList, "true", "false") ?>" aria-controls="settingsSubmenu">
-                        <i class="bi bi-gear<?= DisplayHelper::isPageInList($pageTitle, $lotPricingList, "-fill") ?>"></i> Settings <i class="bi bi-caret-down<?= DisplayHelper::isPageInList($pageTitle, $lotPricingList, "-fill") ?>"></i>
+                    <a class="nav-link d-flex align-items-center gap-2" data-bs-toggle="collapse" href="#settingsSubmenu" role="button" aria-expanded="<?= DisplayHelper::isPageInList($pageTitle, $settingsList, "true", "false") ?>" aria-controls="settingsSubmenu">
+                        <i class="bi bi-gear<?= DisplayHelper::isPageInList($pageTitle, $settingsList, "-fill") ?>"></i> Settings <i class="bi bi-caret-down<?= DisplayHelper::isPageInList($pageTitle, $settingsList, "-fill") ?>"></i>
                     </a>
-                    <div class="collapse <?= DisplayHelper::isPageInList($pageTitle, $lotPricingList, "show") ?>" id="settingsSubmenu">
+                    <div class="collapse <?= DisplayHelper::isPageInList($pageTitle, $settingsList, "show") ?>" id="settingsSubmenu">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="backup-and-restore" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isActivePage($pageTitle, "Backup & Restore", "-fill text-bg-primary") ?>" <?= DisplayHelper::isActivePage($pageTitle, "Backup & Restore", "aria-current='page'") ?>><i class="bi bi-caret-right<?= DisplayHelper::isActivePage($pageTitle, "Backup & Restore", "-fill") ?>"></i> Backup & Restore</a></li>
+                            <li>
+                                <a href="backup-and-restore" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isActivePage($pageTitle, "Backup & Restore", "-fill text-bg-primary") ?>" <?= DisplayHelper::isActivePage($pageTitle, "Backup & Restore", "aria-current='page'") ?>><i class="bi bi-caret-right<?= DisplayHelper::isActivePage($pageTitle, "Backup & Restore", "-fill") ?>"></i> Backup & Restore</a>
+                            </li>
+                            <li>
+                                <a href="customers" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isActivePage($pageTitle, "Customers", "-fill text-bg-primary") ?>" <?= DisplayHelper::isActivePage($pageTitle, "Customers", "aria-current='page'") ?>><i class="bi bi-caret-right<?= DisplayHelper::isActivePage($pageTitle, "Customers", "-fill") ?>"></i> Customers</a>
+                            </li>
 
                         </ul>
                     </div>

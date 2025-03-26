@@ -78,6 +78,9 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute("GET", "/undo-restore", ['App\Controllers\BackupAndRestoreController', 'undoRestore']);
     $r->addRoute("POST", "/update-backup-time", ['App\Controllers\BackupAndRestoreController', 'updateBackupTime']);
 
+    $r->addRoute("GET", "/customers", ['App\Controllers\CustomersController', 'index']);
+    $r->addRoute("POST", "/customers/action", ['App\Controllers\CustomersController', 'customerAction']);
+
     // $r->addRoute("GET", "/notification/fetchNotifications/{adminId}", ['App\Controllers\NotificationController', 'fetchNotifications/$1']);
     // $r->addRoute("GET", "/notification/markAsRead/{notificationId}", ['App\Controllers\NotificationController', 'markAsRead/$1']);
     // $r->addRoute("GET", "/notification/markAllAsRead/{adminId}", ['App\Controllers\NotificationController', 'markAllAsRead/$1']);
