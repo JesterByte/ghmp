@@ -27,8 +27,8 @@ class BackupAndRestoreModel extends Model {
         }
 
         // Corrected command (without hanging issue)
-        $command = "C:/xampp/mysql/bin/mysqldump -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
-        // $command = "mysqldump -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
+        // $command = "C:/xampp/mysql/bin/mysqldump -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
+        $command = "mysqldump -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
         
         exec($command . " 2>&1", $output, $returnVar);
 
@@ -39,27 +39,27 @@ class BackupAndRestoreModel extends Model {
         }
     }
 
-    public function automatedBackupDatabase() {
-        $config = require __DIR__ . "/../../config/database.php";
+    // public function automatedBackupDatabase() {
+    //     $config = require __DIR__ . "/../../config/database.php";
 
-        $dbHost = $config["host"];
-        $dbUser = $config["username"]; // Change if needed
-        $dbPass = $config["password"]; // Change if needed
-        $dbName = $config["dbname"]; 
+    //     $dbHost = $config["host"];
+    //     $dbUser = $config["username"]; // Change if needed
+    //     $dbPass = $config["password"]; // Change if needed
+    //     $dbName = $config["dbname"]; 
 
-        $backupFile = STORAGE_PATH . '/backups/ghmp_db_backup_' . date('Y-m-d_h-i-s-a') . '.sql';
+    //     $backupFile = STORAGE_PATH . '/backups/ghmp_db_backup_' . date('Y-m-d_h-i-s-a') . '.sql';
 
-        // Ensure backups folder exists
-        if (!file_exists('backups')) {
-            mkdir('backups', 0777, true);
-        }
+    //     // Ensure backups folder exists
+    //     if (!file_exists('backups')) {
+    //         mkdir('backups', 0777, true);
+    //     }
 
-        // Corrected command (without hanging issue)
-        $command = "C:/xampp/mysql/bin/mysqldump -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
-        // $command = "mysqldump -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
+    //     // Corrected command (without hanging issue)
+    //     // $command = "C:/xampp/mysql/bin/mysqldump -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
+    //     $command = "mysqldump -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
         
-        exec($command . " 2>&1", $output, $returnVar);
-    }
+    //     exec($command . " 2>&1", $output, $returnVar);
+    // }
 
     public function restoreDatabase($backupFile) {
         // Read the SQL file

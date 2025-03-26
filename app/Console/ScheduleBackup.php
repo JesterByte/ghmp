@@ -34,8 +34,8 @@ if ($currentTimeTimestamp >= $backupTimeTimestamp && $currentTimeTimestamp <= $b
     // $backupFile = 'C:/xampp/htdocs/ghmp/storage/backups/ghmp_db_backup_' . date('Y-m-d_h-i-s-a') . '.sql';
     
     // Corrected command (without hanging issue)
-    $command = "C:/xampp/mysql/bin/mysqldump -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
-    // $command = "mysqldump -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
+    // $command = "C:/xampp/mysql/bin/mysqldump -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
+    $command = "mysqldump -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
     
     exec($command . " 2>&1", $output, $returnVar);
 }
