@@ -6,8 +6,10 @@ use App\Models\MapModel;
 use App\Models\BadgeModel;
 use App\Core\View;
 
-class MapController extends BaseController {
-    public function index() {
+class MapController extends BaseController
+{
+    public function index()
+    {
         $this->checkSession();
 
         $data = [
@@ -17,15 +19,17 @@ class MapController extends BaseController {
             "view" => "map/index",
 
             "userId" => $_SESSION["user_id"],
-            
+
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
-            "pendingEstateReservations" => $this->pendingEstateReservations
+            "pendingEstateReservations" => $this->pendingEstateReservations,
+            "pendingReservations" => $this->pendingReservations
         ];
 
         View::render("templates/layout", $data);
     }
-    public function fetchLots() {
+    public function fetchLots()
+    {
         $mapModel = new MapModel();
         $lots = $mapModel->getLots();
 

@@ -8,26 +8,10 @@ use App\Utils\Formatter;
 use App\Utils\Calculator;
 use App\Core\View;
 
-class EstateReservationsController extends BaseController {
-    // public function index() {
-    //     $estatetReservationsModel = new EstateReservationsModel();
-    //     $lotReservationsTable = $estatetReservationsModel->getLotReservations();
-    //     $availableEstates = $estatetReservationsModel->getAvailableEstates();
-    //     $customers = $estatetReservationsModel->getCustomers();
-
-    //     $data = [
-    //         "pageTitle" => "Estate Reservations",
-    //         "usesDataTables" => true,
-    //         "lotReservationsTable" => $lotReservationsTable,
-    //         "availableEstates" => $availableEstates,
-    //         "customers" => $customers,
-    //         "view" => "lot-reservations/index"
-    //     ];
-
-    //     View::render("templates/layout", $data);
-    // }
-
-    public function indexCashSale() {
+class EstateReservationsController extends BaseController
+{
+    public function indexCashSale()
+    {
         $this->checkSession();
 
         $estatetReservationsModel = new EstateReservationsModel();
@@ -50,13 +34,15 @@ class EstateReservationsController extends BaseController {
 
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
-            "pendingEstateReservations" => $this->pendingEstateReservations
+            "pendingEstateReservations" => $this->pendingEstateReservations,
+            "pendingReservations" => $this->pendingReservations
         ];
 
         View::render("templates/layout", $data);
     }
 
-    public function indexSixMonths() {
+    public function indexSixMonths()
+    {
         $this->checkSession();
 
         $estatetReservationsModel = new EstateReservationsModel();
@@ -79,13 +65,15 @@ class EstateReservationsController extends BaseController {
 
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
-            "pendingEstateReservations" => $this->pendingEstateReservations
+            "pendingEstateReservations" => $this->pendingEstateReservations,
+            "pendingReservations" => $this->pendingReservations
         ];
 
         View::render("templates/layout", $data);
     }
 
-    public function indexInstallments() {
+    public function indexInstallments()
+    {
         $this->checkSession();
 
         $estatetReservationsModel = new EstateReservationsModel();
@@ -108,13 +96,15 @@ class EstateReservationsController extends BaseController {
 
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
-            "pendingEstateReservations" => $this->pendingEstateReservations
+            "pendingEstateReservations" => $this->pendingEstateReservations,
+            "pendingReservations" => $this->pendingReservations
         ];
 
         View::render("templates/layout", $data);
     }
 
-    public function indexCancelled() {
+    public function indexCancelled()
+    {
         $this->checkSession();
 
         $estateReservationsModel = new EstateReservationsModel();
@@ -137,21 +127,54 @@ class EstateReservationsController extends BaseController {
 
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
-            "pendingEstateReservations" => $this->pendingEstateReservations
+            "pendingEstateReservations" => $this->pendingEstateReservations,
+            "pendingReservations" => $this->pendingReservations
         ];
 
         View::render("templates/layout", $data);
     }
 
-    public function setReservation() {
+    public function indexOverdue()
+    {
+        $this->checkSession();
+
+        $estateReservationsModel = new EstateReservationsModel();
+        $estateReservationsTable = $estateReservationsModel->getOverdueEstateReservations();
+        $availableEstates = $estateReservationsModel->getAvailableEstates();
+        $customers = $estateReservationsModel->getCustomers();
+        $estateReservationRequests = $estateReservationsModel->getEstateReservationRequestsBadge();
+
+        $data = [
+            "pageTitle" => "Estate Reservations",
+            "usesDataTables" => true,
+            "currentTable" => "Overdue",
+            "estateReservationsTable" => $estateReservationsTable,
+            "availableEstates" => $availableEstates,
+            "customers" => $customers,
+            "estateReservationRequests" => $estateReservationRequests,
+            "view" => "estate-reservations/index",
+
+            "userId" => $_SESSION["user_id"],
+
+            "pendingBurialReservations" => $this->pendingBurialReservations,
+            "pendingLotReservations" => $this->pendingLotReservations,
+            "pendingEstateReservations" => $this->pendingEstateReservations,
+            "pendingReservations" => $this->pendingReservations
+        ];
+
+        View::render("templates/layout", $data);
+    }
+
+    public function setReservation()
+    {
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $estatetReservationsModel = new EstateReservationsModel();
             $estateId = $_POST['estate'];
             $reserveeId = $_POST['customer'];
             $estateType = Formatter::extractEstateType($_POST['estate']);
             $paymentOption = $_POST['payment-option'];
-            
-            $pricing = $estatetReservationsModel->getPricing( "Estate " . $estateType);
+
+            $pricing = $estatetReservationsModel->getPricing("Estate " . $estateType);
 
             $estatetReservationsModel->setReservation($estateId, $reserveeId, $estateType, $paymentOption);
             $calculator = new Calculator();
@@ -204,13 +227,13 @@ class EstateReservationsController extends BaseController {
                     break;
             }
             $estatetReservationsModel->setEstateStatus($estateId);
-    
-            $this->redirectBack();    
+
+            $this->redirectBack();
         }
     }
 
-    public function setDownPaymentDueDate() {
+    public function setDownPaymentDueDate()
+    {
         return date("Y-m-d", strtotime("+30 days"));
     }
-
 }

@@ -7,7 +7,7 @@ use PDO;
 
 class NotificationModel extends Model {
     public function getUnreadNotifications($adminId) {
-        $stmt = $this->db->prepare("SELECT * FROM admin_notifications WHERE admin_id = :admin_id AND is_read = 0 ORDER BY created_at DESC");
+        $stmt = $this->db->prepare("SELECT * FROM admin_notifications WHERE (admin_id = :admin_id OR admin_id IS NULL) AND is_read = 0 ORDER BY created_at DESC");
         $stmt->bindParam(':admin_id', $adminId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll();
@@ -24,5 +24,4 @@ class NotificationModel extends Model {
         $stmt->bindParam(':admin_id', $adminId, PDO::PARAM_INT);
         return $stmt->execute();
     }
-
 }

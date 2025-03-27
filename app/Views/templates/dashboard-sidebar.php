@@ -25,7 +25,11 @@ use App\Helpers\DisplayHelper;
                 <?php $reservationsList = ["Burial Reservations", "Burial Reservation Requests", "Lot Reservations", "Lot Reservation Requests", "Verify Lot Type", "Estate Reservations", "Estate Reservation Requests"]; ?>
                 <li class="nav-item">
                     <a class="nav-link d-flex align-items-center gap-2" data-bs-toggle="collapse" href="#reservationsSubmenu" role="button" aria-expanded="<?= DisplayHelper::isPageInList($pageTitle, $reservationsList, "true", "false") ?>" aria-controls="reservationsSubmenu">
-                        <i class="bi bi-calendar<?= DisplayHelper::isPageInList($pageTitle, $reservationsList, "-fill") ?>"></i> Reservations <i class="bi bi-caret-down<?= DisplayHelper::isPageInList($pageTitle, $reservationsList, "-fill") ?>"></i>
+                        <i class="bi bi-calendar<?= DisplayHelper::isPageInList($pageTitle, $reservationsList, "-fill") ?>"></i> Reservations
+                        <?php if ($pendingReservations != 0): ?>
+                            <span class="badge text-bg-danger"><?= $pendingReservations ?></span>
+                        <?php endif; ?>
+                        <i class="bi bi-caret-down<?= DisplayHelper::isPageInList($pageTitle, $reservationsList, "-fill") ?>"></i>
                     </a>
                     <div class="collapse <?= DisplayHelper::isPageInList($pageTitle, $reservationsList, "show") ?>" id="reservationsSubmenu">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">

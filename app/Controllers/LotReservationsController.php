@@ -8,28 +8,12 @@ use App\Utils\Formatter;
 use App\Utils\Calculator;
 use App\Core\View;
 
-class LotReservationsController extends BaseController {
-    // public function index() {
-    //     $lotReservationsModel = new LotReservationsModel();
-    //     $lotReservationsTable = $lotReservationsModel->getLotReservations();
-    //     $availableLots = $lotReservationsModel->getAvailableLots();
-    //     $customers = $lotReservationsModel->getCustomers();
-
-    //     $data = [
-    //         "pageTitle" => "Lot Reservations",
-    //         "usesDataTables" => true,
-    //         "lotReservationsTable" => $lotReservationsTable,
-    //         "availableLots" => $availableLots,
-    //         "customers" => $customers,
-    //         "view" => "lot-reservations/index"
-    //     ];
-
-    //     View::render("templates/layout", $data);
-    // }
-
-    public function indexCashSale() {
+class LotReservationsController extends BaseController
+{
+    public function indexCashSale()
+    {
         $this->checkSession();
-    
+
         $lotReservationsModel = new LotReservationsModel();
         $lotReservationsTable = $lotReservationsModel->getCashSaleLotReservations();
         $availableLots = $lotReservationsModel->getAvailableLots();
@@ -50,13 +34,15 @@ class LotReservationsController extends BaseController {
 
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
-            "pendingEstateReservations" => $this->pendingEstateReservations
+            "pendingEstateReservations" => $this->pendingEstateReservations,
+            "pendingReservations" => $this->pendingReservations
         ];
 
         View::render("templates/layout", $data);
     }
 
-    public function indexSixMonths() {
+    public function indexSixMonths()
+    {
         $this->checkSession();
 
         $lotReservationsModel = new LotReservationsModel();
@@ -79,13 +65,15 @@ class LotReservationsController extends BaseController {
 
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
-            "pendingEstateReservations" => $this->pendingEstateReservations
+            "pendingEstateReservations" => $this->pendingEstateReservations,
+            "pendingReservations" => $this->pendingReservations
         ];
 
         View::render("templates/layout", $data);
     }
 
-    public function indexInstallments() {
+    public function indexInstallments()
+    {
         $this->checkSession();
 
         $lotReservationsModel = new LotReservationsModel();
@@ -108,13 +96,15 @@ class LotReservationsController extends BaseController {
 
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
-            "pendingEstateReservations" => $this->pendingEstateReservations
+            "pendingEstateReservations" => $this->pendingEstateReservations,
+            "pendingReservations" => $this->pendingReservations
         ];
 
         View::render("templates/layout", $data);
     }
 
-    public function indexCancelled() {
+    public function indexCancelled()
+    {
         $this->checkSession();
 
         $lotReservationsModel = new LotReservationsModel();
@@ -137,13 +127,46 @@ class LotReservationsController extends BaseController {
 
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
-            "pendingEstateReservations" => $this->pendingEstateReservations
+            "pendingEstateReservations" => $this->pendingEstateReservations,
+            "pendingReservations" => $this->pendingReservations
         ];
 
         View::render("templates/layout", $data);
     }
 
-    public function setReservation() {
+    public function indexOverdue()
+    {
+        $this->checkSession();
+
+        $lotReservationsModel = new LotReservationsModel();
+        $lotReservationsTable = $lotReservationsModel->getOverdueLotReservations();
+        $availableLots = $lotReservationsModel->getAvailableLots();
+        $customers = $lotReservationsModel->getCustomers();
+        $lotReservationRequests = $lotReservationsModel->getReservationRequestsBadge();
+
+        $data = [
+            "pageTitle" => "Lot Reservations",
+            "usesDataTables" => true,
+            "currentTable" => "Overdue",
+            "lotReservationsTable" => $lotReservationsTable,
+            "availableLots" => $availableLots,
+            "customers" => $customers,
+            "lotReservationRequests" => $lotReservationRequests,
+            "view" => "lot-reservations/index",
+
+            "userId" => $_SESSION["user_id"],
+
+            "pendingBurialReservations" => $this->pendingBurialReservations,
+            "pendingLotReservations" => $this->pendingLotReservations,
+            "pendingEstateReservations" => $this->pendingEstateReservations,
+            "pendingReservations" => $this->pendingReservations
+        ];
+
+        View::render("templates/layout", $data);
+    }
+
+    public function setReservation()
+    {
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $lotReservationsModel = new LotReservationsModel();
             $lotId = $_POST['lot'];
@@ -151,7 +174,7 @@ class LotReservationsController extends BaseController {
             $phase = Formatter::extractPhase($_POST['lot']);
             $lotType = $_POST['lot-type'];
             $paymentOption = $_POST['payment-option'];
-            
+
             $pricing = $lotReservationsModel->getPricing("Phase " . $phase, $lotType);
 
             $lotReservationsModel->setReservation($lotId, $reserveeId, $lotType, $paymentOption);
@@ -205,13 +228,13 @@ class LotReservationsController extends BaseController {
                     break;
             }
             $lotReservationsModel->setLotStatus($lotId);
-    
-            $this->redirectBack();    
+
+            $this->redirectBack();
         }
     }
 
-    public function setDownPaymentDueDate() {
+    public function setDownPaymentDueDate()
+    {
         return date("Y-m-d", strtotime("+30 days"));
     }
-
 }

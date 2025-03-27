@@ -34,15 +34,21 @@ foreach ($customers as $customer) {
     </div>
 </div>
 <div class="row my-3">
-    <div class="col d-flex justify-content-between">
+    <div class="col">
         <div class="btn-group">
-            <a href="lot-reservations-cash-sale" class="btn btn-primary <?= DisplayHelper::isActivePage($currentTable, "Cash Sale", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "Cash Sale", "aria-current='page'") ?>>Cash Sale</a>
-            <a href="lot-reservations-six-months" class="btn btn-primary <?= DisplayHelper::isActivePage($currentTable, "6 Months", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "6 Months", "aria-current='page'") ?>>6 Months</a>
-            <a href="lot-reservations-installment" class="btn btn-primary <?= DisplayHelper::isActivePage($currentTable, "Installment", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "Installment", "aria-current='page'") ?>>Installment</a>
-            <a href="lot-reservations-cancelled" class="btn btn-danger <?= DisplayHelper::isActivePage($currentTable, "Cancelled", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "Cancelled", "aria-current='page'") ?>><i class="bi bi-trash<?= DisplayHelper::isActivePage($currentTable, "Cancelled", "-fill") ?>"></i> Cancelled</a>
-
+            <a href="lot-reservations-cash-sale" class="btn btn-primary d-flex align-items-center <?= DisplayHelper::isActivePage($currentTable, "Cash Sale", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "Cash Sale", "aria-current='page'") ?>>Cash Sale</a>
+            <a href="lot-reservations-six-months" class="btn btn-primary d-flex align-items-center <?= DisplayHelper::isActivePage($currentTable, "6 Months", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "6 Months", "aria-current='page'") ?>>6 Months</a>
+            <a href="lot-reservations-installment" class="btn btn-primary d-flex align-items-center <?= DisplayHelper::isActivePage($currentTable, "Installment", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "Installment", "aria-current='page'") ?>>Installment</a>
         </div>
-        <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-lot-reservation-modal"><i class="bi bi-plus"></i> Add New Reservation</button> -->
+    </div>
+</div>
+
+<div class="row my-3">
+    <div class="col">
+        <div class="btn-group">
+            <a href="lot-reservations-overdue" class="btn btn-warning <?= DisplayHelper::isActivePage($currentTable, "Overdue", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "Overdue", "aria-current='page'") ?>><i class="bi bi-clock<?= DisplayHelper::isActivePage($currentTable, "Overdue", "-fill") ?>"></i> Overdue</a>
+            <a href="lot-reservations-cancelled" class="btn btn-danger <?= DisplayHelper::isActivePage($currentTable, "Cancelled", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "Cancelled", "aria-current='page'") ?>><i class="bi bi-trash<?= DisplayHelper::isActivePage($currentTable, "Cancelled", "-fill") ?>"></i> Cancelled</a>
+        </div>
     </div>
 </div>
 
@@ -54,9 +60,8 @@ foreach ($customers as $customer) {
                 <th class="text-center">Reservation Date</th>
                 <th class="text-center">Lot</th>
                 <th class="text-center">Reservee</th>
-                <th class="text-center">Reservation Status</th>
                 <?php if ($currentTable == "Cancelled"): ?>
-                    <th class="text-center">Cancelled On</th>    
+                    <th class="text-center">Cancelled On</th>
                 <?php else: ?>
                     <th class="text-center">Action</th>
                 <?php endif; ?>
@@ -74,7 +79,6 @@ foreach ($customers as $customer) {
                     TableHelper::cell($reservationDate);
                     TableHelper::cell($lotId);
                     TableHelper::cell($reservee);
-                    TableHelper::cell($row["reservation_status"]);
                     if ($currentTable == "Cancelled") {
                         $cancelledOn = Formatter::formatDateTime($row["updated_at"]);
                         TableHelper::cell($cancelledOn);

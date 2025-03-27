@@ -47,6 +47,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute("GET", "/lot-reservations-six-months", ['App\Controllers\LotReservationsController', 'indexSixMonths']);
     $r->addRoute("GET", "/lot-reservations-installment", ['App\Controllers\LotReservationsController', 'indexInstallments']);
     $r->addRoute("GET", "/lot-reservations-cancelled", ['App\Controllers\LotReservationsController', 'indexCancelled']);
+    $r->addRoute("GET", "/lot-reservations-overdue", ['App\Controllers\LotReservationsController', 'indexOverdue']);
 
     $r->addRoute('POST', '/add-reservation', ['App\Controllers\LotReservationsController', 'setReservation']);
 
@@ -55,6 +56,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute("GET", "/estate-reservations-six-months", ['App\Controllers\EstateReservationsController', 'indexSixMonths']);
     $r->addRoute("GET", "/estate-reservations-installment", ['App\Controllers\EstateReservationsController', 'indexInstallments']);
     $r->addRoute("GET", "/estate-reservations-cancelled", ['App\Controllers\EstateReservationsController', 'indexCancelled']);
+    $r->addRoute("GET", "/estate-reservations-overdue", ['App\Controllers\EstateReservationsController', 'indexOverdue']);
 
     $r->addRoute('POST', '/add-reservation-estate', ['App\Controllers\EstateReservationsController', 'setReservation']);
 

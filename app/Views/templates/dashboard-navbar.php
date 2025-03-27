@@ -7,8 +7,7 @@
       <a class="nav-link text-white position-relative me-3" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="notificationBell">
         <i class="bi bi-bell" id="bellIcon"></i>
         <!-- Notification Count Badge -->
-        <span id="notificationCount" class="position-absolute top-0 start-100 translate-top badge rounded-circle bg-danger">
-          <!-- <span class="visually-hidden">unread notifications</span> -->
+        <span id="notificationCount" class="position-absolute top-0 start-100 translate-top badge rounded-circle bg-danger" style="display: none;">
         </span>
       </a>
       <!-- Notification Dropdown (Responsive Width) -->

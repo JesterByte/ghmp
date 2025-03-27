@@ -10,6 +10,7 @@ class BaseController {
     protected $pendingBurialReservations;
     protected $pendingLotReservations;
     protected $pendingEstateReservations;
+    protected $pendingReservations;
 
     public function __construct() {
         session_start();
@@ -19,6 +20,7 @@ class BaseController {
         $this->pendingBurialReservations = $badgeModel->getPendingBurialReservations();
         $this->pendingLotReservations = $badgeModel->getPendingLotReservations();
         $this->pendingEstateReservations = $badgeModel->getPendingEstateReservations();
+        $this->pendingReservations = $badgeModel->getPendingReservations();
     }
 
     // Sanitize string input to prevent XSS attacks

@@ -29,4 +29,8 @@ class BadgeModel extends Model {
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC)["pending_estate_reservations"];
     }
+
+    public function getPendingReservations() {
+        return $this->getPendingBurialReservations() + $this->getPendingLotReservations() + $this->getPendingEstateReservations();
+    }
 }

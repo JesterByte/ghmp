@@ -28,7 +28,8 @@ class LotReservationRequestsController extends BaseController
 
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
-            "pendingEstateReservations" => $this->pendingEstateReservations
+            "pendingEstateReservations" => $this->pendingEstateReservations,
+            "pendingReservations" => $this->pendingReservations
         ];
 
         View::render("templates/layout", $data);
@@ -49,8 +50,11 @@ class LotReservationRequestsController extends BaseController
 
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
-            "pendingEstateReservations" => $this->pendingEstateReservations
+            "pendingEstateReservations" => $this->pendingEstateReservations,
+            "pendingReservations" => $this->pendingReservations
         ];
+
+        
 
         View::render("templates/layout", $data);
     }
@@ -64,6 +68,10 @@ class LotReservationRequestsController extends BaseController
             $lotReservationRequestsModel = new LotReservationRequestsModel();
 
             $lotReservationRequestsModel->setLotType($lotId, $lotType);
+
+            // $customerNotificationModel = new CustomerNotificationModel();
+            // $customerNotificationModel->setNotification($_POST["reservee-id"], "Your lot reservation request has been approved.", BASE_URL . "/lot-reservation-requests");
+
             // $this->redirect(BASE_URL . "/reservation-requests");
             $this->redirect(BASE_URL . "/lot-reservation-requests", DisplayHelper::$checkIcon, "The lot type has been assigned.", "Operation Successful");
         }

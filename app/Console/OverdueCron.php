@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set("Asia/Manila");
 // Include PHPMailer
 // require 'C:/xampp/htdocs/ghmp/vendor/autoload.php'; // Adjust the path if necessary"
 // require "C:/xampp/htdocs/ghmp/app/Utils/Formatter.php";

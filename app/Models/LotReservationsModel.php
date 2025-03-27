@@ -57,6 +57,38 @@ class LotReservationsModel extends Model
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getOverdueLotReservations()
+    {
+        $stmt = $this->db->prepare("
+            SELECT lr.lot_id, lr.created_at, lr.updated_at, 
+                   c.first_name, c.middle_name, c.last_name, c.suffix_name
+            FROM lot_reservations AS lr
+            INNER JOIN customers AS c ON lr.reservee_id = c.id
+            LEFT JOIN cash_sales AS cs ON lr.id = cs.reservation_id
+            LEFT JOIN cash_sale_due_dates AS csdd ON cs.id = csdd.cash_sale_id 
+                AND csdd.due_date < CURDATE() 
+                AND cs.payment_status = 'Pending'
+            LEFT JOIN six_months AS sm ON lr.id = sm.reservation_id
+            LEFT JOIN six_months_due_dates AS smdd ON sm.id = smdd.six_months_id 
+                AND smdd.due_date < CURDATE() 
+                AND sm.payment_status = 'Pending'
+            LEFT JOIN installments AS i ON lr.id = i.reservation_id
+            WHERE lr.reservation_status != :reservation_status
+              AND (
+                    csdd.due_date IS NOT NULL OR 
+                    smdd.due_date IS NOT NULL OR
+                    (i.down_payment_due_date IS NOT NULL AND i.down_payment_due_date < CURDATE() AND i.down_payment_status = 'Pending') OR
+                    (i.next_due_date IS NOT NULL AND i.next_due_date < CURDATE() AND i.payment_status = 'Ongoing')
+                  )
+        ");
+
+        $stmt->execute([
+            ':reservation_status' => 'Cancelled'
+        ]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getAvailableLots()
     {
         $stmt = $this->db->prepare("SELECT * FROM lots WHERE status = :status");

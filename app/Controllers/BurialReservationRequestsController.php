@@ -9,8 +9,10 @@ use App\Utils\Calculator;
 use App\Core\View;
 use App\Helpers\DisplayHelper;
 
-class BurialReservationRequestsController extends BaseController {
-    public function index() {
+class BurialReservationRequestsController extends BaseController
+{
+    public function index()
+    {
         $burialReservationsModel = new BurialReservationsModel();
         $burialReservationRequestsTable = $burialReservationsModel->getBurialReservationRequests();
 
@@ -24,13 +26,15 @@ class BurialReservationRequestsController extends BaseController {
 
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
-            "pendingEstateReservations" => $this->pendingEstateReservations
+            "pendingEstateReservations" => $this->pendingEstateReservations,
+            "pendingReservations" => $this->pendingReservations
         ];
 
         View::render("templates/layout", $data);
     }
 
-    public function submitBurialReservationConfirmation() {
+    public function submitBurialReservationConfirmation()
+    {
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $assetId = $_POST["asset_id"];
             $status = $_POST["action"] == "approve" ? "Approved" : "Cancelled";
@@ -50,7 +54,6 @@ class BurialReservationRequestsController extends BaseController {
             }
 
             $this->redirect(BASE_URL . "/burial-reservation-requests", $toastIcon, $message, "Operation Successful");
-
         }
     }
 }
