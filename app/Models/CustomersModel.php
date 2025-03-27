@@ -17,4 +17,10 @@ class CustomersModel extends Model
         $stmt = $this->db->prepare("UPDATE customers SET status = :status WHERE id = :id");
         return $stmt->execute(["status" => $status, "id" => $customerId]);
     }
+
+    public function getBeneficiariesByCustomerId($customerId) {
+        $stmt = $this->db->prepare("SELECT * FROM beneficiaries WHERE customer_id = :customer_id AND status = 'Inactive'");
+        $stmt->execute(["customer_id" => $customerId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

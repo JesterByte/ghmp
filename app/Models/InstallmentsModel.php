@@ -53,6 +53,38 @@ class InstallmentsModel extends Model {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);    
     }
 
+    public function getDownPayments() {
+        $stmt = $this->db->prepare("SELECT 
+        i.lot_id AS asset_id, 
+        i.down_payment AS payment_amount, 
+        i.down_payment_date AS payment_date, 
+        c.first_name, 
+        c.middle_name, 
+        c.last_name, 
+        c.suffix_name
+        FROM installments AS i
+        INNER JOIN lot_reservations AS lr ON i.lot_id = lr.lot_id
+        INNER JOIN customers AS c ON lr.reservee_id = c.id
+        WHERE i.down_payment_status = :down_payment_status
+        
+        UNION ALL
+        
+        SELECT 
+        ei.estate_id AS asset_id, 
+        ei.down_payment AS payment_amount, 
+        ei.down_payment_date AS payment_date, 
+        c.first_name, 
+        c.middle_name, 
+        c.last_name, 
+        c.suffix_name
+        FROM estate_installments AS ei
+        INNER JOIN estate_reservations AS er ON ei.estate_id = er.estate_id
+        INNER JOIN customers AS c ON er.reservee_id = c.id
+        WHERE ei.down_payment_status = :down_payment_status");
+        $stmt->execute([":down_payment_status" => "Paid"]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);    
+    }
+
     // public function getPendingDownPayments() {
     //     $stmt = $this->db->prepare("SELECT * FROM installments WHERE down_payment_status = :down_payment_status");
     //     $stmt->execute([":down_payment_status" => "Pending"]);

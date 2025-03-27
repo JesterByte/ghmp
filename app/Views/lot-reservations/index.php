@@ -54,6 +54,7 @@ foreach ($customers as $customer) {
                 <th class="text-center">Reservation Date</th>
                 <th class="text-center">Lot</th>
                 <th class="text-center">Reservee</th>
+                <th class="text-center">Reservation Status</th>
                 <?php if ($currentTable == "Cancelled"): ?>
                     <th class="text-center">Cancelled On</th>    
                 <?php else: ?>
@@ -63,18 +64,19 @@ foreach ($customers as $customer) {
         </thead>
         <tbody>
             <?php
-            foreach ($lotReservationsTable as $lotReservationsRow) {
+            foreach ($lotReservationsTable as $row) {
                 if (!empty($lotReservationsTable)) {
-                    $lotId = Formatter::formatLotId($lotReservationsRow["lot_id"]);
-                    $reservee = Formatter::formatFullName($lotReservationsRow["first_name"], $lotReservationsRow["middle_name"], $lotReservationsRow["last_name"], $lotReservationsRow["suffix_name"]);
-                    $reservationDate = Formatter::formatDateTime($lotReservationsRow["created_at"]);
+                    $lotId = Formatter::formatLotId($row["lot_id"]);
+                    $reservee = Formatter::formatFullName($row["first_name"], $row["middle_name"], $row["last_name"], $row["suffix_name"]);
+                    $reservationDate = Formatter::formatDateTime($row["created_at"]);
 
                     TableHelper::startRow();
                     TableHelper::cell($reservationDate);
                     TableHelper::cell($lotId);
                     TableHelper::cell($reservee);
+                    TableHelper::cell($row["reservation_status"]);
                     if ($currentTable == "Cancelled") {
-                        $cancelledOn = Formatter::formatDateTime($lotReservationsRow["updated_at"]);
+                        $cancelledOn = Formatter::formatDateTime($row["updated_at"]);
                         TableHelper::cell($cancelledOn);
                     } else {
                         TableHelper::cell("");

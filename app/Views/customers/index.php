@@ -58,7 +58,8 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
                 }
 
                 TableHelper::startRow();
-                TableHelper::cell($fullName);
+                // TableHelper::cell($fullName);
+                TableHelper::cell('<a href="#" class="customer-name-link" data-bs-customer-id="' . $row["id"] . '" data-bs-toggle="modal" data-bs-target="#beneficiaries-modal">' . $fullName . '</a>');
                 TableHelper::cell($row["email_address"]);
                 TableHelper::cell($row["contact_number"]);
                 TableHelper::cell($row["status"]);
@@ -73,6 +74,7 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
 <?php include_once VIEW_PATH . "/templates/dataTables-scripts.php" ?>
 <?php include_once VIEW_PATH . "/modals/modal-update-burial-pricing.php" ?>
 <?php include_once VIEW_PATH . "/modals/modal-customer-action.php" ?>
+<?php include_once VIEW_PATH . "/modals/modal-beneficiaries.php" ?>
 
 <script src="<?= BASE_URL . "/js/form-validation.js" ?>"></script>
 <script src="<?= BASE_URL . "/js/modal-autofocus.js" ?>"></script>
@@ -109,6 +111,48 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
 
             customerIdHidden.value = customerId;
             actionHidden.value = action;
+        });
+    });
+</script>
+
+<script>
+    const customerNameLinks = document.querySelectorAll(".customer-name-link");
+    const beneficiariesList = document.getElementById("beneficiaries-list");
+
+    customerNameLinks.forEach(link => {
+        link.addEventListener("click", async function() {
+            const customerId = this.getAttribute("data-bs-customer-id");
+
+            try {
+                const response = await fetch("<?= BASE_URL ?>/fetch-beneficiaries/" + customerId);
+
+                if (!response.ok) {
+                    throw new Error("Network response was not ok: " + response.statusText);
+                }
+
+                const data = await response.json();
+                const beneficiaries = data.beneficiaries;
+
+                beneficiariesList.innerHTML = "";
+
+                if (beneficiaries.length > 0) {
+                    beneficiaries.forEach(beneficiary => {
+                        const listItem = document.createElement("li");
+                        listItem.className = "list-group-item";
+                        listItem.textContent = beneficiary.first_name + " " +
+                            (beneficiary.middle_name || "") + " " +
+                            beneficiary.last_name +
+                            (beneficiary.suffix_name ? ", " + beneficiary.suffix_name : "");
+
+                        beneficiariesList.appendChild(listItem);
+                    });
+                } else {
+                    beneficiariesList.innerHTML = '<li class="list-group-item">No beneficiaries found.</li>';
+                }
+            } catch (error) {
+                beneficiariesList.innerHTML = '<li class="list-group-item text-danger">Failed to fetch beneficiaries.</li>';
+                console.error("Error fetching beneficiaries:", error);
+            }
         });
     });
 </script>

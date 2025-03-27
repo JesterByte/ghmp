@@ -46,4 +46,22 @@ class CustomersController extends BaseController
             $this->redirect(BASE_URL . "/customers", DisplayHelper::$checkIcon, "Customer account status has been changed successfully!", "Operation Successful");
         }
     }
+
+    public function fetchBeneficiaries($customerId)
+    {
+        // $this->checkSession();
+
+        $customersModel = new CustomersModel();
+        $beneficiaries = $customersModel->getBeneficiariesByCustomerId($customerId);
+
+        header("Content-Type: application/json");
+
+        if ($beneficiaries) {
+            echo json_encode(["beneficiaries" => $beneficiaries]);
+        } else {
+            echo json_encode(["beneficiaries" => []]);
+        }
+
+        exit;
+    }
 }

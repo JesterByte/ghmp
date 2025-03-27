@@ -12,13 +12,42 @@ class InstallmentsController extends BaseController {
 
         $installmentsModel = new InstallmentsModel();
         $installmentsTable = $installmentsModel->getInstallments();
+        $downPayments = $installmentsModel->getDownPayments();
         $pendingDownPayments = $installmentsModel->getPendingDownPayments();
         $ongoingInstallments = $installmentsModel->getOngoingInstallments();
 
         $data = [
             "pageTitle" => "Installments",
+            "currentTable" => "Installments",
             "usesDataTables" => true,
             "installmentsTable" => $installmentsTable,
+            "pendingDownPayments" => $pendingDownPayments,
+            "ongoingInstallments" => $ongoingInstallments,
+            "view" => "installments/index",
+
+            "userId" => $_SESSION["user_id"],
+
+            "pendingBurialReservations" => $this->pendingBurialReservations,
+            "pendingLotReservations" => $this->pendingLotReservations,
+            "pendingEstateReservations" => $this->pendingEstateReservations
+        ];
+
+        View::render("templates/layout", $data);
+    }
+
+    public function indexDownPayments() {
+        $this->checkSession();
+
+        $installmentsModel = new InstallmentsModel();
+        $downPaymentsTable = $installmentsModel->getDownPayments();
+        $pendingDownPayments = $installmentsModel->getPendingDownPayments();
+        $ongoingInstallments = $installmentsModel->getOngoingInstallments();
+
+        $data = [
+            "pageTitle" => "Down Payments",
+            "currentTable" => "Down Payments",
+            "usesDataTables" => true,
+            "downPaymentsTable" => $downPaymentsTable,
             "pendingDownPayments" => $pendingDownPayments,
             "ongoingInstallments" => $ongoingInstallments,
             "view" => "installments/index",

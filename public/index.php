@@ -63,6 +63,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute("GET", "/six-months", ['App\Controllers\SixMonthsController', 'index']);
     $r->addRoute("POST", "/add-six-months-payment", ['App\Controllers\SixMonthsController', 'setPayment']);
     $r->addRoute("GET", "/installments", ['App\Controllers\InstallmentsController', 'index']);
+    $r->addRoute("GET", "/installments-down-payments", ['App\Controllers\InstallmentsController', 'indexDownPayments']);
 
     $r->addRoute("POST", "/add-down-payment", ['App\Controllers\InstallmentsController', 'setDownPayment']);
     $r->addRoute("POST", "/add-monthly-payment", ['App\Controllers\InstallmentsController', 'setMonthlyPayment']);
@@ -80,6 +81,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
 
     $r->addRoute("GET", "/customers", ['App\Controllers\CustomersController', 'index']);
     $r->addRoute("POST", "/customers/action", ['App\Controllers\CustomersController', 'customerAction']);
+    $r->addRoute("GET", "/fetch-beneficiaries/{customerId}", ["App\Controllers\CustomersController", "fetchBeneficiaries"]);
 
     // $r->addRoute("GET", "/notification/fetchNotifications/{adminId}", ['App\Controllers\NotificationController', 'fetchNotifications/$1']);
     // $r->addRoute("GET", "/notification/markAsRead/{notificationId}", ['App\Controllers\NotificationController', 'markAsRead/$1']);
