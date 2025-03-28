@@ -6,8 +6,10 @@ use App\Models\BadgeModel;
 use App\Models\InstallmentsModel;
 use App\Core\View;
 
-class InstallmentsController extends BaseController {
-    public function index() {
+class InstallmentsController extends BaseController
+{
+    public function index()
+    {
         $this->checkSession();
 
         $installmentsModel = new InstallmentsModel();
@@ -29,13 +31,15 @@ class InstallmentsController extends BaseController {
 
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
-            "pendingEstateReservations" => $this->pendingEstateReservations
+            "pendingEstateReservations" => $this->pendingEstateReservations,
+            "pendingReservations" => $this->pendingReservations
         ];
 
         View::render("templates/layout", $data);
     }
 
-    public function indexDownPayments() {
+    public function indexDownPayments()
+    {
         $this->checkSession();
 
         $installmentsModel = new InstallmentsModel();
@@ -56,13 +60,15 @@ class InstallmentsController extends BaseController {
 
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
-            "pendingEstateReservations" => $this->pendingEstateReservations
+            "pendingEstateReservations" => $this->pendingEstateReservations,
+            "pendingReservations" => $this->pendingReservations
         ];
 
         View::render("templates/layout", $data);
     }
 
-    public function setDownPayment() {
+    public function setDownPayment()
+    {
         $installmentsModel = new InstallmentsModel();
 
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -82,7 +88,8 @@ class InstallmentsController extends BaseController {
         }
     }
 
-    public function setMonthlyPayment() {
+    public function setMonthlyPayment()
+    {
         $installmentsModel = new InstallmentsModel();
 
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -93,12 +100,12 @@ class InstallmentsController extends BaseController {
                 case "lot":
                     $installmentsModel->setMonthlyPayment($assetId);
                     $installmentsModel->setNextDueDate($assetId);
-        
+
                     $installmentRow = $installmentsModel->getInstallmentByLotId($assetId);
                     $installmentId = $installmentRow["id"];
                     $totalPaid = $installmentsModel->getPaymentAmountSum($installmentId)["total_paid"];
                     $totalAmount = $installmentRow["total_amount"];
-        
+
                     if ($totalPaid >= $totalAmount) {
                         $installmentsModel->setCompleteInstallment($installmentId);
                         $installmentsModel->setLotReservation($assetId);
@@ -109,12 +116,12 @@ class InstallmentsController extends BaseController {
                 case "estate":
                     $installmentsModel->setMonthlyPaymentEstate($assetId);
                     $installmentsModel->setNextDueDateEstate($assetId);
-        
+
                     $installmentRow = $installmentsModel->getInstallmentByEstateId($assetId);
                     $installmentId = $installmentRow["id"];
                     $totalPaid = $installmentsModel->getPaymentAmountSumEstate($installmentId)["total_paid"];
                     $totalAmount = $installmentRow["total_amount"];
-        
+
                     if ($totalPaid >= $totalAmount) {
                         $installmentsModel->setCompleteInstallmentEstate($installmentId);
                         $installmentsModel->setEstateReservation($assetId);
@@ -129,7 +136,7 @@ class InstallmentsController extends BaseController {
 
     // public function setPayment() {
     //     $cashSalesModel = new InstallmentsModel();
-        
+
     //     if ($_SERVER["REQUEST_METHOD"] === "POST") {
     //         $lotId = $_POST["lot-id"];
 

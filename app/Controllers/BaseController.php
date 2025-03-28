@@ -17,10 +17,10 @@ class BaseController {
         date_default_timezone_set("Asia/Manila");
 
         $badgeModel = new BadgeModel();
-        $this->pendingBurialReservations = $badgeModel->getPendingBurialReservations();
-        $this->pendingLotReservations = $badgeModel->getPendingLotReservations();
-        $this->pendingEstateReservations = $badgeModel->getPendingEstateReservations();
-        $this->pendingReservations = $badgeModel->getPendingReservations();
+        $this->pendingBurialReservations = $badgeModel->getPendingBurialReservations() > 99 ? 99 : $badgeModel->getPendingBurialReservations();
+        $this->pendingLotReservations = $badgeModel->getPendingLotReservations() > 99 ? 99 : $badgeModel->getPendingLotReservations();
+        $this->pendingEstateReservations = $badgeModel->getPendingEstateReservations() > 99 ? 99 : $badgeModel->getPendingEstateReservations();
+        $this->pendingReservations = $badgeModel->getPendingReservations() > 99 ? 99 : $badgeModel->getPendingReservations();
     }
 
     // Sanitize string input to prevent XSS attacks

@@ -45,6 +45,11 @@
         /* Yellow for pending */
     }
 
+    .legend-item.paid {
+        background-color: #008000;
+        /* Green for paid */
+    }
+
     .legend-item.completed {
         background-color: #6c757d;
         /* Gray for completed */
@@ -76,6 +81,7 @@
     <strong>Legend:</strong>
     <span class="legend-item pending">Pending</span>
     <span class="legend-item active border-primary">Approved</span>
+    <span class="legend-item paid border-primary">Paid</span>
     <span class="legend-item completed">Completed</span>
     <span class="legend-item cancelled">Cancelled</span>
 </div>
@@ -109,6 +115,7 @@
             // Use eventDidMount to style events on load
             eventDidMount: function(info) {
                 const status = info.event.extendedProps.status;
+                const paymentStatus = info.event.extendedProps.payment_status;
 
                 // Set colors based on event status
                 if (status === "Pending") {
@@ -122,6 +129,13 @@
                     info.el.style.color = "white";
                     info.el.style.borderColor = "#0d6efd"; // Match border color
                 }
+
+                if (status === "Approved" && paymentStatus === "Paid") {
+                    info.el.style.backgroundColor = "#008000"; // Blue for Approved
+                    info.el.style.color = "white";
+                    info.el.style.borderColor = "#008000"; // Match border color
+                }
+
                 if (status === "Completed") {
                     info.el.style.backgroundColor = "gray"; // Gray for Completed
                     info.el.style.color = "white";
@@ -137,36 +151,11 @@
             },
             eventClick: function(info) {
                 const status = info.event.extendedProps.status;
+                const paymentStatus = info.event.extendedProps.payment_status;
+                const burialDateTime = new Date(info.event.extendedProps.burial_date_time);
+                const now = new Date();
 
-                // Prevent interaction with "Pending" or "Completed" events
-                // if (status === "Pending" || status === "Completed") {
-                //     showToast("<i class='bi bi-exclamation-lg text-warning'></i>", `This reservation is ${status.toLowerCase()}.`, "Reservation Status");
-                //     return;
-                // }
-
-                // Disable click and change style for "Pending" events
-                if (status === "Pending") {
-                    // info.el.style.opacity = "0.6"; // Make it look disabled
-                    info.el.style.backgroundColor = "#ffc107"; // Yellow color for pending
-                }
-
-                if (status === "Approved") {
-                    // info.el.style.opacity = "0.6"; // Make it look disabled
-                    info.el.style.backgroundColor = "#ffc107"; // Yellow color for pending
-                }
-
-                // Disable click and change style for "Completed" events
-                if (status === "Completed") {
-                    // info.el.style.opacity = "0.6"; // Make it look disabled
-                    info.el.style.backgroundColor = "gray"; // Gray color for completed
-                }
-
-                if (status === "Cancelled") {
-                    // info.el.style.opacity = "0.6"; // Make it look disabled
-                    info.el.style.backgroundColor = "red"; // Gray color for completed
-                }
-
-                // Populate the modal with event details
+                // Populate modal details
                 document.getElementById("eventDetailsModalLabel").textContent = "Burial Reservation Details " + "(" + status + ")";
                 document.getElementById("interredName").textContent = info.event.extendedProps.interred_name;
                 document.getElementById("interredBirthDate").textContent = info.event.extendedProps.interred_birth_date;
@@ -180,7 +169,19 @@
                 document.getElementById("burialDateTime").textContent = info.event.extendedProps.burial_date_time;
                 document.getElementById("assetId").textContent = info.event.extendedProps.asset_id;
 
-                // Show the modal
+                const markAsDoneBtn = document.getElementById("markAsDoneBtn");
+
+                // Ensure "Mark as Done" button is only shown if:
+                // 1. Status is "Approved"
+                // 2. Payment status is "Paid"
+                // 3. Burial Date is in the past
+                if (status === "Approved" && paymentStatus === "Paid" && burialDateTime < now) {
+                    markAsDoneBtn.style.display = "block"; // Show button
+                    document.getElementById("markAsDoneSubmit").setAttribute("data-event-id", info.event.id); // Store event ID
+                } else {
+                    markAsDoneBtn.style.display = "none"; // Hide button
+                }
+
                 var eventDetailsModal = new bootstrap.Modal(document.getElementById("eventDetailsModal"));
                 eventDetailsModal.show();
             }
@@ -188,58 +189,9 @@
 
         calendar.render();
 
-        // var calendarEl = document.getElementById('calendar');
-        // var calendar = new FullCalendar.Calendar(calendarEl, {
-        //     initialView: 'dayGridMonth',
-        //     headerToolbar: {
-        //         left: 'prev,next today',
-        //         center: 'title',
-        //         right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        //     },
-        //     events: "<?= BASE_URL . "/burial-reservations/get-events" ?>",
-
-        //     // Customize event rendering
-        //     eventDidMount: function(info) {
-        //         const status = info.event.extendedProps.status;
-
-        //         // Disable click and change style for "Pending" events
-        //         if (status === "Pending") {
-        //             info.el.style.pointerEvents = "none"; // Disable click
-        //             info.el.style.opacity = "0.6"; // Make it look disabled
-        //             info.el.style.backgroundColor = "#ffc107"; // Yellow color for pending
-        //         }
-
-        //         // Disable click and change style for "Completed" events
-        //         if (status === "Completed") {
-        //             info.el.style.pointerEvents = "none"; // Disable click
-        //             info.el.style.opacity = "0.6"; // Make it look disabled
-        //             info.el.style.backgroundColor = "gray"; // Gray color for completed
-        //         }
-        //     },
-
-        //     eventClick: function(info) {
-        //         const status = info.event.extendedProps.status;
-
-        //         // Prevent interaction with "Pending" or "Completed" events
-        //         if (status === "Pending" || status === "Completed") {
-        //             showToast("<i class='bi bi-exclamation-lg text-warning'></i>", `This reservation is ${status.toLowerCase()}.`, "Reservation Status");
-        //             return;
-        //         }
-
-        //         // Store event ID in hidden input inside modal
-        //         document.getElementById("selectedEventId").value = info.event.id;
-
-        //         // Show the modal
-        //         var confirmModal = new bootstrap.Modal(document.getElementById("confirmDoneModal"));
-        //         confirmModal.show();
-        //     }
-        // });
-
-        // calendar.render();
-
         // Handle the "Confirm" button click inside the modal
-        document.getElementById("confirmMarkDone").addEventListener("click", function() {
-            var eventId = document.getElementById("selectedEventId").value;
+        document.getElementById("markAsDoneSubmit").addEventListener("click", function() {
+            var eventId = this.getAttribute("data-event-id");
 
             fetch("<?= BASE_URL . "/burial-reservations/mark-done" ?>", {
                     method: "POST",
@@ -253,24 +205,32 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        showToast(data.icon, data.message, data.title);
+                        showToast("<i class='bi bi-check-lg text-success'></i>", "Burial marked as done successfully.", "Success");
 
-                        // Find and remove event from calendar
+                        // Find event and update status
                         var event = calendar.getEventById(eventId);
-                        if (event) event.remove();
+                        if (event) {
+                            event.remove(); // Remove old event
+                            calendar.refetchEvents(); // Refresh events
+                        }
 
-                        // Hide the modal
+                        // Hide the confirmation modal
                         var confirmModal = bootstrap.Modal.getInstance(document.getElementById("confirmDoneModal"));
                         confirmModal.hide();
+
+                        // Hide the details modal
+                        var eventDetailsModal = bootstrap.Modal.getInstance(document.getElementById("eventDetailsModal"));
+                        eventDetailsModal.hide();
                     } else {
                         showToast("<i class='bi bi-x-lg'></i>", data.message, "Operation Failed");
                     }
                 })
                 .catch(error => {
-                    console.error("Error updating event:", error);
+                    console.error("Error marking event as done:", error);
                     showToast("<i class='bi bi-x-lg'></i>", "An unexpected error occurred.", "Operation Failed");
                 });
         });
+
     });
 
     function showToast(htmlIcon, message, title = 'Notification', delay = 5000, link = '') {

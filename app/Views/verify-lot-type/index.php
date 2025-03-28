@@ -39,24 +39,6 @@ $lotNumber = $lotIdComponents["lot"];
                         Please verify the distance of the lot to the road and select the appropriate lot type.
                         Ensure that the lot is accurately assessed before making a selection.
                     </p>
-                    <!-- <h5 class="card-title">Verify Lot Type</h5> -->
-                    <!-- <form class="" action="<?= BASE_URL . "/verify-lot-type-submit" ?>" method="post">
-                        <div class="mb-3">
-                            <input type="hidden" name="lot-id" value="<?= $lotId ?>">
-                            <label for="lotType" class="form-label">Lot Type</label>
-                            <select id="lotType" name="lot-type" class="form-select" required>
-                                <option value="" disabled selected>Select Lot Type</option>
-                                <option value="Supreme">Supreme</option>
-                                <option value="Special">Special</option>
-                                <option value="Standard">Standard</option>
-                            </select>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                            <a href="<?= BASE_URL . "/lot-reservation-requests" ?>" class="btn btn-danger">Cancel</a>
-
-                        </div>
-                    </form> -->
 
                     <form id="lotTypeForm" class="" action="<?= BASE_URL . "/verify-lot-type-submit" ?>" method="post">
                         <div class="mb-3">

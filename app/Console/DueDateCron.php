@@ -31,10 +31,10 @@ if ($conn->connect_error) {
 // Query for lot reservations due dates
 $lotQuery = "
     SELECT lr.id AS reservation_id, lr.lot_id AS asset_id, lr.reservee_id, c.email_address, 'Lot Reservation' AS reservation_type,
-        csdd.due_date AS cash_sale_due_date,
-        smdd.due_date AS six_month_due_date,
-        i.down_payment_due_date AS installment_dp_due_date,
-        i.next_due_date AS installment_next_due_date
+        csdd.due_date AS cash_sale_due_date, cs.payment_amount AS cash_sale_amount,
+        smdd.due_date AS six_month_due_date, sm.payment_amount AS six_month_amount,
+        i.down_payment_due_date AS installment_dp_due_date, i.next_due_date AS installment_next_due_date, 
+        i.down_payment AS installment_down_payment, i.monthly_payment AS installment_monthly_payment
     FROM lot_reservations AS lr
     LEFT JOIN customers AS c ON lr.reservee_id = c.id
     LEFT JOIN cash_sales AS cs ON lr.id = cs.reservation_id AND cs.payment_status = 'Pending'
@@ -51,13 +51,14 @@ $lotQuery = "
         )
 ";
 
+
 // Query for estate reservations due dates
 $estateQuery = "
     SELECT er.id AS reservation_id, er.estate_id AS asset_id, er.reservee_id, c.email_address, 'Estate Reservation' AS reservation_type,
-        csdd.due_date AS cash_sale_due_date,
-        smdd.due_date AS six_month_due_date,
-        i.down_payment_due_date AS installment_dp_due_date,
-        i.next_due_date AS installment_next_due_date
+        csdd.due_date AS cash_sale_due_date, cs.payment_amount AS cash_sale_amount,
+        smdd.due_date AS six_month_due_date, sm.payment_amount AS six_month_amount,
+        i.down_payment_due_date AS installment_dp_due_date, i.next_due_date AS installment_next_due_date, 
+        i.down_payment AS installment_down_payment, i.monthly_payment AS installment_monthly_payment
     FROM estate_reservations AS er
     LEFT JOIN customers AS c ON er.reservee_id = c.id
     LEFT JOIN estate_cash_sales AS cs ON er.id = cs.reservation_id AND cs.payment_status = 'Pending'
@@ -74,6 +75,7 @@ $estateQuery = "
         )
 ";
 
+
 // Combine the queries correctly without extra semicolons
 $combinedQuery = "($lotQuery) UNION ($estateQuery)";
 $result = $conn->query($combinedQuery);
@@ -82,52 +84,11 @@ if (!$result) {
     echo "Error: " . $conn->error;
 }
 
-// Log the query result
-// echo "<h3>Query Result Log:</h3>";
-// if ($result && $result->num_rows > 0) {
-//     echo "<pre>";
-//     while ($row = $result->fetch_assoc()) {
-//         print_r($row);  // Log each result row
-//     }
-//     echo "</pre><hr>";
-// } else {
-//     echo "No results found or there was an issue with the query.<br>";
-// }
-
 if ($result && $result->num_rows > 0) {
     $groupedResults = [];
     while ($row = $result->fetch_assoc()) {
         $groupedResults[$row['email_address']][] = $row;
     }
-
-    // foreach ($groupedResults as $emailAddr => $reservations) {
-    //     error_log("Processing email for: " . $emailAddr); // Log the email being processed
-
-    //     $message = "Dear Customer,<br><br>We would like to remind you that the following payment(s) are due in 3 days:<br><br>";
-
-    //     foreach ($reservations as $reservation) {
-    //         error_log("Processing reservation ID: " . $reservation['reservation_id']); // Log the reservation ID
-    //         $message .= "Reservation Type: <strong>{$reservation['reservation_type']}</strong><br>";
-    //         $message .= "Reservation ID: <strong>{$reservation['reservation_id']}</strong><br>";
-
-    //         if (!empty($reservation['cash_sale_due_date'])) {
-    //             $message .= "- Cash Sale Due Date: <strong>{$reservation['cash_sale_due_date']}</strong><br>";
-    //         }
-    //         if (!empty($reservation['six_month_due_date'])) {
-    //             $message .= "- Six Months Due Date: <strong>{$reservation['six_month_due_date']}</strong><br>";
-    //         }
-    //         if (!empty($reservation['installment_dp_due_date'])) {
-    //             $message .= "- Installment Down Payment Due Date: <strong>{$reservation['installment_dp_due_date']}</strong><br>";
-    //         }
-    //         if (!empty($reservation['installment_next_due_date'])) {
-    //             $message .= "- Installment Next Due Date: <strong>{$reservation['installment_next_due_date']}</strong><br>";
-    //         }
-
-    //         $message .= "<br>";
-    //     }
-
-    //     error_log("Completed processing for: " . $emailAddr); // Confirm completion for each email
-    // }
 
     foreach ($groupedResults as $emailAddr => $reservations) {
         $message = "
@@ -146,6 +107,7 @@ if ($result && $result->num_rows > 0) {
                             <th style='padding: 10px; border: 1px solid #ddd; text-align: left;'>Reservation ID</th>
                             <th style='padding: 10px; border: 1px solid #ddd; text-align: left;'>Due Date Type</th>
                             <th style='padding: 10px; border: 1px solid #ddd; text-align: left;'>Due Date</th>
+                            <th style='padding: 10px; border: 1px solid #ddd; text-align: left;'>Payment Amount</th>
                         </tr>
                     </thead>
                     <tbody style='font-size: 14px;'>";
@@ -162,74 +124,41 @@ if ($result && $result->num_rows > 0) {
 
             if (!empty($reservation['cash_sale_due_date'])) {
                 $cashSaleDueDate = date("F j, Y", strtotime($reservation['cash_sale_due_date']));
-                $message .= "
-                <tr>
-                    <td style='padding: 8px; border: 1px solid #ddd;'>{$reservation['reservation_type']}</td>
-                    <td style='padding: 8px; border: 1px solid #ddd;'>{$assetId}</td>
-                    <td style='padding: 8px; border: 1px solid #ddd;'>Cash Sale Due Date</td>
-                    <td style='padding: 8px; border: 1px solid #ddd;'>{$cashSaleDueDate}</td>
-                </tr>";
+                $cashSaleAmount = number_format($reservation['cash_sale_amount'], 2);
 
-                // Insert notification for Cash Sale Due Date
-                $notifMessage = "Your {$reservation['reservation_type']} with ID {$assetId} has a Cash Sale payment due on {$cashSaleDueDate}.";
+                $message .= "
+                            <tr>
+                                <td style='padding: 8px; border: 1px solid #ddd;'>{$reservation['reservation_type']}</td>
+                                <td style='padding: 8px; border: 1px solid #ddd;'>{$assetId}</td>
+                                <td style='padding: 8px; border: 1px solid #ddd;'>Cash Sale Due Date</td>
+                                <td style='padding: 8px; border: 1px solid #ddd;'>{$cashSaleDueDate}</td>
+                                <td style='padding: 8px; border: 1px solid #ddd;'>₱{$cashSaleAmount}</td>
+                            </tr>";
+
+                $notifMessage = "Your {$reservation['reservation_type']} with ID {$assetId} has a Cash Sale payment of ₱{$cashSaleAmount} due on {$cashSaleDueDate}.";
                 $insertQuery = "
-                INSERT INTO notifications (customer_id, message, link, is_read, created_at)
-                VALUES ('{$customerId}', '{$notifMessage}', '{$link}', 0, NOW())
-            ";
+                            INSERT INTO notifications (customer_id, message, link, is_read, created_at)
+                            VALUES ('{$customerId}', '{$notifMessage}', '{$link}', 0, NOW())";
                 $conn->query($insertQuery);
             }
-            if (!empty($reservation['six_month_due_date'])) {
-                $sixMonthDueDate = date("F j, Y", strtotime($reservation['six_month_due_date']));
-                $message .= "
-                <tr>
-                    <td style='padding: 8px; border: 1px solid #ddd;'>{$reservation['reservation_type']}</td>
-                    <td style='padding: 8px; border: 1px solid #ddd;'>{$assetId}</td>
-                    <td style='padding: 8px; border: 1px solid #ddd;'>Six Months Due Date</td>
-                    <td style='padding: 8px; border: 1px solid #ddd;'>{$sixMonthDueDate}</td>
-                </tr>";
 
-                // Insert notification for Six Months Due Date
-                $notifMessage = "Your {$reservation['reservation_type']} with ID {$assetId} has a Six Months payment due on {$sixMonthDueDate}.";
-                $insertQuery = "
-                INSERT INTO notifications (customer_id, message, link, is_read, created_at)
-                VALUES ('{$customerId}', '{$notifMessage}', '{$link}', 0, NOW())
-            ";
-                $conn->query($insertQuery);
-            }
-            if (!empty($reservation['installment_dp_due_date'])) {
-                $installmentDpDueDate = date("F j, Y", strtotime($reservation['installment_dp_due_date']));
-                $message .= "
-                <tr>
-                    <td style='padding: 8px; border: 1px solid #ddd;'>{$reservation['reservation_type']}</td>
-                    <td style='padding: 8px; border: 1px solid #ddd;'>{$assetId}</td>
-                    <td style='padding: 8px; border: 1px solid #ddd;'>Installment Down Payment Due Date</td>
-                    <td style='padding: 8px; border: 1px solid #ddd;'>{$installmentDpDueDate}</td>
-                </tr>";
-
-                // Insert notification for Installment Down Payment
-                $notifMessage = "Your {$reservation['reservation_type']} with ID {$assetId} has an Installment Down Payment due on {$installmentDpDueDate}.";
-                $insertQuery = "
-                INSERT INTO notifications (customer_id, message, link, is_read, created_at)
-                VALUES ('{$customerId}', '{$notifMessage}', '{$link}', 0, NOW())
-            ";
-                $conn->query($insertQuery);
-            }
             if (!empty($reservation['installment_next_due_date'])) {
                 $installmentNextDueDate = date("F j, Y", strtotime($reservation['installment_next_due_date']));
-                $message .= "
-                <tr>
-                    <td style='padding: 8px; border: 1px solid #ddd;'>{$reservation['reservation_type']}</td>
-                    <td style='padding: 8px; border: 1px solid #ddd;'>{$assetId}</td>
-                    <td style='padding: 8px; border: 1px solid #ddd;'>Installment Next Due Date</td>
-                    <td style='padding: 8px; border: 1px solid #ddd;'>{$installmentNextDueDate}</td>
-                </tr>";
+                $installmentMonthlyPayment = number_format($reservation['installment_monthly_payment'], 2);
 
-                // Insert notification for Installment Next Due Date
-                $notifMessage = "Your {$reservation['reservation_type']} with ID {$assetId} has an Installment Next Payment due on {$installmentNextDueDate}.";
+                $message .= "
+                            <tr>
+                                <td style='padding: 8px; border: 1px solid #ddd;'>{$reservation['reservation_type']}</td>
+                                <td style='padding: 8px; border: 1px solid #ddd;'>{$assetId}</td>
+                                <td style='padding: 8px; border: 1px solid #ddd;'>Installment Next Due Date</td>
+                                <td style='padding: 8px; border: 1px solid #ddd;'>{$installmentNextDueDate}</td>
+                                <td style='padding: 8px; border: 1px solid #ddd;'>₱{$installmentMonthlyPayment}</td>
+                            </tr>";
+
+                $notifMessage = "Your {$reservation['reservation_type']} with ID {$assetId} has an Installment Monthly Payment of ₱{$installmentMonthlyPayment} due on {$installmentNextDueDate}.";
                 $insertQuery = "
-                INSERT INTO notifications (customer_id, message, link, is_read, created_at)
-                VALUES ('{$customerId}', '{$notifMessage}', '{$link}', 0, NOW())
-            ";
+                            INSERT INTO notifications (customer_id, message, link, is_read, created_at)
+                            VALUES ('{$customerId}', '{$notifMessage}', '{$link}', 0, NOW())";
                 $conn->query($insertQuery);
             }
         }

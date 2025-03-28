@@ -12,7 +12,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                <button type="button" class="btn btn-primary" id="confirmMarkDone">Yes</button>
+                <button type="button" class="btn btn-primary" id="markAsDoneSubmit">Yes</button>
             </div>
         </div>
     </div>

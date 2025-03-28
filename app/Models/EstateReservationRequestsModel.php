@@ -17,15 +17,26 @@ class EstateReservationRequestsModel extends Model {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function setEstateReservationStatus($estateId, $reserveeId, $reservationStatus) {
-        $stmt = $this->db->prepare("UPDATE estate_reservations SET reservation_status = :reservation_status WHERE estate_id = :estate_id AND reservee_id = :reservee_id");
+    public function approveEstateReservation($estateId, $reserveeId) {
+        $stmt = $this->db->prepare("UPDATE estate_reservations SET reservation_status = :reservation_status WHERE estate_id = :estate_id AND reservee_id = :reservee_id AND reservation_status = :pending_status ORDER BY created_at DESC LIMIT 1");
+        $pendingStatus = "Pending";
+        $stmt->bindParam(":pending_status", $pendingStatus);
         $stmt->bindParam(":reservation_status", $reservationStatus);
+        $reservationStatus = "Confirmed";
         $stmt->bindParam(":estate_id", $estateId);
         $stmt->bindParam(":reservee_id", $reserveeId);
 
-        if ($reservationStatus === "Cancelled") {
-            $this->setEstateStatus($estateId, "Available");
-        }
+        return $stmt->execute();
+    }
+
+    public function cancelEstateReservation($estateId, $reserveeId) {
+        $stmt = $this->db->prepare("UPDATE estate_reservations SET reservation_status = :reservation_status WHERE estate_id = :estate_id AND reservee_id = :reservee_id AND reservation_status = :pending_status ORDER BY created_at DESC LIMIT 1");
+        $pendingStatus = "Pending";
+        $stmt->bindParam(":pending_status", $pendingStatus);
+        $stmt->bindParam(":reservation_status", $reservationStatus);
+        $reservationStatus = "Cancelled";
+        $stmt->bindParam(":estate_id", $estateId);
+        $stmt->bindParam(":reservee_id", $reserveeId);
 
         return $stmt->execute();
     }

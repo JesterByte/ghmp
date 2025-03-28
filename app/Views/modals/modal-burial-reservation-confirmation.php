@@ -9,7 +9,7 @@
             <div class="modal-body">
                 <form action="<?= BASE_URL . "/burial-reservation-confirmation" ?>" method="post">
                     <p id="burial-reservation-confirmation-text"></p>
-                    <input type="hidden" name="asset_id" id="asset-id">
+                    <input type="hidden" name="burial_reservation_id" id="burial-reservation-id">
                     <input type="hidden" name="action" id="action">
                     <div class="text-end">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>

@@ -7,18 +7,29 @@ use PDO;
 
 class CustomersModel extends Model
 {
-    public function getCustomers() {
+    public function getCustomers()
+    {
         $stmt = $this->db->prepare("SELECT * FROM customers");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function setCustomerStatus($customerId, $status) {
+    public function getCustomerById($customerId)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM customers WHERE id = :id");
+        $stmt->bindValue(":id", $customerId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function setCustomerStatus($customerId, $status)
+    {
         $stmt = $this->db->prepare("UPDATE customers SET status = :status WHERE id = :id");
         return $stmt->execute(["status" => $status, "id" => $customerId]);
     }
 
-    public function getBeneficiariesByCustomerId($customerId) {
+    public function getBeneficiariesByCustomerId($customerId)
+    {
         $stmt = $this->db->prepare("SELECT * FROM beneficiaries WHERE customer_id = :customer_id AND status = 'Inactive'");
         $stmt->execute(["customer_id" => $customerId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -98,13 +98,13 @@ foreach ($customers as $customer) {
 </div>
 
 <?php include_once VIEW_PATH . "/templates/dataTables-scripts.php" ?>
-<?php include_once VIEW_PATH . "/modals/modal-add-estate-reservation.php" ?>
+<?php // include_once VIEW_PATH . "/modals/modal-add-estate-reservation.php" ?>
 
 <script src="<?= BASE_URL . "/js/form-validation.js" ?>"></script>
 <script src="<?= BASE_URL . "/js/modal-autofocus.js" ?>"></script>
 
 <script>
-    autofocusModal("add-estate-reservation-modal", "estate");
+    // autofocusModal("add-estate-reservation-modal", "estate");
 </script>
 
 <script>

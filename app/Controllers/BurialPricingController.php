@@ -48,7 +48,8 @@ class BurialPricingController extends BaseController
 
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
-            "pendingEstateReservations" => $this->pendingEstateReservations
+            "pendingEstateReservations" => $this->pendingEstateReservations,
+            "pendingReservations" => $this->pendingReservations
         ];
 
         View::render("templates/layout", $data);
@@ -64,7 +65,7 @@ class BurialPricingController extends BaseController
         $estateStandardPrice = $burialPricingModel->getPrice("Estate", "Standard")["price"];
         $estateMausoleumPrice = $burialPricingModel->getPrice("Estate", "Mausoleum")["price"];
         $estateBoneTransferPrice = $burialPricingModel->getPrice("Estate", "Bone Transfer")["price"];
-        
+
         $data = [
             "pageTitle" => "Burial Pricing List",
             "category" => "Estate",
@@ -79,7 +80,8 @@ class BurialPricingController extends BaseController
 
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
-            "pendingEstateReservations" => $this->pendingEstateReservations
+            "pendingEstateReservations" => $this->pendingEstateReservations,
+            "pendingReservations" => $this->pendingReservations
         ];
 
         View::render("templates/layout", $data);

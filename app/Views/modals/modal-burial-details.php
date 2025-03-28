@@ -31,6 +31,7 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <button type="button" id="markAsDoneBtn" class="btn btn-success" style="display: none;" data-bs-toggle="modal" data-bs-target="#confirmDoneModal" data-bs-dismiss="modal">Mark as Done</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>

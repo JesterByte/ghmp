@@ -88,15 +88,15 @@ foreach ($ongoingInstallments as $ongoingInstallment) {
 </div>
 
 <?php include_once VIEW_PATH . "/templates/dataTables-scripts.php" ?>
-<?php include_once VIEW_PATH . "/modals/modal-add-monthly-payment.php" ?>
-<?php include_once VIEW_PATH . "/modals/modal-add-down-payment.php" ?>
+<?php // include_once VIEW_PATH . "/modals/modal-add-monthly-payment.php" ?>
+<?php // include_once VIEW_PATH . "/modals/modal-add-down-payment.php" ?>
 
 <script src="<?= BASE_URL . "/js/form-validation.js" ?>"></script>
 <script src="<?= BASE_URL . "/js/modal-autofocus.js" ?>"></script>
 
 <script>
-    autofocusModal("add-down-payment-modal", "asset-id");
-    autofocusModal("add-monthly-payment-modal", "asset-id");
+    // autofocusModal("add-down-payment-modal", "asset-id");
+    // autofocusModal("add-monthly-payment-modal", "asset-id");
 </script>
 
 <script>

@@ -6,7 +6,8 @@ use App\Models\BadgeModel;
 use App\Models\FullyPaidsModel;
 use App\Core\View;
 
-class FullyPaidsController extends BaseController {
+class FullyPaidsController extends BaseController
+{
     // public function index() {
     //     $fullyPaidsModel = new FullyPaidsModel();
     //     $fullyPaidsTable = $fullyPaidsModel->getFullyPaids();
@@ -21,7 +22,8 @@ class FullyPaidsController extends BaseController {
     //     View::render("templates/layout", $data);
     // }
 
-    public function indexCashSale() {
+    public function indexCashSale()
+    {
         $this->checkSession();
 
         $fullyPaidsModel = new FullyPaidsModel();
@@ -38,13 +40,15 @@ class FullyPaidsController extends BaseController {
 
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
-            "pendingEstateReservations" => $this->pendingEstateReservations
+            "pendingEstateReservations" => $this->pendingEstateReservations,
+            "pendingReservations" => $this->pendingReservations
         ];
 
         View::render("templates/layout", $data);
     }
 
-    public function indexSixMonths() {
+    public function indexSixMonths()
+    {
         $this->checkSession();
 
         $fullyPaidsModel = new FullyPaidsModel();
@@ -61,13 +65,15 @@ class FullyPaidsController extends BaseController {
 
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
-            "pendingEstateReservations" => $this->pendingEstateReservations
+            "pendingEstateReservations" => $this->pendingEstateReservations,
+            "pendingReservations" => $this->pendingReservations
         ];
 
         View::render("templates/layout", $data);
     }
 
-    public function indexInstallment() {
+    public function indexInstallment()
+    {
         $this->checkSession();
 
         $fullyPaidsModel = new FullyPaidsModel();
@@ -84,7 +90,8 @@ class FullyPaidsController extends BaseController {
 
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
-            "pendingEstateReservations" => $this->pendingEstateReservations
+            "pendingEstateReservations" => $this->pendingEstateReservations,
+            "pendingReservations" => $this->pendingReservations
         ];
 
         View::render("templates/layout", $data);

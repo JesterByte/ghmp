@@ -6,8 +6,10 @@ use App\Models\BadgeModel;
 use App\Models\SixMonthsModel;
 use App\Core\View;
 
-class SixMonthsController extends BaseController {
-    public function index() {
+class SixMonthsController extends BaseController
+{
+    public function index()
+    {
         $this->checkSession();
 
         $sixMonthsModel = new SixMonthsModel();
@@ -25,15 +27,17 @@ class SixMonthsController extends BaseController {
 
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
-            "pendingEstateReservations" => $this->pendingEstateReservations
+            "pendingEstateReservations" => $this->pendingEstateReservations,
+            "pendingReservations" => $this->pendingReservations
         ];
 
         View::render("templates/layout", $data);
     }
 
-    public function setPayment() {
+    public function setPayment()
+    {
         $sixMonthsModel = new SixMonthsModel();
-        
+
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $assetId = $_POST["asset-id"];
             $assetType = $this->checkAssetId($assetId);

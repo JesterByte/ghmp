@@ -7,7 +7,7 @@
       <a class="nav-link text-white position-relative me-3" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="notificationBell">
         <i class="bi bi-bell" id="bellIcon"></i>
         <!-- Notification Count Badge -->
-        <span id="notificationCount" class="position-absolute top-0 start-100 translate-top badge rounded-circle bg-danger" style="display: none;">
+        <span id="notificationCount" class="position-absolute top-0 start-100 translate-top badge bg-danger" style="display: none;">
         </span>
       </a>
       <!-- Notification Dropdown (Responsive Width) -->
@@ -63,7 +63,11 @@
         notificationList.innerHTML = `<li class="dropdown-header">Notifications</li>`;
 
         if (notifications.length > 0) {
-          notificationCount.textContent = notifications.length;
+          if (notifications.length > 99) {
+            notificationCount.textContent = "99";
+          } else {
+            notificationCount.textContent = notifications.length;
+          } 
           notificationCount.style.display = "block"; // Show badge
 
           notifications.forEach(notification => {

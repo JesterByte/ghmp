@@ -116,12 +116,21 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
 </script>
 
 <script>
-    const customerNameLinks = document.querySelectorAll(".customer-name-link");
-    const beneficiariesList = document.getElementById("beneficiaries-list");
+    document.addEventListener("DOMContentLoaded", function() {
+        const beneficiariesList = document.getElementById("beneficiaries-list");
+        const beneficiariesModal = document.getElementById("beneficiaries-modal");
 
-    customerNameLinks.forEach(link => {
-        link.addEventListener("click", async function() {
-            const customerId = this.getAttribute("data-bs-customer-id");
+        // Fetch beneficiaries when the modal is shown
+        beneficiariesModal.addEventListener("shown.bs.modal", async function(event) {
+            // Get the button that triggered the modal
+            const button = event.relatedTarget;
+            if (!button) return;
+
+            // Get customer ID from the button
+            const customerId = button.getAttribute("data-bs-customer-id");
+            if (!customerId) return;
+
+            console.log("Fetching beneficiaries for customer:", customerId);
 
             try {
                 const response = await fetch("<?= BASE_URL ?>/fetch-beneficiaries/" + customerId);
@@ -133,6 +142,7 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
                 const data = await response.json();
                 const beneficiaries = data.beneficiaries;
 
+                // Clear previous list
                 beneficiariesList.innerHTML = "";
 
                 if (beneficiaries.length > 0) {

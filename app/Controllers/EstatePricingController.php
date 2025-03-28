@@ -9,8 +9,10 @@ use App\Utils\Formatter;
 use App\Core\View;
 use App\Helpers\DisplayHelper;
 
-class EstatePricingController extends BaseController {
-    public function index() {
+class EstatePricingController extends BaseController
+{
+    public function index()
+    {
         $this->checkSession();
 
         $estatePricingModel = new EstatePricingModel();
@@ -26,20 +28,22 @@ class EstatePricingController extends BaseController {
 
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
-            "pendingEstateReservations" => $this->pendingEstateReservations
+            "pendingEstateReservations" => $this->pendingEstateReservations,
+            "pendingReservations" => $this->pendingReservations
         ];
 
         View::render("templates/layout", $data);
     }
 
-    public function setPrice() {
+    public function setPrice()
+    {
         $estatePricingModel = new EstatePricingModel();
         $rates = $estatePricingModel->getRates();
         $interestRates = [
-            "one_year" => $rates["one_year_interest_rate"], 
-            "two_years" => $rates["two_years_interest_rate"], 
-            "three_years" => $rates["three_years_interest_rate"], 
-            "four_years" => $rates["four_years_interest_rate"], 
+            "one_year" => $rates["one_year_interest_rate"],
+            "two_years" => $rates["two_years_interest_rate"],
+            "three_years" => $rates["three_years_interest_rate"],
+            "four_years" => $rates["four_years_interest_rate"],
             "five_years" => $rates["five_years_interest_rate"]
         ];
 
@@ -58,17 +62,17 @@ class EstatePricingController extends BaseController {
             foreach ($interestRates as $term => $interestRate) {
                 $newMonthlyAmortizations[$term] = $calculator->getMonthlyAmortization($newBalance, $interestRate, $year);
                 $year++;
-            } 
+            }
 
             $estatePricingModel->updatePrice($estate, $newEstatePrice, $newTotalPurchasePrice, $newCashSale, $newSixMonths, $newDownPayment, $newBalance, $newMonthlyAmortizations);
 
             // $this->redirectBack();
             $this->redirect(BASE_URL . "/estate-pricing", DisplayHelper::$checkIcon, "Pricing has been updated successfully!", "Operation Successful");
-
         }
     }
 
-    public function setRates() {
+    public function setRates()
+    {
         if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["update-rates-submit"])) {
             $vat = Formatter::formatDecimal($_POST["vat"]);
             $mcf = $_POST["mcf"];
@@ -91,8 +95,6 @@ class EstatePricingController extends BaseController {
 
             // $this->redirectBack();
             $this->redirect(BASE_URL . "/estate-pricing", DisplayHelper::$checkIcon, "Rates has been updated successfully!", "Operation Successful");
-
         }
     }
-
 }

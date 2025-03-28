@@ -61,8 +61,8 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
                             data-bs-date-of-birth="' . $birthDate . '" data-bs-date-of-death="' . $deathDate . '"
                             data-bs-obituary="' . $row["obituary"] . '" data-bs-reservation-date="' . $reservationDate . '" data-bs-burial-date-time="' . $burialDateTime . '">
                             <i class="bi bi-eye-fill"></i> View Details</button>                        
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#burial-reservation-confirmation" data-bs-asset-id="' . $assetId . '" data-bs-action="approve"><i class="bi bi-check"></i> Approve</button>
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#burial-reservation-confirmation" data-bs-asset-id="' . $assetId . '" data-bs-action="cancel"><i class="bi bi-x"></i> Cancel</button>
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#burial-reservation-confirmation" data-bs-burial-reservation-id="' . $row["id"] . '" data-bs-action="approve"><i class="bi bi-check"></i> Approve</button>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#burial-reservation-confirmation" data-bs-burial-reservation-id="' . $row["id"] . '" data-bs-action="cancel"><i class="bi bi-x"></i> Cancel</button>
                         </div>';
 
                     TableHelper::startRow();
@@ -154,14 +154,14 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
 
         burialModal.addEventListener("show.bs.modal", function(event) {
             var button = event.relatedTarget;
-            var assetId = button.getAttribute("data-bs-asset-id");
+            var burialReservationId = button.getAttribute("data-bs-burial-reservation-id");
             var action = button.getAttribute("data-bs-action");
 
             var burialReservationConfirmationText = document.getElementById("burial-reservation-confirmation-text");
             burialReservationConfirmationText.textContent = "Are you sure you want to " + action + " this reservation?";
 
-            var inputAssetId = document.getElementById("asset-id");
-            inputAssetId.value = assetId;
+            var inputBurialReservationId = document.getElementById("burial-reservation-id");
+            inputBurialReservationId.value = burialReservationId;
 
             var inputAction = document.getElementById("action");
             inputAction.value = action;

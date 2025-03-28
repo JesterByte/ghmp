@@ -20,7 +20,7 @@ class NotificationModel extends Model {
     }
 
     public function markAllAsRead($adminId) {
-        $stmt = $this->db->prepare("UPDATE admin_notifications SET is_read = 1 WHERE admin_id = :admin_id");
+        $stmt = $this->db->prepare("UPDATE admin_notifications SET is_read = 1 WHERE admin_id = :admin_id OR admin_id IS NULL");
         $stmt->bindParam(':admin_id', $adminId, PDO::PARAM_INT);
         return $stmt->execute();
     }

@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\BadgeModel;
 use App\Models\BurialReservationsModel;
+use App\Models\DeceasedModel;
 use App\Utils\Formatter;
 use App\Utils\Calculator;
 use App\Core\View;
@@ -85,6 +86,7 @@ class BurialReservationsController extends BaseController
                     "reservation_date" => Formatter::formatDateTime($event["created_at"]),
                     "burial_type" => $event["burial_type"],
                     "burial_date_time" => Formatter::formatDateTime($event["date_time"]),
+                    "payment_status" => $event["payment_status"],
                     "asset_id" => $assetId
                 ]
             ];
@@ -169,6 +171,25 @@ class BurialReservationsController extends BaseController
                     $burialReservationsModel->updateLotOccupancy($reservation["asset_id"], $reservation["reservee_id"]);
                     break;
             }
+
+            $deceasedMiddleName = !empty($reservation["middle_name"]) ? " " . $reservation["middle_name"] . " " : " ";
+            $deceasedSuffix = !empty($reservation["suffix"]) ? ", " . $reservation["suffix"] : "";
+            $deceasedFullName = $reservation["first_name"] . $deceasedMiddleName . $reservation["last_name"] . $deceasedSuffix;
+
+            $deceasedModel = new DeceasedModel();
+            $newDeceased = [
+                "full_name" => $deceasedFullName,
+                "first_name" => $reservation["first_name"],
+                "middle_name" => $reservation["middle_name"],
+                "last_name" => $reservation["last_name"],
+                "suffix" => $reservation["suffix"],
+                "obituary" => $reservation["obituary"],
+                "birth_date" => $reservation["date_of_birth"],
+                "death_date" => $reservation["date_of_death"],
+                "burial_date" => $reservation["date_time"],
+                "location" => $reservation["asset_id"]
+            ];
+            $deceasedModel->setDeceased($newDeceased);
 
             if ($result) {
                 echo json_encode([

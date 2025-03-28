@@ -57,13 +57,13 @@
 </div>
 
 <?php include_once VIEW_PATH . "/templates/dataTables-scripts.php" ?>
-<?php include_once VIEW_PATH . "/modals/modal-add-six-months-payment.php" ?>
+<?php // include_once VIEW_PATH . "/modals/modal-add-six-months-payment.php" ?>
 
 <script src="<?= BASE_URL . "/js/form-validation.js" ?>"></script>
 <script src="<?= BASE_URL . "/js/modal-autofocus.js" ?>"></script>
 
 <script>
-    autofocusModal("add-six-months-payment-modal", "lot-id");
+    // autofocusModal("add-six-months-payment-modal", "lot-id");
 </script>
 
 <script>

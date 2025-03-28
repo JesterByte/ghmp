@@ -86,7 +86,7 @@ class BurialReservationsModel extends Model
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function updateStatus($assetId, $status)
+    public function updateStatus($assetId, $customerId, $status)
     {
         $stmt = $this->db->prepare("UPDATE burial_reservations SET status = :status WHERE asset_id = :asset_id");
         return $stmt->execute([':asset_id' => $assetId, ':status' => $status]);
