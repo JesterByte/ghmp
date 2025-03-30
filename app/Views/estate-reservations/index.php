@@ -45,11 +45,12 @@ foreach ($customers as $customer) {
 </div>
 
 <div class="row my-3">
-    <div class="col">
+    <div class="col d-flex justify-content-between">
         <div class="btn-group">
             <a href="estate-reservations-overdue" class="btn btn-warning <?= DisplayHelper::isActivePage($currentTable, "Overdue", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "Overdue", "aria-current='page'") ?>><i class="bi bi-clock<?= DisplayHelper::isActivePage($currentTable, "Overdue", "-fill") ?>"></i> Overdue</a>
             <a href="estate-reservations-cancelled" class="btn btn-danger <?= DisplayHelper::isActivePage($currentTable, "Cancelled", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "Cancelled", "aria-current='page'") ?>><i class="bi bi-trash<?= DisplayHelper::isActivePage($currentTable, "Cancelled", "-fill") ?>"></i> Cancelled</a>
         </div>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-estate-reservation-modal">+ New Reservation</button>
     </div>
 </div>
 
@@ -98,13 +99,13 @@ foreach ($customers as $customer) {
 </div>
 
 <?php include_once VIEW_PATH . "/templates/dataTables-scripts.php" ?>
-<?php // include_once VIEW_PATH . "/modals/modal-add-estate-reservation.php" ?>
+<?php include_once VIEW_PATH . "/modals/modal-add-estate-reservation.php" ?>
 
 <script src="<?= BASE_URL . "/js/form-validation.js" ?>"></script>
 <script src="<?= BASE_URL . "/js/modal-autofocus.js" ?>"></script>
 
 <script>
-    // autofocusModal("add-estate-reservation-modal", "estate");
+    autofocusModal("add-estate-reservation-modal", "estate");
 </script>
 
 <script>

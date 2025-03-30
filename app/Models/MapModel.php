@@ -6,12 +6,6 @@ use App\Core\Model;
 use PDO;
 
 class MapModel extends Model {
-    // public function getLots() {
-    //     $stmt = $this->db->prepare("SELECT * FROM lots");
-    //     $stmt->execute();
-    //     return $stmt->fetchAll();
-    // }
-
     public function getLots() {
         $stmt = $this->db->prepare("SELECT lot_id AS id, latitude_start, latitude_end, longitude_start, longitude_end, status, 'lot' AS type
         FROM lots

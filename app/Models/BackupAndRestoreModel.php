@@ -15,20 +15,20 @@ class BackupAndRestoreModel extends Model {
         $dbName = $config["dbname"]; 
 
         if ($tempBackupPath != null) {
-            $backupFile = STORAGE_PATH . '/backups/temp_backup.sql';;
+            $backupFile = STORAGE_PATH . '/backups/temp_backup.sql';
         } else {
             $backupFile = STORAGE_PATH . '/backups/ghmp_db_backup_' . date('Y-m-d_h-i-s-a') . '.sql';
         }
         // $backupFile = STORAGE_PATH . '/backups/ghmp_db_backup_' . date('Y-m-d_h-i-s-a') . '.sql';
 
         // Ensure backups folder exists
-        if (!file_exists('backups')) {
-            mkdir('backups', 0777, true);
+        if (!file_exists(STORAGE_PATH . '/backups')) {
+            mkdir(STORAGE_PATH . '/backups', 0777, true);
         }
 
         // Corrected command (without hanging issue)
-        // $command = "C:/xampp/mysql/bin/mysqldump -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
-        $command = "mysqldump -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
+        $command = "C:/xampp/mysql/bin/mysqldump -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
+        // $command = "mysqldump -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
         
         exec($command . " 2>&1", $output, $returnVar);
 

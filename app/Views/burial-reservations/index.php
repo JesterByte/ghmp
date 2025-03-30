@@ -31,41 +31,84 @@
         font-size: 14px;
     }
 
+    /* Legend container */
+    .legend-box {
+        max-width: 250px;
+        border: 2px solid #ccc;
+        background-color: #f8f9fa;
+        text-align: left;
+    }
+
+    /* Legend item (each row) */
     .legend-item {
-        display: inline-block;
-        padding: 5px 10px;
-        margin: 0 5px;
-        border-radius: 4px;
-        color: white;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
         font-weight: bold;
+        margin-bottom: 5px;
     }
 
-    .legend-item.pending {
+    /* Colored boxes */
+    .color-box {
+        width: 20px;
+        height: 20px;
+        border-radius: 4px;
+        display: inline-block;
+    }
+
+    /* Color styles */
+    .color-box.pending {
         background-color: #ffc107;
-        /* Yellow for pending */
+        /* Yellow */
     }
 
-    .legend-item.paid {
-        background-color: #008000;
-        /* Green for paid */
-    }
-
-    .legend-item.completed {
-        background-color: #6c757d;
-        /* Gray for completed */
-    }
-
-    .legend-item.cancelled {
-        background-color: red;
-        /* Gray for completed */
-    }
-
-    .legend-item.active {
+    .color-box.active {
         background-color: #0d6efd;
-        /* Blue for active */
+        /* Blue */
+    }
+
+    .color-box.paid {
+        background-color: #008000;
+        /* Green */
+    }
+
+    .color-box.completed {
+        background-color: gray;
+        /* Gray */
+    }
+
+    .color-box.cancelled {
+        background-color: red;
+        /* Red */
+    }
+
+    @media (max-width: 768px) {
+        #calendar-container {
+            display: none;
+            /* Hide the calendar */
+        }
+
+        #mobile-message {
+            display: block !important;
+            /* Show the message */
+        }
+
+        #calendar-legend {
+            display: none;
+            /* Hide the legend */
+        }
     }
 </style>
-<div class="text-end">
+
+<div class="alert alert-info text-center">
+    <i class="bi bi-info-circle-fill"></i> On this page, you can view burial reservations in a calendar format.  
+    Click on an event to see details, including interred information, reservation details, and payment status.  
+    Approved and paid burials can be marked as done after the burial date has passed.
+</div>
+
+<div class="d-flex justify-content-between my-3">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-burial-reservation-modal">+ New Reservation</button>
     <a href="<?= BASE_URL . "/burial-reservation-requests" ?>" class="btn btn-primary position-relative" role="button"><i class="bi bi-list"></i> Requests
         <?php if ($burialReservationRequests != 0): ?>
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -76,30 +119,67 @@
     </a>
 </div>
 
-<!-- Legend -->
-<div id="calendar-legend" class="my-3 text-center">
-    <strong>Legend:</strong>
-    <span class="legend-item pending">Pending</span>
-    <span class="legend-item active border-primary">Approved</span>
-    <span class="legend-item paid border-primary">Paid</span>
-    <span class="legend-item completed">Completed</span>
-    <span class="legend-item cancelled">Cancelled</span>
-</div>
-
 <div class="row">
-    <div class="col-lg-12">
-        <div id="calendar" class="rounded shadow"></div>
+    <div class="col-lg-10">
+        <div id="calendar-container">
+            <div id="calendar" class="rounded shadow"></div>
+        </div>
+        <div id="mobile-message" class="alert alert-warning text-center d-none">
+            The calendar view is not available on mobile devices.
+        </div>
+    </div>
+    <div class="col-lg-2">
+        <!-- Legend Box -->
+        <div id="calendar-legend" class="legend-box mx-auto my-3 p-3 rounded shadow">
+            <h6 class="text-center fw-bold mb-2">Legend</h6>
+            <div class="d-flex flex-column align-items-start">
+                <div class="legend-item">
+                    <span class="color-box pending"></span> Pending
+                </div>
+                <div class="legend-item">
+                    <span class="color-box active"></span> Approved
+                </div>
+                <div class="legend-item">
+                    <span class="color-box paid"></span> Paid
+                </div>
+                <div class="legend-item">
+                    <span class="color-box completed"></span> Completed
+                </div>
+                <div class="legend-item">
+                    <span class="color-box cancelled"></span> Cancelled
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-
 <?php include_once VIEW_PATH . "/modals/modal-mark-as-done.php" ?>
 <?php include_once VIEW_PATH . "/modals/modal-burial-details.php" ?>
+<?php include_once VIEW_PATH . "/modals/modal-add-burial-reservation.php" ?>
 
 <script src="<?= BASE_URL . "/js/form-validation.js" ?>"></script>
 <script src="<?= BASE_URL . "/js/modal-autofocus.js" ?>"></script>
 <script src="<?= BASE_URL . "/js/fullcalendar.js" ?>"></script>
 <!-- <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script> -->
+
+<script>
+    function toggleCalendar() {
+        const calendarContainer = document.getElementById("calendar-container");
+        const mobileMessage = document.getElementById("mobile-message");
+
+        if (window.innerWidth <= 768) {
+            calendarContainer.style.display = "none";
+            mobileMessage.style.display = "block";
+        } else {
+            calendarContainer.style.display = "block";
+            mobileMessage.style.display = "none";
+        }
+    }
+
+    // Run on page load and when resizing
+    window.addEventListener("load", toggleCalendar);
+    window.addEventListener("resize", toggleCalendar);
+</script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -180,11 +260,19 @@
                     document.getElementById("markAsDoneSubmit").setAttribute("data-event-id", info.event.id); // Store event ID
                 } else {
                     markAsDoneBtn.style.display = "none"; // Hide button
+
+                    // Show message if burial date is in the future
+                    if (status === "Approved" && burialDateTime > now) {
+                        showToast("<i class='bi bi-info-circle-fill text-info'></i>",
+                            "You can mark the burial as done only after the burial date has passed.",
+                            "Info");
+                    }
                 }
 
                 var eventDetailsModal = new bootstrap.Modal(document.getElementById("eventDetailsModal"));
                 eventDetailsModal.show();
             }
+
         });
 
         calendar.render();

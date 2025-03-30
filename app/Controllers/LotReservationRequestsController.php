@@ -38,9 +38,10 @@ class LotReservationRequestsController extends BaseController
         View::render("templates/layout", $data);
     }
 
-    public function verifyLotType($lotId)
+    public function verifyLotType($lotId, $reserveeId)
     {
         $lotId = Encryption::decrypt($lotId, $this->secretKey);
+        $reserveeId = Encryption::decrypt($reserveeId, $this->secretKey);
 
         $lotReservationRequestsModel = new LotReservationRequestsModel();
         $lot = $lotReservationRequestsModel->getCoordinatesByLotId($lotId);
@@ -49,6 +50,7 @@ class LotReservationRequestsController extends BaseController
             "pageTitle" => "Verify Lot Type",
             "usesDataTables" => false,
             "lot" => $lot,
+            "reserveeId" => $reserveeId,
             "view" => "verify-lot-type/index",
 
             "userId" => $_SESSION["user_id"],
@@ -59,8 +61,6 @@ class LotReservationRequestsController extends BaseController
             "pendingReservations" => $this->pendingReservations
         ];
 
-
-
         View::render("templates/layout", $data);
     }
 
@@ -68,11 +68,8 @@ class LotReservationRequestsController extends BaseController
     {
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $lotId = $_POST["lot-id"];
+            $reserveeId = $_POST["reservee-id"];
             $lotType = $_POST["lot-type"];
-
-            $lotReservationModel = new LotReservationsModel();
-            $lotReservation = $lotReservationModel->getLotReservation($lotId, $lotType, "Pending");
-            $customerId = $lotReservation["reservee_id"];
 
             $lotReservationRequestsModel = new LotReservationRequestsModel();
             $lotReservationRequestsModel->setLotType($lotId, $lotType);
@@ -80,11 +77,11 @@ class LotReservationRequestsController extends BaseController
             // Send Notification
             $customerNotificationModel = new CustomerNotificationModel();
             $notificationMessage = "Your lot reservation for Lot #$lotId ($lotType) has been approved by the administrator.";
-            $customerNotificationModel->setNotification($customerId, $notificationMessage, "my_lots_and_estates");
+            $customerNotificationModel->setNotification($reserveeId, $notificationMessage, "my_lots_and_estates");
 
             // Send Email
             $customerModel = new CustomersModel();
-            $customer = $customerModel->getCustomerById($customerId);
+            $customer = $customerModel->getCustomerById($reserveeId);
             $customerEmail = $customer["email_address"];
             $customerName = $customer["first_name"];
 
@@ -119,8 +116,8 @@ class LotReservationRequestsController extends BaseController
             $lotReservationRequestsModel = new LotReservationRequestsModel();
             $lotReservationRequestsModel->cancelLotReservation($lotId, $reserveeId);
 
-            $lotReservationsModel = new LotReservationsModel();
-            $lotReservationsModel->cancelLotReservation($lotId, $reserveeId);
+            // $lotReservationsModel = new LotReservationsModel();
+            // $lotReservationsModel->cancelLotReservation($lotId, $reserveeId);
 
             // Send Notification
             $customerNotificationModel = new CustomerNotificationModel();

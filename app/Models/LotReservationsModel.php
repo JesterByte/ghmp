@@ -208,13 +208,13 @@ class LotReservationsModel extends Model
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // public function setLotStatus($lotId, $status = "Reserved")
-    // {
-    //     $stmt = $this->db->prepare("UPDATE lots SET status = :status WHERE lot_id = :lot_id");
-    //     $stmt->bindParam(':status', $status);
-    //     $stmt->bindParam(':lot_id', $lotId);
-    //     return $stmt->execute();
-    // }
+    public function setLotStatus($lotId, $status = "Reserved")
+    {
+        $stmt = $this->db->prepare("UPDATE lots SET status = :status WHERE lot_id = :lot_id");
+        $stmt->bindParam(':status', $status);
+        $stmt->bindParam(':lot_id', $lotId);
+        return $stmt->execute();
+    }
 
     // public function setCashSale($lotId) {
     //     $stmt = $this->db->prepare('INSERT INTO cash_sales (lot_reservation_id, payment_amount) VALUES (:lot_reservation_id, :payment_amount)');

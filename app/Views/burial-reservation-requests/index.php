@@ -90,14 +90,14 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
                 <h5 class="modal-title" id="eventDetailsModalLabel">Burial Reservation Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body overflow-auto">
                 <div class="row">
                     <div class="col-md-6">
                         <h6>Interred Information</h6>
-                        <p><strong>Name:</strong> <span id="interredName"></span></p>
+                        <p><strong>Name:</strong> <span id="interredName" class="text-wrap"></span></p>
                         <p><strong>Birth Date:</strong> <span id="interredBirthDate"></span></p>
                         <p><strong>Death Date:</strong> <span id="interredDeathDate"></span></p>
-                        <p><strong>Obituary:</strong> <span id="interredObituary"></span></p>
+                        <p><strong>Obituary:</strong> <span id="interredObituary" class="text-break"></span></p>
                     </div>
                     <div class="col-md-6">
                         <h6>Reservation Information</h6>
@@ -111,7 +111,7 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
                         <h6>Burial Details</h6>
                         <p><strong>Burial Type:</strong> <span id="burialType"></span></p>
                         <p><strong>Burial Date & Time:</strong> <span id="burialDateTime"></span></p>
-                        <p><strong>Asset ID:</strong> <span id="assetId"></span></p>
+                        <p><strong>Asset ID:</strong> <span id="assetId" class="text-break"></span></p>
                     </div>
                 </div>
             </div>

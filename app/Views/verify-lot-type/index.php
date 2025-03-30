@@ -43,6 +43,7 @@ $lotNumber = $lotIdComponents["lot"];
                     <form id="lotTypeForm" class="" action="<?= BASE_URL . "/verify-lot-type-submit" ?>" method="post">
                         <div class="mb-3">
                             <input type="hidden" name="lot-id" value="<?= $lotId ?>">
+                            <input type="hidden" name="reservee-id" value="<?= $reserveeId ?>">
                             <label for="lotType" class="form-label">Lot Type</label>
                             <select id="lotType" name="lot-type" class="form-select" required>
                                 <option value="" disabled selected>Select Lot Type</option>

@@ -15,11 +15,11 @@
         $formattedReservationsTable["payment_amount"][] = Formatter::formatCurrency($reservationRow["payment_amount"]);
     }
 ?>
-<!-- <div class="row">
+<div class="row my-3">
     <div class="col d-flex justify-content-end">
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-six-months-payment-modal"><i class="bi bi-plus"></i> Add New Payment</button>
     </div>
-</div> -->
+</div>
 
 <?php include_once VIEW_PATH . "/templates/dataTables-styles.php" ?>
 <div class="table-responsive-sm shadow">
@@ -57,13 +57,13 @@
 </div>
 
 <?php include_once VIEW_PATH . "/templates/dataTables-scripts.php" ?>
-<?php // include_once VIEW_PATH . "/modals/modal-add-six-months-payment.php" ?>
+<?php include_once VIEW_PATH . "/modals/modal-add-six-months-payment.php" ?>
 
 <script src="<?= BASE_URL . "/js/form-validation.js" ?>"></script>
 <script src="<?= BASE_URL . "/js/modal-autofocus.js" ?>"></script>
 
 <script>
-    // autofocusModal("add-six-months-payment-modal", "lot-id");
+    autofocusModal("add-six-months-payment-modal", "lot-id");
 </script>
 
 <script>

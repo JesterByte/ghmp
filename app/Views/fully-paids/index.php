@@ -47,12 +47,14 @@
                         }
                         $completedOn = Formatter::formatDateTime($fullyPaidsRow["updated_at"]);
 
+                        $action = '<button type="button" class="btn btn-primary">Issue Certificate</button>';
+
                         TableHelper::startRow();
                         TableHelper::cell($completedOn);
                         TableHelper::cell($assetId);
                         TableHelper::cell($reservee);
                         TableHelper::cell($paymentAmount);
-                        TableHelper::cell('');
+                        TableHelper::cell($action);
                         TableHelper::endRow();
                     }
                 }

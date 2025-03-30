@@ -6,8 +6,8 @@ use App\Core\Model;
 use PDO;
 
 class CustomerNotificationModel extends Model {
-    public function setNotification($customer, $message, $link) {
+    public function setNotification($customerId, $message, $link) {
         $stmt = $this->db->prepare("INSERT INTO notifications (customer_id, message, link) VALUES (:customer_id, :message, :link)");
-        return $stmt->execute([':customer_id' => $customer, ':message' => $message, ':link' => $link]);
+        return $stmt->execute([':customer_id' => $customerId, ':message' => $message, ':link' => $link]);
     }
 }
