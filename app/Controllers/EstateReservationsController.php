@@ -7,6 +7,7 @@ use App\Models\EstateReservationsModel;
 use App\Utils\Formatter;
 use App\Utils\Calculator;
 use App\Core\View;
+use App\Helpers\DisplayHelper;
 
 class EstateReservationsController extends BaseController
 {
@@ -176,59 +177,59 @@ class EstateReservationsController extends BaseController
 
             $pricing = $estatetReservationsModel->getPricing("Estate " . $estateType);
 
-            $estatetReservationsModel->setReservation($estateId, $reserveeId, $estateType, $paymentOption);
+            $reservationId = $estatetReservationsModel->setReservation($estateId, $reserveeId, $estateType, $paymentOption);
             $calculator = new Calculator();
             $downPaymentDueDate = $this->setDownPaymentDueDate();
             switch ($paymentOption) {
                 case "Cash Sale":
                     $paymentAmount = $pricing['cash_sale'];
-                    $estatetReservationsModel->setCashSalePayment($estateId, $paymentAmount);
-                    $estatetReservationsModel->setCashSaleDueDate($estateId);
+                    $estatetReservationsModel->setCashSalePayment($estateId, $reservationId, $paymentAmount);
+                    $estatetReservationsModel->setCashSaleDueDate($estateId, $reservationId);
                     break;
                 case "6 Months":
                     $paymentAmount = $pricing['six_months'];
-                    $estatetReservationsModel->setSixMonthsPayment($estateId, $paymentAmount);
-                    $estatetReservationsModel->setSixMonthsDueDate($estateId);
+                    $estatetReservationsModel->setSixMonthsPayment($estateId, $reservationId, $paymentAmount);
+                    $estatetReservationsModel->setSixMonthsDueDate($estateId, $reservationId);
                     break;
                 case "Installment: 1 Year":
                     $termYears = 1;
                     $downPayment = $pricing["down_payment"];
                     $totalAmount = $calculator->getFinalBalance($pricing["monthly_amortization_one_year"], $termYears);
                     $paymentAmount = $pricing["monthly_amortization_one_year"];
-                    $estatetReservationsModel->setInstallmentPayment($estateId, $termYears, $downPayment, "Pending", $downPaymentDueDate, $totalAmount, $paymentAmount, $pricing["one_year_interest_rate"], "Pending");
+                    $estatetReservationsModel->setInstallmentPayment($estateId, $reservationId, $termYears, $downPayment, "Pending", $downPaymentDueDate, $totalAmount, $paymentAmount, $pricing["one_year_interest_rate"], "Pending");
                     break;
                 case "Installment: 2 Years":
                     $termYears = 2;
                     $downPayment = $pricing["down_payment"];
                     $totalAmount = $calculator->getFinalBalance($pricing["monthly_amortization_two_years"], $termYears);
                     $paymentAmount = $pricing["monthly_amortization_two_years"];
-                    $estatetReservationsModel->setInstallmentPayment($estateId, $termYears, $downPayment, "Pending", $downPaymentDueDate, $totalAmount, $paymentAmount, $pricing["two_years_interest_rate"], "Pending");
+                    $estatetReservationsModel->setInstallmentPayment($estateId, $reservationId, $termYears, $downPayment, "Pending", $downPaymentDueDate, $totalAmount, $paymentAmount, $pricing["two_years_interest_rate"], "Pending");
                     break;
                 case "Installment: 3 Years":
                     $termYears = 3;
                     $downPayment = $pricing["down_payment"];
                     $totalAmount = $calculator->getFinalBalance($pricing["monthly_amortization_four_years"], $termYears);
                     $paymentAmount = $pricing["monthly_amortization_three_years"];
-                    $estatetReservationsModel->setInstallmentPayment($estateId, $termYears, $downPayment, "Pending", $downPaymentDueDate, $totalAmount, $paymentAmount, $pricing["three_years_interest_rate"], "Pending");
+                    $estatetReservationsModel->setInstallmentPayment($estateId, $reservationId, $termYears, $downPayment, "Pending", $downPaymentDueDate, $totalAmount, $paymentAmount, $pricing["three_years_interest_rate"], "Pending");
                     break;
                 case "Installment: 4 Years":
                     $termYears = 4;
                     $downPayment = $pricing["down_payment"];
                     $totalAmount = $calculator->getFinalBalance($pricing["monthly_amortization_four_years"], $termYears);
                     $paymentAmount = $pricing["monthly_amortization_four_years"];
-                    $estatetReservationsModel->setInstallmentPayment($estateId, $termYears, $downPayment, "Pending", $downPaymentDueDate, $totalAmount, $paymentAmount, $pricing["four_years_interest_rate"], "Pending");
+                    $estatetReservationsModel->setInstallmentPayment($estateId, $reservationId, $termYears, $downPayment, "Pending", $downPaymentDueDate, $totalAmount, $paymentAmount, $pricing["four_years_interest_rate"], "Pending");
                     break;
                 case "Installment: 5 Years":
                     $termYears = 5;
                     $downPayment = $pricing["down_payment"];
                     $totalAmount = $calculator->getFinalBalance($pricing["monthly_amortization_five_years"], $termYears);
                     $paymentAmount = $pricing["monthly_amortization_five_years"];
-                    $estatetReservationsModel->setInstallmentPayment($estateId, $termYears, $downPayment, "Pending", $downPaymentDueDate, $totalAmount, $paymentAmount, $pricing["five_years_interest_rate"], "Pending");
+                    $estatetReservationsModel->setInstallmentPayment($estateId, $reservationId, $termYears, $downPayment, "Pending", $downPaymentDueDate, $totalAmount, $paymentAmount, $pricing["five_years_interest_rate"], "Pending");
                     break;
             }
             $estatetReservationsModel->setEstateStatus($estateId);
 
-            $this->redirectBack();
+            $this->redirect(BASE_URL . "/estate-reservation", DisplayHelper::$checkIcon, "The estate reservation has been added.", "Operation Successful");
         }
     }
 

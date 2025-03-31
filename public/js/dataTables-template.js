@@ -4,7 +4,7 @@ function createDataTable(tableId, exportName, pricingTable = false) {
     new DataTable(tableId, {
         dom: 'Bfrtip',
         buttons: [
-            'copy', 
+            'copy',
             {
                 extend: 'csvHtml5',
                 title: exportName,
@@ -13,7 +13,7 @@ function createDataTable(tableId, exportName, pricingTable = false) {
                     columns: exportedColumns
                 },
                 bom: true
-            }, 
+            },
             {
                 extend: 'pdfHtml5',
                 title: exportName,
@@ -46,8 +46,28 @@ function createDataTable(tableId, exportName, pricingTable = false) {
                         }
                     };
                 }
-            }, 
+            },
             'print', 'colvis'
         ]
     });
+}
+
+function formatExportTitle(exportName) {
+    // Extract parts from the export name
+    const parts = exportName.split('_');
+
+    if (parts.length < 5) return exportName; // Return original name if format is unexpected
+
+    const type = parts[1].charAt(0).toUpperCase() + parts[1].slice(1); // Capitalize first letter
+    const category = parts[2].charAt(0).toUpperCase() + parts[2].slice(1); // Capitalize first letter
+    const date = parts[3].match(/(\d{4})(\d{2})(\d{2})/); // Extract YYYY, MM, DD
+    const time = parts[4].match(/(\d{2})(\d{2})(\d{2})/); // Extract HH, MM, SS
+
+    if (!date || !time) return exportName; // Return original if parsing fails
+
+    // Format date and time
+    const formattedDate = `${date[1]}-${date[2]}-${date[3]}`;
+    const formattedTime = `${time[1]}:${time[2]}:${time[3]}`;
+
+    return `${type} ${category} Report - ${formattedDate} ${formattedTime}`;
 }

@@ -20,11 +20,13 @@ class BurialReservationsController extends BaseController
 
         $burialReservationsModel = new BurialReservationsModel();
         $burialReservationRequests = $burialReservationsModel->getBurialReservationRequestsBadge();
+        $ownedAssets = $burialReservationsModel->getOwnedAssets("Sold");
 
         $data = [
             "pageTitle" => "Burial Reservations",
             "burialReservationRequests" => $burialReservationRequests,
             "view" => "burial-reservations/index",
+            "ownedAssets" => $ownedAssets,
 
             "userId" => $_SESSION["user_id"],
 

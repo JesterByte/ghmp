@@ -197,7 +197,7 @@ class Formatter
             // Convert it into a DateTime object
             $datetime = DateTime::createFromFormat("Y-m-d h:i:s a", $datetime_str);
 
-            return $datetime->format("F j, Y, g:i A");
+            return $datetime->format("Y-m-d, h:i:s a");
         } else {
             echo "Invalid filename format.";
         }

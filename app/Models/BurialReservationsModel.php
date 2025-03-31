@@ -38,13 +38,47 @@ class BurialReservationsModel extends Model
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getOwnedAssets($status = "Sold")
+    {
+        $query = "SELECT 
+            l.lot_id AS asset_id, 
+            'lot' AS asset_type
+            c.first_name AS first_name,
+            c.middle_name AS middle_name,
+            c.last_name AS last_name,
+            c.suffix AS suffix
+            FROM lots AS l
+            INNER JOIN customers AS c ON l.owner_id = c.id
+            WHERE l.owner_id IS NOT NULL AND l.status = :status
+            
+            UNION
+            
+            SELECT 
+            e.estate_id AS asset_id, 
+            'estate' AS asset_type,
+            c.first_name AS first_name,
+            c.middle_name AS middle_name,
+            c.last_name AS last_name,
+            c.suffix AS suffix
+            FROM estates AS e
+            INNER JOIN customers AS c ON l.owner_id = c.id
+            WHERE e.owner_id IS NOT NULL AND e.status = :status
+        ";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':status', $status);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     // public function getEvents() {
     //     $stmt = $this->db->prepare("SELECT * FROM burial_reservations WHERE status = :status");
     //     $stmt->execute([':status' => 'Approved']);
     //     return $stmt->fetchAll(PDO::FETCH_ASSOC);
     // }
 
-    public function getBurialReservationRequestsBadge() {
+    public function getBurialReservationRequestsBadge()
+    {
         $stmt = $this->db->prepare("SELECT COUNT(*) AS total_burial_reservation_requests FROM burial_reservations WHERE status = :status");
         $stmt->execute([':status' => 'Pending']);
         return $stmt->fetch(PDO::FETCH_ASSOC)["total_burial_reservation_requests"];

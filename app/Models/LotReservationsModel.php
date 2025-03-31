@@ -110,51 +110,52 @@ class LotReservationsModel extends Model
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // public function getLotReservationByLotId($lotId) {
-    //     $stmt = $this->db->prepare("SELECT * FROM lot_reservations WHERE lot_id = :lot_id");
-    //     $stmt->execute([':lot_id' => $lotId]);
-    //     return $stmt->fetch(PDO::FETCH_ASSOC);
-    // }
-
-    public function setCashSalePayment($lotId, $paymentAmount)
+    public function setCashSalePayment($lotId, $reservationId, $paymentAmount)
     {
-        $stmt = $this->db->prepare("INSERT INTO cash_sales (lot_id, payment_amount) VALUES (:lot_id, :payment_amount)");
+        $stmt = $this->db->prepare("INSERT INTO cash_sales (lot_id, reservation_id, payment_amount) VALUES (:lot_id, :reservation_id, :payment_amount)");
         $stmt->bindParam(':lot_id', $lotId);
+        $stmt->bindParam(":reservation_id", $reservationId);
         $stmt->bindParam(':payment_amount', $paymentAmount);
-        return $stmt->execute();
+        $stmt->execute();
+        return $this->db->lastInsertId();
     }
 
-    public function setCashSaleDueDate($lotId)
+    public function setCashSaleDueDate($lotId, $cashSaleId)
     {
         $dueDate = date("Y-m-d", strtotime("+7 days"));
-        $stmt = $this->db->prepare("INSERT INTO cash_sale_due_dates (lot_id, due_date) VALUES (:lot_id, :due_date)");
+        $stmt = $this->db->prepare("INSERT INTO cash_sale_due_dates (lot_id, cash_sale_id, due_date) VALUES (:lot_id, :cash_sale_id, :due_date)");
         $stmt->bindParam(':lot_id', $lotId);
+        $stmt->bindParam(":cash_sale_id", $cashSaleId);
         $stmt->bindParam(':due_date', $dueDate);
         return $stmt->execute();
     }
 
-    public function setSixMonthsPayment($lotId, $paymentAmount)
+    public function setSixMonthsPayment($lotId, $reservationId, $paymentAmount)
     {
-        $stmt = $this->db->prepare("INSERT INTO six_months (lot_id, payment_amount) VALUES (:lot_id, :payment_amount)");
+        $stmt = $this->db->prepare("INSERT INTO six_months (lot_id, reservation_id, payment_amount) VALUES (:lot_id, :reservation_id, :payment_amount)");
         $stmt->bindParam(':lot_id', $lotId);
+        $stmt->bindParam(":reservation_id", $reservationId);
         $stmt->bindParam(':payment_amount', $paymentAmount);
-        return $stmt->execute();
+        $stmt->execute();
+        return $this->db->lastInsertId();
     }
 
-    public function setSixMonthsDueDate($lotId)
+    public function setSixMonthsDueDate($lotId, $sixMonthsId)
     {
         $dueDate = date("Y-m-d", strtotime("+6 months"));
-        $stmt = $this->db->prepare("INSERT INTO six_months_due_dates (lot_id, due_date) VALUES (:lot_id, :due_date)");
+        $stmt = $this->db->prepare("INSERT INTO six_months_due_dates (lot_id, six_months_id, due_date) VALUES (:lot_id, :six_months_id, :due_date)");
         $stmt->bindParam(':lot_id', $lotId);
+        $stmt->bindParam(":six_months_id", $sixMonthsId);
         $stmt->bindParam(':due_date', $dueDate);
         return $stmt->execute();
     }
 
-    public function setInstallmentPayment($lotId, $termYears, $downPayment, $downPaymentStatus = "Pending", $downPaymentDueDate, $totalAmount, $monthlyPayment, $interestRate, $paymentStatus)
+    public function setInstallmentPayment($lotId, $reservationId, $termYears, $downPayment, $downPaymentStatus = "Pending", $downPaymentDueDate, $totalAmount, $monthlyPayment, $interestRate, $paymentStatus)
     {
-        $stmt = $this->db->prepare("INSERT INTO installments (lot_id, term_years, down_payment, down_payment_status, down_payment_due_date, total_amount, monthly_payment, interest_rate, payment_status) 
+        $stmt = $this->db->prepare("INSERT INTO installments (lot_id, reservation_id, term_years, down_payment, down_payment_status, down_payment_due_date, total_amount, monthly_payment, interest_rate, payment_status) 
                                     VALUES (:lot_id, :term_years, :down_payment, :down_payment_status, :down_payment_due_date, :total_amount, :monthly_payment, :interest_rate, :payment_status)");
         $stmt->bindParam(':lot_id', $lotId);
+        $stmt->bindParam(":reservation_id", $reservationId);
         $stmt->bindParam(':term_years', $termYears);
         $stmt->bindParam(':down_payment', $downPayment);
         $stmt->bindParam(':down_payment_status', $downPaymentStatus);
@@ -176,8 +177,9 @@ class LotReservationsModel extends Model
         $stmt->bindParam(':payment_option', $paymentOption);
         $reservationStatus = 'Confirmed'; // Set the default reservation status to 'Pending' later 
         $stmt->bindParam(':reservation_status', $reservationStatus);
+        $stmt->execute();
 
-        return $stmt->execute();
+        return $this->db->lastInsertId();
     }
 
     public function approveLotReservation($lotId, $reserveeId, $status = "Approved")
@@ -198,7 +200,8 @@ class LotReservationsModel extends Model
         return $stmt->execute();
     }
 
-    public function getLotReservation($lotId, $lotType, $status = "Pending") {
+    public function getLotReservation($lotId, $lotType, $status = "Pending")
+    {
         $stmt = $this->db->prepare("SELECT * FROM lot_reservations WHERE lot_id = :lot_id AND lot_type = :lot_type AND reservation_status = :reservation_status ORDER BY created_at DESC LIMIT 1");
         $stmt->execute([
             ":lot_id" => $lotId,

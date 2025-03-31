@@ -107,45 +107,53 @@ class EstateReservationsModel extends Model
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function setCashSalePayment($estateId, $paymentAmount)
+    public function setCashSalePayment($estateId, $reservationId, $paymentAmount)
     {
-        $stmt = $this->db->prepare("INSERT INTO estate_cash_sales (estate_id, payment_amount) VALUES (:estate_id, :payment_amount)");
+        $stmt = $this->db->prepare("INSERT INTO estate_cash_sales (estate_id, reservation_id, payment_amount) VALUES (:estate_id, :reservation_id, :payment_amount)");
         $stmt->bindParam(':estate_id', $estateId);
+        $stmt->bindParam(':reservation_id', $reservationId);
         $stmt->bindParam(':payment_amount', $paymentAmount);
-        return $stmt->execute();
+        $stmt->execute();
+
+        return $this->db->lastInsertId();
     }
 
-    public function setCashSaleDueDate($estateId)
+    public function setCashSaleDueDate($estateId, $cashSaleId)
     {
         $dueDate = date("Y-m-d", strtotime("+7 days"));
-        $stmt = $this->db->prepare("INSERT INTO estate_cash_sale_due_dates (estate_id, due_date) VALUES (:estate_id, :due_date)");
+        $stmt = $this->db->prepare("INSERT INTO estate_cash_sale_due_dates (estate_id, cash_sale_id, due_date) VALUES (:estate_id, :cash_sale_id, :due_date)");
         $stmt->bindParam(':estate_id', $estateId);
+        $stmt->bindParam(':cash_sale_id', $cashSaleId);
         $stmt->bindParam(':due_date', $dueDate);
         return $stmt->execute();
     }
 
-    public function setSixMonthsPayment($estateId, $paymentAmount)
+    public function setSixMonthsPayment($estateId, $reservationId, $paymentAmount)
     {
-        $stmt = $this->db->prepare("INSERT INTO estate_six_months (estate_id, payment_amount) VALUES (:estate_id, :payment_amount)");
+        $stmt = $this->db->prepare("INSERT INTO estate_six_months (estate_id, reservation_id, payment_amount) VALUES (:estate_id, :reservation_id, :payment_amount)");
         $stmt->bindParam(':estate_id', $estateId);
+        $stmt->bindParam(':reservation_id', $reservationId);
         $stmt->bindParam(':payment_amount', $paymentAmount);
-        return $stmt->execute();
+        $stmt->execute();
+        return $this->db->lastInsertId();
     }
 
-    public function setSixMonthsDueDate($estateId)
+    public function setSixMonthsDueDate($estateId, $sixMonthsId)
     {
         $dueDate = date("Y-m-d", strtotime("+6 months"));
-        $stmt = $this->db->prepare("INSERT INTO estate_six_months_due_dates (estate_id, due_date) VALUES (:estate_id, :due_date)");
+        $stmt = $this->db->prepare("INSERT INTO estate_six_months_due_dates (estate_id, six_months_id, due_date) VALUES (:estate_id, :six_months_id, :due_date)");
         $stmt->bindParam(':estate_id', $estateId);
+        $stmt->bindParam(':six_months_id', $sixMonthsId);
         $stmt->bindParam(':due_date', $dueDate);
         return $stmt->execute();
     }
 
-    public function setInstallmentPayment($estateId, $termYears, $downPayment, $downPaymentStatus = "Pending", $downPaymentDueDate, $totalAmount, $monthlyPayment, $interestRate, $paymentStatus)
+    public function setInstallmentPayment($estateId, $reservationId, $termYears, $downPayment, $downPaymentStatus = "Pending", $downPaymentDueDate, $totalAmount, $monthlyPayment, $interestRate, $paymentStatus)
     {
-        $stmt = $this->db->prepare("INSERT INTO estate_installments (estate_id, term_years, down_payment, down_payment_status, down_payment_due_date, total_amount, monthly_payment, interest_rate, payment_status) 
+        $stmt = $this->db->prepare("INSERT INTO estate_installments (estate_id, reservation_id, term_years, down_payment, down_payment_status, down_payment_due_date, total_amount, monthly_payment, interest_rate, payment_status) 
                                     VALUES (:estate_id, :term_years, :down_payment, :down_payment_status, :down_payment_due_date, :total_amount, :monthly_payment, :interest_rate, :payment_status)");
         $stmt->bindParam(':estate_id', $estateId);
+        $stmt->bindParam(':reservation_id', $reservationId);
         $stmt->bindParam(':term_years', $termYears);
         $stmt->bindParam(':down_payment', $downPayment);
         $stmt->bindParam(':down_payment_status', $downPaymentStatus);
@@ -160,15 +168,16 @@ class EstateReservationsModel extends Model
 
     public function setReservation($estateId, $reserveeId, $estateType, $paymentOption)
     {
-        $stmt = $this->db->prepare("INSERT INTO estate_reservations (estate_id, reservee_id, estate_type, payment_option, reservation_status) VALUES (:estate_id, :reservee_id, :estate_type, :payment_option, :reservation_status)");
+        $stmt = $this->db->prepare("INSERT INTO estate_reservations (estate_id, reservee_id, estate_type, payment_option, reservation_status) VALUES (:estate_id, :reservation_id, :reservee_id, :estate_type, :payment_option, :reservation_status)");
         $stmt->bindParam(':estate_id', $estateId);
         $stmt->bindParam(':reservee_id', $reserveeId);
         $stmt->bindParam(':estate_type', $estateType);
         $stmt->bindParam(':payment_option', $paymentOption);
         $reservationStatus = 'Confirmed'; // Set the default reservation status to 'Pending' later 
         $stmt->bindParam(':reservation_status', $reservationStatus);
+        $stmt->execute();
 
-        return $stmt->execute();
+        return $this->db->lastInsertId();
     }
 
     public function setEstateStatus($estateId)
