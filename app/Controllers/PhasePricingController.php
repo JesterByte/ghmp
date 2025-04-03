@@ -54,7 +54,10 @@ class PhasePricingController extends BaseController
             $newTotalPurchasePrice = $calculator->getTotalPurchasePrice($newLotPrice, $rates["vat"], $rates["memorial_care_fee"]);
             $newCashSale = $calculator->getDiscount($newTotalPurchasePrice, $rates["cash_sale_discount"]);
             $newSixMonths = $calculator->getDiscount($newTotalPurchasePrice, $rates["six_months_discount"]);
-            $newDownPayment = $calculator->getDownPayment($newTotalPurchasePrice, $rates["down_payment_rate"]) + $rates["memorial_care_fee"];
+            $newSixMonthsDownPayment = $calculator->getDownPayment($newSixMonths, $rates["down_payment_rate"]);
+            $newSixMonthsBalance = $calculator->getBalance($newSixMonths, $newSixMonthsDownPayment);
+            $newSixMonthsMonthlyAmortization = $calculator->getSixMonthsAmortization($newSixMonthsBalance);
+            $newDownPayment = $calculator->getDownPayment($newTotalPurchasePrice, $rates["down_payment_rate"]);
             $newBalance = $calculator->getBalance($newTotalPurchasePrice, $newDownPayment);
 
             $newMonthlyAmortizations = [];
@@ -64,7 +67,7 @@ class PhasePricingController extends BaseController
                 $year++;
             }
 
-            $phasePricingModel->updatePrice($phase, $lotType, $newLotPrice, $newTotalPurchasePrice, $newCashSale, $newSixMonths, $newDownPayment, $newBalance, $newMonthlyAmortizations);
+            $phasePricingModel->updatePrice($phase, $lotType, $newLotPrice, $newTotalPurchasePrice, $newCashSale, $newSixMonths, $newSixMonthsDownPayment, $newSixMonthsBalance, $newSixMonthsMonthlyAmortization, $newDownPayment, $newBalance, $newMonthlyAmortizations);
 
             // $this->redirectBack();
             $this->redirect(BASE_URL . "/phase-pricing", DisplayHelper::$checkIcon, "Pricing has been updated successfully!", "Operation Successful");
@@ -92,6 +95,50 @@ class PhasePricingController extends BaseController
 
             $phasePricingModel = new PhasePricingModel();
             $phasePricingModel->updateRates($vat, $mcf, $discounts, $downPaymentRate, $amortizationRates);
+
+            $phasePricing = $phasePricingModel->getPricingData();
+
+            $calculator = new Calculator();
+            // Loop through each lot and recalculate prices
+            foreach ($phasePricing as $lot) {
+                $phase = $lot["phase"];
+                $lotType = $lot["lot_type"];
+                $lotPrice = $lot["lot_price"];
+
+                // Recalculate prices using the updated rates
+                $totalPurchasePrice = $calculator->getTotalPurchasePrice($lotPrice, $vat, $mcf);
+                $cashSale = $calculator->getDiscount($totalPurchasePrice, $discounts["cash_sale"]);
+                $sixMonths = $calculator->getDiscount($totalPurchasePrice, $discounts["six_months"]);
+                $sixMonthsDownPayment = $calculator->getDownPayment($sixMonths, $downPaymentRate);
+                $sixMonthsBalance = $calculator->getBalance($sixMonths, $sixMonthsDownPayment);
+                $sixMonthsMonthlyAmortization = $calculator->getSixMonthsAmortization($sixMonthsBalance);
+                $downPayment = $calculator->getDownPayment($totalPurchasePrice, $downPaymentRate);
+                $balance = $calculator->getBalance($totalPurchasePrice, $downPayment);
+
+                // Calculate new installment prices for different terms
+                $newMonthlyAmortizations = [];
+                $year = 1;
+                foreach ($amortizationRates as $term => $interestRate) {
+                    $newMonthlyAmortizations[$term] = $calculator->getMonthlyAmortization($balance, $interestRate, $year);
+                    $year++;
+                }
+
+                // Update the database with new prices
+                $phasePricingModel->updatePrice(
+                    $phase,
+                    $lotType,
+                    $lotPrice,
+                    $totalPurchasePrice,
+                    $cashSale,
+                    $sixMonths,
+                    $sixMonthsDownPayment,
+                    $sixMonthsBalance,
+                    $sixMonthsMonthlyAmortization,
+                    $downPayment,
+                    $balance,
+                    $newMonthlyAmortizations
+                );
+            }
 
             // $this->redirectBack();
             $this->redirect(BASE_URL . "/phase-pricing", DisplayHelper::$checkIcon, "Rates has been updated successfully!", "Operation Successful");

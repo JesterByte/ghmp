@@ -54,6 +54,9 @@ class EstatePricingController extends BaseController
             $newTotalPurchasePrice = $calculator->getTotalPurchasePrice($newEstatePrice, $rates["vat"], $rates["memorial_care_fee"]);
             $newCashSale = $calculator->getDiscount($newTotalPurchasePrice, $rates["cash_sale_discount"]);
             $newSixMonths = $calculator->getDiscount($newTotalPurchasePrice, $rates["six_months_discount"]);
+            $newSixMonthsDownPayment = $calculator->getDownPayment($newSixMonths, $rates["down_payment_rate"]);
+            $newSixMonthsBalance = $calculator->getBalance($newSixMonths, $newSixMonthsDownPayment);
+            $newSixMonthsMonthlyAmortization = $calculator->getSixMonthsAmortization($newSixMonthsBalance);
             $newDownPayment = $calculator->getDownPayment($newTotalPurchasePrice, $rates["down_payment_rate"]) + $rates["memorial_care_fee"];
             $newBalance = $calculator->getBalance($newTotalPurchasePrice, $newDownPayment);
 
@@ -64,7 +67,7 @@ class EstatePricingController extends BaseController
                 $year++;
             }
 
-            $estatePricingModel->updatePrice($estate, $newEstatePrice, $newTotalPurchasePrice, $newCashSale, $newSixMonths, $newDownPayment, $newBalance, $newMonthlyAmortizations);
+            $estatePricingModel->updatePrice($estate, $newEstatePrice, $newTotalPurchasePrice, $newCashSale, $newSixMonths, $newSixMonthsDownPayment, $newSixMonthsBalance, $newSixMonthsMonthlyAmortization, $newDownPayment, $newBalance, $newMonthlyAmortizations);
 
             // $this->redirectBack();
             $this->redirect(BASE_URL . "/estate-pricing", DisplayHelper::$checkIcon, "Pricing has been updated successfully!", "Operation Successful");
@@ -92,6 +95,32 @@ class EstatePricingController extends BaseController
 
             $estatePricingModel = new EstatePricingModel();
             $estatePricingModel->updateRates($vat, $mcf, $discounts, $downPaymentRate, $amortizationRates);
+
+            $pricingData = $estatePricingModel->getPricingData();
+
+            $calculator = new Calculator();
+            foreach ($pricingData as $estate) {
+                $estate = $estate["estate"];
+                $newEstatePrice = $estate["new-estate-price"];
+                $newTotalPurchasePrice = $calculator->getTotalPurchasePrice($newEstatePrice, $vat, $mcf);
+                $newCashSale = $calculator->getDiscount($newTotalPurchasePrice, $discounts["cash_sale"]);
+                $newSixMonths = $calculator->getDiscount($newTotalPurchasePrice, $discounts["six_months"]);
+                $newSixMonthsDownPayment = $calculator->getDownPayment($newSixMonths, $downPaymentRate);
+                $newSixMonthsBalance = $calculator->getBalance($newSixMonths, $newSixMonthsDownPayment);
+                $newSixMonthsMonthlyAmortization = $calculator->getSixMonthsAmortization($newSixMonthsBalance);
+                $newDownPayment = $calculator->getDownPayment($newTotalPurchasePrice, $downPaymentRate);
+                $newBalance = $calculator->getBalance($newTotalPurchasePrice, $newDownPayment);
+    
+                $newMonthlyAmortizations = [];
+                $year = 1;
+                foreach ($amortizationRates as $term => $interestRate) {
+                    $newMonthlyAmortizations[$term] = $calculator->getMonthlyAmortization($newBalance, $interestRate, $year);
+                    $year++;
+                }
+    
+                $estatePricingModel->updatePrice($estate, $newEstatePrice, $newTotalPurchasePrice, $newCashSale, $newSixMonths, $newSixMonthsDownPayment, $newSixMonthsBalance, $newSixMonthsMonthlyAmortization, $newDownPayment, $newBalance, $newMonthlyAmortizations);
+    
+            }
 
             // $this->redirectBack();
             $this->redirect(BASE_URL . "/estate-pricing", DisplayHelper::$checkIcon, "Rates has been updated successfully!", "Operation Successful");

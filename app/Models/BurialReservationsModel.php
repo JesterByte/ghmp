@@ -42,32 +42,104 @@ class BurialReservationsModel extends Model
     {
         $query = "SELECT 
             l.lot_id AS asset_id, 
-            'lot' AS asset_type
+            l.owner_id AS owner_id,
+            'lot' AS asset_type,
             c.first_name AS first_name,
             c.middle_name AS middle_name,
             c.last_name AS last_name,
-            c.suffix AS suffix
+            c.suffix_name AS suffix
             FROM lots AS l
             INNER JOIN customers AS c ON l.owner_id = c.id
-            WHERE l.owner_id IS NOT NULL AND l.status = :status
+            WHERE l.owner_id IS NOT NULL AND l.status = :lot_status
             
             UNION
             
             SELECT 
-            e.estate_id AS asset_id, 
+            e.estate_id AS asset_id,
+            e.owner_id AS owner_id, 
             'estate' AS asset_type,
             c.first_name AS first_name,
             c.middle_name AS middle_name,
             c.last_name AS last_name,
-            c.suffix AS suffix
+            c.suffix_name AS suffix
             FROM estates AS e
-            INNER JOIN customers AS c ON l.owner_id = c.id
-            WHERE e.owner_id IS NOT NULL AND e.status = :status
+            INNER JOIN customers AS c ON e.owner_id = c.id
+            WHERE e.owner_id IS NOT NULL AND e.status = :estate_status
         ";
 
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':status', $status);
+        $stmt->bindParam(':lot_status', $status);
+        $stmt->bindParam(':estate_status', $status);
         $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getOwnedAssetsByCustomer($customerId)
+    {
+        $query = "SELECT 
+                    l.lot_id AS asset_id, 
+                    'Lot' AS asset_type
+                  FROM lots AS l
+                  LEFT JOIN burial_reservations AS br ON l.lot_id = br.asset_id
+                  WHERE l.owner_id = :lot_customer_id 
+                    AND l.status = :lot_status
+                    AND (br.asset_id IS NULL OR br.status = 'Cancelled')
+        
+                  UNION
+        
+                  SELECT 
+                    e.estate_id AS asset_id, 
+                    'Estate' AS asset_type
+                  FROM estates AS e
+                  LEFT JOIN burial_reservations AS br ON e.estate_id = br.asset_id
+                  WHERE e.owner_id = :estate_customer_id 
+                    AND e.status = :estate_status
+                    AND (br.asset_id IS NULL OR br.status = 'Cancelled')";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':lot_customer_id', $customerId, PDO::PARAM_INT);
+        $stmt->bindParam(':estate_customer_id', $customerId, PDO::PARAM_INT);
+
+        $status = "Sold";
+        $stmt->bindParam(':lot_status', $status, PDO::PARAM_STR);
+        $stmt->bindParam(':estate_status', $status, PDO::PARAM_STR);
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+    public function setReservation($data)
+    {
+        $stmt = $this->db->prepare("INSERT INTO burial_reservations 
+        (reservee_id, asset_id, burial_type, relationship, first_name, middle_name, last_name, suffix, date_of_birth, date_of_death, obituary, date_time, status, payment_amount, payment_status, receipt_path)
+        VALUES (:reservee_id, :asset_id, :burial_type, :relationship, :first_name, :middle_name, :last_name, :suffix, :date_of_birth, :date_of_death, :obituary, :date_time, :status, :payment_amount, :payment_status, :receipt_path)");
+        return $stmt->execute([
+            ":reservee_id" => $data["reservee_id"],
+            ":asset_id" => $data["asset_id"],
+            ":burial_type" => $data["burial_type"],
+            ":relationship" => $data["relationship"],
+            ":first_name" => $data["first_name"],
+            ":middle_name" => $data["middle_name"],
+            ":last_name" => $data["last_name"],
+            ":suffix" => $data["suffix"],
+            ":date_of_birth" => $data["date_of_birth"],
+            ":date_of_death" => $data["date_of_death"],
+            ":obituary" => $data["obituary"],
+            ":date_time" => $data["date_time"],
+            ":status" => $data["status"],
+            ":payment_amount" => $data["payment_amount"],
+            ":payment_status" => $data["payment_status"],
+            ":receipt_path" => $data["receipt_path"]
+        ]);
+    }
+
+    public function getBurialTypes($assetType)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM burial_pricing WHERE category = :category");
+        $stmt->bindParam(":category", $assetType, PDO::PARAM_STR);
+        $stmt->execute();
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -108,6 +180,7 @@ class BurialReservationsModel extends Model
         br.status,
         br.payment_amount,
         br.payment_status,
+        br.receipt_path,
         br.created_at,
 
         c.first_name AS reservee_first_name,

@@ -153,6 +153,20 @@ class Formatter
         }
     }
 
+    public static function extractInstallmentYears($paymentOption)
+    {
+        // Match one or more digits from the string
+        preg_match('/\d+/', $paymentOption, $matches);
+
+        // If a match is found, return the first match (the number)
+        if (!empty($matches)) {
+            return (int)$matches[0]; // Convert the matched value to an integer
+        }
+
+        // Return null if no number is found
+        return null;
+    }
+
     public static function formatEstateId($estateId)
     {
         if (preg_match('/E-([A-C])(\d+)/', $estateId, $matches)) {

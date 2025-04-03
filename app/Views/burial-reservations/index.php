@@ -1,7 +1,5 @@
 <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.8/index.global.min.css" rel="stylesheet"> -->
 
-
-
 <style>
     #calendar {
         max-width: 70%;
@@ -33,13 +31,17 @@
         font-size: 14px;
     }
 
-    /* Legend container */
+    /* Default Light Mode */
     .legend-box {
         max-width: 250px;
-        border: 2px solid #ccc;
-        background-color: #f8f9fa;
+        border: 2px solid currentColor;
         text-align: left;
+        color: inherit;
+        /* Inherit text color from parent */
+        background-color: transparent;
+        /* No background */
     }
+
 
     /* Legend item (each row) */
     .legend-item {
@@ -104,8 +106,8 @@
 </style>
 
 <div class="alert alert-info text-center">
-    <i class="bi bi-info-circle-fill"></i> On this page, you can view burial reservations in a calendar format.  
-    Click on an event to see details, including interred information, reservation details, and payment status.  
+    <i class="bi bi-info-circle-fill"></i> On this page, you can view burial reservations in a calendar format.
+    Click on an event to see details, including interred information, reservation details, and payment status.
     Approved and paid burials can be marked as done after the burial date has passed.
 </div>
 
@@ -250,6 +252,16 @@
                 document.getElementById("burialType").textContent = info.event.extendedProps.burial_type;
                 document.getElementById("burialDateTime").textContent = info.event.extendedProps.burial_date_time;
                 document.getElementById("assetId").textContent = info.event.extendedProps.asset_id;
+
+                const receiptPath = info.event.extendedProps.receipt_path;
+
+                // Check if receipt exists and display it
+                if (receiptPath) {
+                    document.getElementById("receiptSection").style.display = "block"; // Show receipt section
+                    document.getElementById("receiptImage").src = "<?= BASE_URL ?>/uploads/receipts/" + receiptPath; // Set receipt image source
+                } else {
+                    document.getElementById("receiptSection").style.display = "none"; // Hide receipt section
+                }
 
                 const markAsDoneBtn = document.getElementById("markAsDoneBtn");
 

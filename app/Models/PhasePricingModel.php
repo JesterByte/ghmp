@@ -18,7 +18,7 @@ class PhasePricingModel extends Model {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function updatePrice($phase, $lotType, $newLotPrice, $newTotalPurchasePrice, $newCashSale, $newSixMonths, $newDownPayment, $newBalance, $newMonthlyAmortizations) {
+    public function updatePrice($phase, $lotType, $newLotPrice, $newTotalPurchasePrice, $newCashSale, $newSixMonths, $newSixMonthsDownPayment, $newSixMonthsBalance, $newSixMonthsMonthlyPayment, $newDownPayment, $newBalance, $newMonthlyAmortizations) {
         $amortizationPlaceholders = "";
         $amortizationBindings = [];
         foreach ($newMonthlyAmortizations as $term => $amortization) {
@@ -36,6 +36,9 @@ class PhasePricingModel extends Model {
             total_purchase_price = :new_total_purchase_price, 
             cash_sale = :new_cash_sale,
             six_months = :new_six_months,
+            six_months_down_payment = :new_six_months_down_payment,
+            six_months_balance = :new_six_months_balance,
+            six_months_monthly_amortization = :new_six_months_monthly_payment,
             down_payment = :new_down_payment,
             balance = :new_balance,
             {$amortizationPlaceholders}
@@ -45,6 +48,9 @@ class PhasePricingModel extends Model {
         $stmt->bindParam(":new_total_purchase_price", $newTotalPurchasePrice, PDO::PARAM_STR);
         $stmt->bindParam(":new_cash_sale", $newCashSale, PDO::PARAM_STR);
         $stmt->bindParam(":new_six_months", $newSixMonths, PDO::PARAM_STR);
+        $stmt->bindParam(":new_six_months_down_payment", $newSixMonthsDownPayment, PDO::PARAM_STR);
+        $stmt->bindParam(":new_six_months_balance", $newSixMonthsBalance, PDO::PARAM_STR);
+        $stmt->bindParam(":new_six_months_monthly_payment", $newSixMonthsMonthlyPayment, PDO::PARAM_STR);
         $stmt->bindParam(":new_down_payment", $newDownPayment, PDO::PARAM_STR);
         $stmt->bindParam(":new_balance", $newBalance, PDO::PARAM_STR);
         $stmt->bindParam(":phase", $phase, PDO::PARAM_STR);

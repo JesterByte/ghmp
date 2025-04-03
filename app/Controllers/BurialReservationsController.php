@@ -22,11 +22,20 @@ class BurialReservationsController extends BaseController
         $burialReservationRequests = $burialReservationsModel->getBurialReservationRequestsBadge();
         $ownedAssets = $burialReservationsModel->getOwnedAssets("Sold");
 
+        $formattedOwners = [];
+        foreach ($ownedAssets as $row) {
+            $middleName = !empty($row["middle_name"]) ? " " . $row["middle_name"] . " " : " ";
+            $suffix = !empty($row["suffix_name"]) ? ", " . $row["suffix_name"] : "";
+            $row["customer"] = $row["first_name"] . $middleName . $row["last_name"] . $suffix;
+
+            $formattedOwners[] = $row;
+        }
+
         $data = [
             "pageTitle" => "Burial Reservations",
             "burialReservationRequests" => $burialReservationRequests,
             "view" => "burial-reservations/index",
-            "ownedAssets" => $ownedAssets,
+            "formattedOwners" => $formattedOwners,
 
             "userId" => $_SESSION["user_id"],
 
@@ -37,6 +46,127 @@ class BurialReservationsController extends BaseController
         ];
 
         View::render("templates/layout", $data);
+    }
+
+    public function getAssets($customerId)
+    {
+        $burialReservationsModel = new BurialReservationsModel();
+        $assets = $burialReservationsModel->getOwnedAssetsByCustomer($customerId);
+    
+        // Return the assets or an empty array if no assets are found
+        echo json_encode($assets ?: []); // If $assets is empty, an empty array is returned
+    }
+    
+
+    public function getBurialTypes($assetType)
+    {
+        $burialTypes = [];
+        $burialReservationsModel = new BurialReservationsModel();
+
+        $burialTypes = $burialReservationsModel->getBurialTypes($assetType);
+
+        header('Content-Type: application/json');
+        echo json_encode($burialTypes);
+    }
+
+    public function setReservation()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Validate form data (simplified here)
+            if (
+                empty($_POST['customer']) ||
+                empty($_POST['relationship']) ||
+                empty($_POST['first_name']) ||
+                empty($_POST['last_name']) ||
+                empty($_POST['date_of_birth']) ||
+                empty($_POST['date_of_death']) ||
+                empty($_POST['obituary']) ||
+                empty($_POST['burial_type']) ||
+                empty($_POST['datetime']) ||
+                empty($_POST['burial_price']) ||
+                empty($_FILES["receipt"]) ||
+                empty($_POST['asset'])
+            ) {
+                $this->redirect(BASE_URL . "/burial-reservations", DisplayHelper::$xIcon, "Please fill in all required fields.", "Validation Error");
+                return;
+            }
+
+            // Handle "Other" relationship field
+            if ($_POST["relationship"] === "Other") {
+                $_POST["relationship"] = ucwords(trim($_POST["other_relationship"]));
+            }
+
+            // Prepare form data with trimmed and formatted values
+            $reservationData = [
+                'reservee_id'    => trim($_POST['customer']),
+                'asset_id'       => $_POST["asset"],
+                'burial_type'    => trim($_POST['burial_type']),
+                'relationship'   => ucwords(trim($_POST['relationship'])),
+                'first_name'     => ucwords(trim($_POST['first_name'])),
+                'middle_name'    => isset($_POST['middle_name']) ? ucwords(trim($_POST['middle_name'])) : "",
+                'last_name'      => ucwords(trim($_POST['last_name'])),
+                'suffix'         => isset($_POST['suffix']) ? trim($_POST['suffix']) : "",
+                'date_of_birth'  => trim($_POST['date_of_birth']),
+                'date_of_death'  => trim($_POST['date_of_death']),
+                'obituary'       => ucfirst(trim($_POST['obituary'])),
+                'date_time'      => trim($_POST['datetime']),
+                'status'         => "Approved",
+                'payment_amount' => trim($_POST['burial_price']),
+                'payment_status' => "Paid"
+            ];
+
+            // Handle file upload for receipt
+            $uploadDir = $_SERVER['DOCUMENT_ROOT'] . "/ghmp/public/uploads/receipts/";
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            $fileName  = $_FILES['receipt']['name'];
+            $fileTmp   = $_FILES['receipt']['tmp_name'];
+            $fileSize  = $_FILES['receipt']['size'];
+            $fileError = $_FILES['receipt']['error'];
+
+            // Check for upload errors
+            if ($fileError !== UPLOAD_ERR_OK) {
+                $this->redirect(BASE_URL . "/burial-reservations", DisplayHelper::$xIcon, "Error uploading file.", "Upload Error");
+                return;
+            }
+
+            // Validate file size and type (max size 5MB)
+            $allowedTypes = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp'];
+            $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+            if (!in_array($fileExt, $allowedTypes)) {
+                $this->redirect(BASE_URL . "/burial-reservations", DisplayHelper::$xIcon, "Invalid file type. Please upload a valid receipt format (PNG, JPG, etc.).", "Upload Error");
+                return;
+            }
+
+            if ($fileSize > 5000000) { // 5MB max size
+                $this->redirect(BASE_URL . "/burial-reservations", DisplayHelper::$xIcon, "File size exceeds 5MB. Please upload a smaller file.", "Upload Error");
+                return;
+            }
+
+            // Move file to the uploads directory
+            $filename = "receipt_" . uniqid() . "." . $fileExt;
+            $destination = $uploadDir . $filename;
+
+            if (!move_uploaded_file($fileTmp, $destination)) {
+                $this->redirect(BASE_URL . "/burial-reservations", DisplayHelper::$xIcon, "Failed to move the uploaded file.", "Upload Error");
+                return;
+            }
+
+            // Store only the filename in the database
+            $reservationData['receipt_path'] = $filename;
+
+            $burialReservationsModel = new BurialReservationsModel();
+            // Insert reservation data into the database
+            $result = $burialReservationsModel->setReservation($reservationData);
+
+            if ($result) {
+                $this->redirect(BASE_URL . "/burial-reservations", DisplayHelper::$checkIcon, "Burial reservation added successfully.", "Operation Successful");
+            } else {
+                $this->redirect(BASE_URL . "/burial-reservations", DisplayHelper::$xIcon, "Failed to add reservation.", "Operation Failed");
+            }
+        }
     }
 
     public function getEvents()
@@ -89,7 +219,8 @@ class BurialReservationsController extends BaseController
                     "burial_type" => $event["burial_type"],
                     "burial_date_time" => Formatter::formatDateTime($event["date_time"]),
                     "payment_status" => $event["payment_status"],
-                    "asset_id" => $assetId
+                    "asset_id" => $assetId,
+                    "receipt_path" => $event["receipt_path"]
                 ]
             ];
         }

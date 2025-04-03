@@ -13,7 +13,7 @@ class GhmpMap {
         // Set up tile layer
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-            maxZoom: 20
+            maxZoom: 21
         }).addTo(this.map);
 
         // Add legend
@@ -63,12 +63,12 @@ class GhmpMap {
                 <b>Lawn:</b> ${lotId.lawn}<br>
                 <b>Row:</b> ${lotId.row}<br>
                 <b>Lot:</b> ${lotId.lot}
-            `);  
+            `);
         } else {
             rectangle.bindPopup(`
                 <b>Status:</b> ${lot.status}<br>
                 <b>Estate:</b> ${lot.id}<br>
-            `);  
+            `);
         }
 
         // Add a popup to the rectangle
@@ -83,17 +83,29 @@ class GhmpMap {
 
     addLegend() {
         const legend = L.control({ position: 'bottomright' });
+
         legend.onAdd = () => {
             const div = L.DomUtil.create('div', 'legend');
+
+            // Get the current theme (light or dark)
+            const theme = document.documentElement.getAttribute('data-bs-theme') || 'light'; // Default to light if not set
+
+            // Set the appropriate class for light or dark theme
+            const legendClass = theme === 'dark' ? 'legend-dark' : 'legend-light';
+            div.classList.add(legendClass);  // Add class for styling
+
             div.innerHTML += '<h4>Legend</h4>';
-            div.innerHTML += '<div><span style="background: green;"></span>Available</div>';
-            div.innerHTML += '<div><span style="background: yellow;"></span>Reserved</div>';
-            div.innerHTML += '<div><span style="background: red;"></span>Sold</div>';
-            div.innerHTML += '<div><span style="background: gray;"></span>Sold and Occupied</div>';
+            div.innerHTML += '<div><span class="legend-color" style="background: green;"></span>Available</div>';
+            div.innerHTML += '<div><span class="legend-color" style="background: yellow;"></span>Reserved</div>';
+            div.innerHTML += '<div><span class="legend-color" style="background: red;"></span>Sold</div>';
+            div.innerHTML += '<div><span class="legend-color" style="background: gray;"></span>Sold and Occupied</div>';
+
             return div;
         };
+
         legend.addTo(this.map);
     }
+
 
     extractLotIdComponents(lotIdentifier) {
         // Regular expression to match the components
@@ -175,7 +187,7 @@ class GhmpMap {
 //             <b>Lawn:</b> ${lotId.lawn}<br>
 //             <b>Row:</b> ${lotId.row}<br>
 //             <b>Lot:</b> ${lotId.lot}
-//         `);    
+//         `);
 //     }
 
 //     addLegend() {

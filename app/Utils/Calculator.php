@@ -36,6 +36,10 @@ class Calculator
         return $monthlyPayment * ($termYears * 12);
     }
 
+    public function getSixMonthsAmortization($balance) {
+        return $balance / 6;
+    }
+
     public function getMonthlyAmortization($balance, $interestRate, $duration)
     {
         if ($duration > 0) {

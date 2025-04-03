@@ -28,19 +28,22 @@ foreach ($ongoingInstallments as $ongoingInstallment) {
 <div class="row my-3">
     <div class="col d-flex justify-content-between">
         <div class="btn-group">
-            <a href="installments" class="btn btn-primary <?= DisplayHelper::isActivePage($currentTable, "Installments", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "Installments", "aria-current='page'") ?>>Installments</a>
-            <a href="installments-down-payments" class="btn btn-primary <?= DisplayHelper::isActivePage($currentTable, "Down Payments", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "Down Payments", "aria-current='page'") ?>>Down Payments</a>
+            <a href="installments" class="btn btn-outline-primary <?= DisplayHelper::isActivePage($currentTable, "Installments", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "Installments", "aria-current='page'") ?>>Installments</a>
+            <a href="installments-down-payments" class="btn btn-outline-primary <?= DisplayHelper::isActivePage($currentTable, "Down Payments", "active") ?>" <?= DisplayHelper::isActivePage($currentTable, "Down Payments", "aria-current='page'") ?>>Down Payments</a>
         </div>
     </div>
 </div>
-<div class="row my-3">
-    <div class="col d-flex justify-content-end">
-        <div class="btn-group" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-down-payment-modal"><i class="bi bi-plus"></i> Add Down Payment</button>
-            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#add-monthly-payment-modal"><i class="bi bi-plus"></i> Add Monthly Payment</button>
+
+<?php if ($currentTable === "Installments"): ?>
+    <div class="row my-3">
+        <div class="col d-flex justify-content-end">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#record-monthly-payment-modal"><i class="bi bi-plus"></i> Record Payment</button>
+            </div>
         </div>
     </div>
-</div>
+<?php endif; ?>
+
 
 <?php include_once VIEW_PATH . "/templates/dataTables-styles.php" ?>
 <div class="table-responsive-sm shadow">
@@ -71,13 +74,14 @@ foreach ($ongoingInstallments as $ongoingInstallment) {
                     $payer = Formatter::formatFullName($row["first_name"], $row["middle_name"], $row["last_name"], $row["suffix_name"]);
                     $paymentAmount = Formatter::formatCurrency($row["payment_amount"]);
                     $paymentDate = Formatter::formatDateTime($row["payment_date"]);
+                    $receipt = BASE_URL . "/uploads/receipts/" . $row["receipt_path"];
 
                     TableHelper::startRow();
                     TableHelper::cell($paymentDate);
                     TableHelper::cell($assetId);
                     TableHelper::cell($payer);
                     TableHelper::cell($paymentAmount);
-                    TableHelper::cell('');
+                    TableHelper::cell("<button class='btn btn-info btn-sm' data-bs-toggle='modal' data-bs-target='#view-receipt-modal' data-bs-receipt='{$receipt}'><i class='bi bi-eye-fill'></i> View Receipt</button>");
                     TableHelper::endRow();
                 }
             }
@@ -87,15 +91,16 @@ foreach ($ongoingInstallments as $ongoingInstallment) {
 </div>
 
 <?php include_once VIEW_PATH . "/templates/dataTables-scripts.php" ?>
-<?php include_once VIEW_PATH . "/modals/modal-add-monthly-payment.php" ?>
-<?php include_once VIEW_PATH . "/modals/modal-add-down-payment.php" ?>
+<?php include_once VIEW_PATH . "/modals/modal-record-monthly-payment.php" ?>
+<?php // include_once VIEW_PATH . "/modals/modal-add-down-payment.php" ?>
+<?php include_once VIEW_PATH . "/modals/modal-view-receipt.php" ?>
 
 <script src="<?= BASE_URL . "/js/form-validation.js" ?>"></script>
 <script src="<?= BASE_URL . "/js/modal-autofocus.js" ?>"></script>
 
 <script>
-    autofocusModal("add-down-payment-modal", "asset-id");
-    autofocusModal("add-monthly-payment-modal", "asset-id");
+    // autofocusModal("add-down-payment-modal", "asset-id");
+    autofocusModal("record-monthly-payment-modal", "asset-id");
 </script>
 
 <script>

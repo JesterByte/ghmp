@@ -35,7 +35,7 @@ if ($currentTimeTimestamp >= $backupTimeTimestamp && $currentTimeTimestamp <= $b
 
     // Corrected command (without hanging issue)
     $backupFile = __DIR__ . '/../../storage/backups/ghmp_db_backup_' . date('Y-m-d_h-i-s-a') . '.sql';
-    $command = "mysqldump -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
+    $command = "mysqldump --default-character-set=utf8mb4 -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
 
 
     exec($command . " 2>&1", $output, $returnVar);

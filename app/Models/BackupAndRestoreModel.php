@@ -5,14 +5,16 @@ namespace App\Models;
 use App\Core\Model;
 use PDO;
 
-class BackupAndRestoreModel extends Model {
-    public function backupDatabase($tempBackupPath = null) {
+class BackupAndRestoreModel extends Model
+{
+    public function backupDatabase($tempBackupPath = null)
+    {
         $config = require __DIR__ . "/../../config/database.php";
 
         $dbHost = $config["host"];
         $dbUser = $config["username"]; // Change if needed
         $dbPass = $config["password"]; // Change if needed
-        $dbName = $config["dbname"]; 
+        $dbName = $config["dbname"];
 
         if ($tempBackupPath != null) {
             $backupFile = STORAGE_PATH . '/backups/temp_backup.sql';
@@ -28,8 +30,8 @@ class BackupAndRestoreModel extends Model {
 
         // Corrected command (without hanging issue)
         $command = "C:/xampp/mysql/bin/mysqldump -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
-        // $command = "mysqldump -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
-        
+        // $command = "mysqldump --default-character-set=utf8mb4 -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
+
         exec($command . " 2>&1", $output, $returnVar);
 
         if ($returnVar === 0) {
@@ -57,46 +59,68 @@ class BackupAndRestoreModel extends Model {
     //     // Corrected command (without hanging issue)
     //     // $command = "C:/xampp/mysql/bin/mysqldump -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
     //     $command = "mysqldump -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
-        
+
     //     exec($command . " 2>&1", $output, $returnVar);
     // }
 
-    public function restoreDatabase($backupFile) {
-        // Read the SQL file
-        $sql = file_get_contents($backupFile);
-        
-        if (!$sql) {
-            return false;
+    public function restoreDatabase($backupFile)
+    {
+        // Check if file exists
+        if (!file_exists($backupFile)) {
+            return "Backup file not found: $backupFile";
         }
 
-        // Disable foreign key checks to prevent constraint issues
+        // Open the backup file
+        $handle = fopen($backupFile, "r");
+        if (!$handle) {
+            return "Failed to open backup file.";
+        }
+
+        // Disable foreign key checks
         $this->db->query("SET FOREIGN_KEY_CHECKS = 0;");
 
-        // Split and execute SQL statements
-        $queries = explode(";", $sql);
-        foreach ($queries as $query) {
-            $query = trim($query);
-            if (!empty($query)) {
+        // Read and execute queries line by line
+        $query = "";
+        while (($line = fgets($handle)) !== false) {
+            $trimmedLine = trim($line);
+
+            // Skip comments and empty lines
+            if (empty($trimmedLine) || strpos($trimmedLine, "--") === 0 || strpos($trimmedLine, "/*") === 0) {
+                continue;
+            }
+
+            // Append line to query
+            $query .= $trimmedLine . " ";
+
+            // Execute query if it ends with semicolon
+            if (substr(trim($query), -1) === ";") {
                 if (!$this->db->query($query)) {
-                    return false;
+                    fclose($handle);
+                    return "Error executing query: " . $this->db->errorInfo();
                 }
+                $query = ""; // Reset query string
             }
         }
+
+        // Close file
+        fclose($handle);
 
         // Enable foreign key checks
         $this->db->query("SET FOREIGN_KEY_CHECKS = 1;");
 
-        // $this->db->close();
-        return true;
+        return "Database restored successfully.";
     }
 
-    public function setBackupTime($backupTime) {    
+
+    public function setBackupTime($backupTime)
+    {
         $stmt = $this->db->prepare("UPDATE backup_settings SET backup_time = :backup_time");
         $stmt->bindParam(":backup_time", $backupTime);
         return $stmt->execute();
     }
-    
-    public function getBackupTime() {
+
+    public function getBackupTime()
+    {
         $stmt = $this->db->query("SELECT backup_time FROM backup_settings LIMIT 1");
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);

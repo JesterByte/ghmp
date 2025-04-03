@@ -62,14 +62,12 @@ class BurialPricingController extends BaseController
         $burialPricingModel = new BurialPricingModel();
         $burialPricingTable = $burialPricingModel->getEstatePricingData();
 
-        $estateStandardPrice = $burialPricingModel->getPrice("Estate", "Standard")["price"];
         $estateMausoleumPrice = $burialPricingModel->getPrice("Estate", "Mausoleum")["price"];
         $estateBoneTransferPrice = $burialPricingModel->getPrice("Estate", "Bone Transfer")["price"];
 
         $data = [
             "pageTitle" => "Burial Pricing List",
             "category" => "Estate",
-            "standardPrice" => $estateStandardPrice,
             "mausoleumPrice" => $estateMausoleumPrice,
             "boneTransferPrice" => $estateBoneTransferPrice,
             "usesDataTables" => true,

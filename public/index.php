@@ -36,10 +36,13 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute("POST", "/estate-reservation-confirmation", ['App\Controllers\EstateReservationRequestsController', 'submitEstateReservationConfirmation']);
 
     $r->addRoute("GET", "/burial-reservations", ['App\Controllers\BurialReservationsController', 'index']);
+    $r->addRoute("GET", "/burial-reservations/get-assets/{customerId}", ['App\Controllers\BurialReservationsController', 'getAssets']);
+    $r->addRoute("GET", "/burial-reservations/get-burial-types/{assetType}", ['App\Controllers\BurialReservationsController', 'getBurialTypes']);
     $r->addRoute("GET", "/burial-reservations/get-events", ['App\Controllers\BurialReservationsController', 'getEvents']);
     $r->addRoute("GET", "/burial-reservation-requests", ['App\Controllers\BurialReservationRequestsController', 'index']);
     $r->addRoute("POST", "/burial-reservation-confirmation", ['App\Controllers\BurialReservationRequestsController', 'submitBurialReservationConfirmation']);
     $r->addRoute("POST", "/burial-reservations/mark-done", ['App\Controllers\BurialReservationsController', 'markDone']);
+    $r->addRoute("POST", "/burial-reservations/add-reservation", ['App\Controllers\BurialReservationsController', 'setReservation']);
 
     $r->addRoute("GET", "/lot-reservations", ['App\Controllers\LotReservationsController', 'indexCashSale']);
     $r->addRoute("GET", "/lot-reservations-cash-sale", ['App\Controllers\LotReservationsController', 'indexCashSale']);
@@ -47,6 +50,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute("GET", "/lot-reservations-installment", ['App\Controllers\LotReservationsController', 'indexInstallments']);
     $r->addRoute("GET", "/lot-reservations-cancelled", ['App\Controllers\LotReservationsController', 'indexCancelled']);
     $r->addRoute("GET", "/lot-reservations-overdue", ['App\Controllers\LotReservationsController', 'indexOverdue']);
+    $r->addRoute("POST", "/lot-reservations/fetch-phase-pricing", ['App\Controllers\LotReservationsController', 'fetchPhasePricing']);
 
     $r->addRoute('POST', '/add-reservation', ['App\Controllers\LotReservationsController', 'setReservation']);
 
@@ -56,15 +60,24 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute("GET", "/estate-reservations-installment", ['App\Controllers\EstateReservationsController', 'indexInstallments']);
     $r->addRoute("GET", "/estate-reservations-cancelled", ['App\Controllers\EstateReservationsController', 'indexCancelled']);
     $r->addRoute("GET", "/estate-reservations-overdue", ['App\Controllers\EstateReservationsController', 'indexOverdue']);
+    $r->addRoute("POST", "/estate-reservations/fetch-estate-pricing", ['App\Controllers\EstateReservationsController', 'fetchEstatePricing']);
+
 
     $r->addRoute('POST', '/add-reservation-estate', ['App\Controllers\EstateReservationsController', 'setReservation']);
 
     $r->addRoute("GET", "/cash-sales", ['App\Controllers\CashSalesController', 'index']);
     $r->addRoute("POST", "/add-cash-sale-payment", ['App\Controllers\CashSalesController', 'setPayment']);
+
     $r->addRoute("GET", "/six-months", ['App\Controllers\SixMonthsController', 'index']);
-    $r->addRoute("POST", "/add-six-months-payment", ['App\Controllers\SixMonthsController', 'setPayment']);
+    $r->addRoute("GET", "/six-months-down-payments", ['App\Controllers\SixMonthsController', 'indexDownPayments']);
+    $r->addRoute("POST", "/six-months/reservee", ['App\Controllers\SixMonthsController', 'fetchReservee']);
+    $r->addRoute("POST", "/record-six-months-payment", ['App\Controllers\SixMonthsController', 'setPayment']);
+
     $r->addRoute("GET", "/installments", ['App\Controllers\InstallmentsController', 'index']);
     $r->addRoute("GET", "/installments-down-payments", ['App\Controllers\InstallmentsController', 'indexDownPayments']);
+    $r->addRoute("POST", "/installments/reservee", ['App\Controllers\InstallmentsController', 'fetchReservee']);
+    $r->addRoute("POST", "/record-installment-payment", ['App\Controllers\InstallmentsController', 'setPayment']);
+
 
     $r->addRoute("POST", "/add-down-payment", ['App\Controllers\InstallmentsController', 'setDownPayment']);
     $r->addRoute("POST", "/add-monthly-payment", ['App\Controllers\InstallmentsController', 'setMonthlyPayment']);
@@ -73,6 +86,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute("GET", "/fully-paids-cash-sale", ['App\Controllers\FullyPaidsController', 'indexCashSale']);
     $r->addRoute("GET", "/fully-paids-six-months", ['App\Controllers\FullyPaidsController', 'indexSixMonths']);
     $r->addRoute("GET", "/fully-paids-installment", ['App\Controllers\FullyPaidsController', 'indexInstallment']);
+    $r->addRoute("POST", "/issue-certificate", ['App\Controllers\FullyPaidsController', 'issueCertificate']);
 
     $r->addRoute("GET", "/backup-and-restore", ['App\Controllers\BackupAndRestoreController', 'index']);
     $r->addRoute("GET", "/backup-database", ['App\Controllers\BackupAndRestoreController', 'backupDatabase']);

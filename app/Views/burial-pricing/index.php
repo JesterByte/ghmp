@@ -15,8 +15,8 @@ $firstRow = reset($burialPricingTable);
 
 <div class="d-flex justify-content-between my-3">
     <div class="btn-group">
-        <a href="<?= BASE_URL . "/burial-pricing-lot" ?>" class="btn btn-primary <?= DisplayHelper::isActivePage($category, "Lot", "active") ?>" <?= DisplayHelper::isActivePage($category, "Lot", 'aria-current="page"') ?>>Lot</a>
-        <a href="<?= BASE_URL . "/burial-pricing-estate" ?>" class="btn btn-primary <?= DisplayHelper::isActivePage($category, "Estate", "active") ?>" <?= DisplayHelper::isActivePage($category, "Estate", 'aria-current="page"') ?>>Estate</a>
+        <a href="<?= BASE_URL . "/burial-pricing-lot" ?>" class="btn btn-outline-primary <?= DisplayHelper::isActivePage($category, "Lot", "active") ?>" <?= DisplayHelper::isActivePage($category, "Lot", 'aria-current="page"') ?>>Lot</a>
+        <a href="<?= BASE_URL . "/burial-pricing-estate" ?>" class="btn btn-outline-primary <?= DisplayHelper::isActivePage($category, "Estate", "active") ?>" <?= DisplayHelper::isActivePage($category, "Estate", 'aria-current="page"') ?>>Estate</a>
     </div>
 
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pricing-update-burial-modal"><i class="bi bi-tag-fill"></i> Update Pricing</button>

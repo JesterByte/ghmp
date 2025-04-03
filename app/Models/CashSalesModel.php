@@ -29,6 +29,7 @@ class CashSalesModel extends Model {
             SELECT 
                 cs.lot_id AS asset_id, 
                 cs.payment_amount, 
+                cs.receipt_path,
                 cs.updated_at, 
                 c.first_name, 
                 c.middle_name, 
@@ -44,6 +45,7 @@ class CashSalesModel extends Model {
             SELECT 
                 ecs.estate_id AS asset_id, 
                 ecs.payment_amount, 
+                ecs.receipt_path,
                 ecs.updated_at, 
                 c.first_name, 
                 c.middle_name, 
@@ -83,17 +85,27 @@ class CashSalesModel extends Model {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function setPayment($lotId) {
-        $stmt = $this->db->prepare("UPDATE cash_sales SET payment_status = :payment_status WHERE lot_id = :lot_id");
+    public function setPayment($lotId, $receiptPath) {
+        $stmt = $this->db->prepare("UPDATE cash_sales SET payment_status = :payment_status, payment_date = :payment_date, receipt_path = :receipt_path WHERE lot_id = :lot_id AND payment_status = :pending_payment_status ORDER BY created_at DESC LIMIT 1");
         $paymentStatus = "Paid";
         $stmt->bindParam(":payment_status", $paymentStatus);
+        $paymentDate = date("Y-m-d H:i:s");
+        $stmt->bindParam(":payment_date", $paymentDate);
+        $stmt->bindParam(":receipt_path", $receiptPath);
+        $pendingPaymentStatus = "Pending";
+        $stmt->bindParam(":pending_payment_status", $pendingPaymentStatus);
         $stmt->bindParam(":lot_id", $lotId);
         return $stmt->execute();
     }
-    public function setPaymentEstate($estateId) {
-        $stmt = $this->db->prepare("UPDATE estate_cash_sales SET payment_status = :payment_status WHERE estate_id = :estate_id");
+    public function setPaymentEstate($estateId, $receiptPath) {
+        $stmt = $this->db->prepare("UPDATE estate_cash_sales SET payment_status = :payment_status, payment_date = :payment_date, receipt_path = :receipt_path WHERE estate_id = :estate_id AND payment_status = :pending_payment_status ORDER BY created_at DESC LIMIT 1");
         $paymentStatus = "Paid";
         $stmt->bindParam(":payment_status", $paymentStatus);
+        $paymentDate = date("Y-m-d H:i:s");
+        $stmt->bindParam(":payment_date", $paymentDate);
+        $stmt->bindParam(":receipt_path", $receiptPath);
+        $pendingPaymentStatus = "Pending";
+        $stmt->bindParam(":pending_payment_status", $pendingPaymentStatus);
         $stmt->bindParam(":estate_id", $estateId);
         return $stmt->execute();
     }

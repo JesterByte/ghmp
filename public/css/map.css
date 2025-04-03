@@ -2,6 +2,7 @@
     height: 600px;
     width: 100%;
 }
+
 .legend {
     background: white;
     padding: 10px;
@@ -9,14 +10,17 @@
     border-radius: 5px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 }
+
 .legend h4 {
     margin: 0 0 10px;
 }
+
 .legend div {
     display: flex;
     align-items: center;
     margin-bottom: 5px;
 }
+
 .legend div span {
     display: inline-block;
     width: 20px;
