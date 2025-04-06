@@ -113,7 +113,7 @@
 
 <div class="d-flex justify-content-between my-3">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-burial-reservation-modal">+ New Reservation</button>
-    <a href="<?= BASE_URL . "/burial-reservation-requests" ?>" class="btn btn-primary position-relative" role="button"><i class="bi bi-list"></i> Requests
+    <a href="<?= BASE_URL . "/burial-reservation-requests" ?>" class="btn btn-info position-relative" role="button"><i class="bi bi-list"></i> Requests
         <?php if ($burialReservationRequests != 0): ?>
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                 <?= $burialReservationRequests ?>
@@ -307,7 +307,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        showToast("<i class='bi bi-check-lg text-success'></i>", "Burial marked as done successfully.", "Success");
+                        showToast("<i class='bi bi-check-lg text-success'></i>", "Burial marked as done successfully.", "Operation Completed");
 
                         // Find event and update status
                         var event = calendar.getEventById(eventId);
@@ -324,12 +324,12 @@
                         var eventDetailsModal = bootstrap.Modal.getInstance(document.getElementById("eventDetailsModal"));
                         eventDetailsModal.hide();
                     } else {
-                        showToast("<i class='bi bi-x-lg'></i>", data.message, "Operation Failed");
+                        showToast("<i class='bi bi-x-lg text-danger'></i>", data.message, "Operation Failed");
                     }
                 })
                 .catch(error => {
                     console.error("Error marking event as done:", error);
-                    showToast("<i class='bi bi-x-lg'></i>", "An unexpected error occurred.", "Operation Failed");
+                    showToast("<i class='bi bi-x-lg text-danger'></i>", "An unexpected error occurred.", "Operation Failed");
                 });
         });
 

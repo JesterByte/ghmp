@@ -3,7 +3,7 @@ class GhmpMap {
         this.mapContainer = document.getElementById(mapId);
 
         if (this.mapContainer) {
-            this.map = L.map(mapId).setView([14.871318, 120.976566], 18);
+            this.map = L.map(mapId).setView([14.871267615791403, 120.97782372003185], 19); // 14.871267615791403, 120.97782372003185
             this.dataUrl = dataUrl;
             this.initMap();
         }

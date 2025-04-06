@@ -9,6 +9,9 @@ $snakeCasePageTitle = Formatter::convertToSnakeCase($pageTitle);
 $timeStamp = DateHelper::getTimestamp();
 $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
 ?>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" integrity="sha512-Zcn6bjR/8RZbLEpLIeOwNtzREBAJnUKESxces60Mpoj+2okopSAcSUIUOseddDm0cxnGQzxIR7vJgsLZbdLE3w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="<?= BASE_URL . "/css/map.css" ?>">
+
 <div class="d-flex justify-content-end">
     <!-- <a href="<?= BASE_URL . "/lot-reservations" ?>" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Back</a> -->
     <nav aria-label="breadcrumb">
@@ -24,6 +27,7 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
     <table class="table table-striped table-hover table-bordered" id="table">
         <thead>
             <tr>
+                <th>Sorter</th>
                 <th class="text-center">Preferred Burial Date</th>
                 <th class="text-center">Location</th>
                 <th class="text-center">Interred</th>
@@ -37,7 +41,18 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
                 if (!empty($burialReservationRequestsTable)) {
                     $prefferedDate = Formatter::formatDateTime($row["date_time"]);
 
-                    $location = Formatter::formatAssetId($row["asset_id"]);
+                    // Get the latitude and longitude for the location
+                    $latitudeStart = $row["lot_lat_start"] ?? $row["estate_lat_start"];  // Assume you have latitude data
+                    $longitudeStart = $row["lot_lng_start"] ?? $row["estate_lng_start"]; // Assume you have longitude data
+                    $latitudeEnd = $row["lot_lat_end"] ?? $row["estate_lat_end"];  // Assume you have latitude data
+                    $longitudeEnd = $row["lot_lng_end"] ?? $row["estate_lng_end"]; // Assume you have longitude data
+
+                    $location = '<a href="#" class="location-link" 
+                    data-asset-id="' . Formatter::formatAssetId($row["asset_id"]) . '"
+                    data-lat-start="' . $latitudeStart . '" 
+                    data-lng-start="' . $longitudeStart . '" 
+                    data-lat-end="' . $latitudeEnd . '" 
+                    data-lng-end="' . $longitudeEnd . '">' . Formatter::formatAssetId($row["asset_id"]) . '</a>';
 
                     $interredMiddleName = !empty($row["interred_middle_name"]) ? " " . $row["interred_middle_name"] . " " : " ";
                     $interredSuffixName = !empty($row["interred_suffix_name"]) ? ", " . $row["interred_suffix_name"] : "";
@@ -56,7 +71,7 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
 
                     $action = '<div class="btn-group" role="group" aria-label="Basic example">
                         <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#eventDetailsModal" 
-                            data-bs-interred="' . $interred . '" data-bs-reservee="' . $reservee . '" data-bs-asset-id="' . $location . '"
+                            data-bs-interred="' . $interred . '" data-bs-reservee="' . $reservee . '" data-bs-asset-id="' . $row["asset_id"] . '"
                             data-bs-burial-type="' . $row["burial_type"] . '" data-bs-relationship="' . $row["relationship"] . '"
                             data-bs-date-of-birth="' . $birthDate . '" data-bs-date-of-death="' . $deathDate . '"
                             data-bs-obituary="' . $row["obituary"] . '" data-bs-reservation-date="' . $reservationDate . '" data-bs-burial-date-time="' . $burialDateTime . '">
@@ -66,6 +81,7 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
                         </div>';
 
                     TableHelper::startRow();
+                    TableHelper::cell($row["date_time"]);
                     TableHelper::cell($prefferedDate);
                     TableHelper::cell($location);
                     TableHelper::cell($interred);
@@ -81,51 +97,91 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
 
 <?php include_once VIEW_PATH . "/templates/dataTables-scripts.php" ?>
 <?php include_once VIEW_PATH . "/modals/modal-burial-reservation-confirmation.php" ?>
+<?php include_once VIEW_PATH . "/modals/modal-request-details.php" ?>
+<?php include_once VIEW_PATH . "/modals/modal-view-location.php" ?>
 
-<!-- Event Details Modal -->
-<div class="modal fade" id="eventDetailsModal" tabindex="-1" aria-labelledby="eventDetailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="eventDetailsModalLabel">Burial Reservation Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body overflow-auto">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h6>Interred Information</h6>
-                        <p><strong>Name:</strong> <span id="interredName" class="text-wrap"></span></p>
-                        <p><strong>Birth Date:</strong> <span id="interredBirthDate"></span></p>
-                        <p><strong>Death Date:</strong> <span id="interredDeathDate"></span></p>
-                        <p><strong>Obituary:</strong> <span id="interredObituary" class="text-break"></span></p>
-                    </div>
-                    <div class="col-md-6">
-                        <h6>Reservation Information</h6>
-                        <p><strong>Reserved By:</strong> <span id="reservedBy"></span></p>
-                        <p><strong>Relationship:</strong> <span id="relationship"></span></p>
-                        <p><strong>Reservation Date:</strong> <span id="reservationDate"></span></p>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-md-12">
-                        <h6>Burial Details</h6>
-                        <p><strong>Burial Type:</strong> <span id="burialType"></span></p>
-                        <p><strong>Burial Date & Time:</strong> <span id="burialDateTime"></span></p>
-                        <p><strong>Asset ID:</strong> <span id="assetId" class="text-break"></span></p>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
+<script src="<?= BASE_URL . "/js/jquery.js" ?>"></script>
+<script src="<?= BASE_URL . "/js/leaflet.js" ?>"></script>
 <script src="<?= BASE_URL . "/js/form-validation.js" ?>"></script>
 
 <script>
     createDataTable("#table", "<?= $fileName ?>");
+</script>
+
+<script>
+    let map; // Variable to hold the map instance
+    let currentRectangle; // To keep track of the rectangle drawn on the map
+
+    // Clear the map of all layers
+    function clearMap() {
+        if (currentRectangle) {
+            map.removeLayer(currentRectangle); // Remove the existing rectangle
+            currentRectangle = null; // Set the reference to null
+        }
+    }
+
+    // Initialize the map
+    function initMap(name, latStart, lngStart, latEnd, lngEnd) {
+        // First, clear the previous rectangle
+        clearMap();
+
+        // Initialize the map centered around the midpoint
+        const centerLat = (latStart + latEnd) / 2;
+        const centerLng = (lngStart + lngEnd) / 2;
+
+        // Initialize map only if it hasn't been initialized already
+        if (!map) {
+            map = L.map('map').setView([centerLat, centerLng], 19); // Set zoom level to 21 for detailed view
+
+            // Add OpenStreetMap tile layer to the map
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 21
+            }).addTo(map);
+        } else {
+            // If map already initialized, update its center
+            map.setView([centerLat, centerLng], 21);
+        }
+
+        // Add a rectangle representing the lot area using latStart, lngStart, latEnd, lngEnd
+        currentRectangle = L.rectangle([
+            [latStart, lngStart], // Bottom-left corner
+            [latEnd, lngEnd] // Top-right corner
+        ], {
+            color: "red", // Color of the rectangle
+            weight: 2,
+            fillOpacity: 0.4 // Transparency of the rectangle
+        }).addTo(map);
+
+        currentRectangle.bindPopup(`
+        <b>Asset ID:</b> ${name}`);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const locationLinks = document.querySelectorAll('.location-link');
+
+        locationLinks.forEach(function(link) {
+            link.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent default anchor behavior
+
+                const assetId = event.target.getAttribute('data-asset-id');
+                const latStart = parseFloat(event.target.getAttribute('data-lat-start'));
+                const lngStart = parseFloat(event.target.getAttribute('data-lng-start'));
+                const latEnd = parseFloat(event.target.getAttribute('data-lat-end'));
+                const lngEnd = parseFloat(event.target.getAttribute('data-lng-end'));
+
+                // Initialize and show the modal
+                const locationModal = new bootstrap.Modal(document.getElementById('location-modal'));
+                locationModal.show();
+
+                // Wait for the modal to be fully shown before initializing the map
+                locationModal._element.addEventListener('shown.bs.modal', function() {
+                    // Reinitialize the map after modal is shown
+                    initMap(assetId, latStart, lngStart, latEnd, lngEnd);
+                });
+            });
+        });
+    });
 </script>
 
 <script>

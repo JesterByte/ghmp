@@ -27,6 +27,7 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
     <table class="table table-striped table-hover table-bordered" id="table">
         <thead>
             <tr>
+                <th>Sorter</th>
                 <th class="text-center">Completed On</th>
                 <th class="text-center">Asset</th>
                 <th class="text-center">Reservee</th>
@@ -65,6 +66,7 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
 
 
                     TableHelper::startRow();
+                    TableHelper::cell($row["updated_at"]);
                     TableHelper::cell($completedOn);
                     TableHelper::cell($assetId);
                     TableHelper::cell($reservee);

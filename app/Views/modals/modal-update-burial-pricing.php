@@ -2,7 +2,7 @@
 <div class="modal fade" id="pricing-update-burial-modal" tabindex="-1" aria-labelledby="pricing-update-burial-modal-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header text-bg-primary">
                 <h1 class="modal-title fs-5" id="pricing-update-burial-modal-label">Update Burial Pricing</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>

@@ -27,6 +27,7 @@ foreach ($reservationsTable as $reservationRow) {
     <table class="table table-striped table-hover table-bordered" id="table">
         <thead>
             <tr>
+                <th>Sorter</th>
                 <th class="text-center">Payment Date</th>
                 <th class="text-center">Asset</th>
                 <th class="text-center">Payer</th>
@@ -36,15 +37,16 @@ foreach ($reservationsTable as $reservationRow) {
         </thead>
         <tbody>
             <?php
-            foreach ($cashSalesTable as $cashSalesRow) {
+            foreach ($cashSalesTable as $row) {
                 if (!empty($cashSalesTable)) {
-                    $lotId = Formatter::formatAssetId($cashSalesRow["asset_id"]);
-                    $payer = Formatter::formatFullName($cashSalesRow["first_name"], $cashSalesRow["middle_name"], $cashSalesRow["last_name"], $cashSalesRow["suffix_name"]);
-                    $paymentAmount = Formatter::formatCurrency($cashSalesRow["payment_amount"]);
-                    $paymentDate = Formatter::formatDateTime($cashSalesRow["updated_at"]);
-                    $receipt = BASE_URL . "/uploads/receipts/" . $cashSalesRow["receipt_path"];
+                    $lotId = Formatter::formatAssetId($row["asset_id"]);
+                    $payer = Formatter::formatFullName($row["first_name"], $row["middle_name"], $row["last_name"], $row["suffix_name"]);
+                    $paymentAmount = Formatter::formatCurrency($row["payment_amount"]);
+                    $paymentDate = Formatter::formatDate($row["payment_date"]);
+                    $receipt = BASE_URL . "/uploads/receipts/" . $row["receipt_path"];
 
                     TableHelper::startRow();
+                    TableHelper::cell($row["created_at"]);
                     TableHelper::cell($paymentDate);
                     TableHelper::cell($lotId);
                     TableHelper::cell($payer);

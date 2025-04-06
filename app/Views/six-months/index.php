@@ -40,6 +40,7 @@ foreach ($reservationsTable as $reservationRow) {
     <table class="table table-striped table-hover table-bordered" id="table">
         <thead>
             <tr>
+                <th>Sorter</th>
                 <th class="text-center">Payment Date</th>
                 <th class="text-center">Asset</th>
                 <th class="text-center">Payer</th>
@@ -58,6 +59,7 @@ foreach ($reservationsTable as $reservationRow) {
                     $receipt = BASE_URL . "/uploads/receipts/" . $row["receipt_path"];
 
                     TableHelper::startRow();
+                    TableHelper::cell($row["payment_date"]);
                     TableHelper::cell($paymentDate);
                     TableHelper::cell($assetId);
                     TableHelper::cell($payer);

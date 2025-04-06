@@ -11,6 +11,7 @@ class BaseController {
     protected $pendingLotReservations;
     protected $pendingEstateReservations;
     protected $pendingReservations;
+    protected $pendingInquiries;
 
     public function __construct() {
         session_start();
@@ -21,6 +22,7 @@ class BaseController {
         $this->pendingLotReservations = $badgeModel->getPendingLotReservations() > 99 ? 99 : $badgeModel->getPendingLotReservations();
         $this->pendingEstateReservations = $badgeModel->getPendingEstateReservations() > 99 ? 99 : $badgeModel->getPendingEstateReservations();
         $this->pendingReservations = $badgeModel->getPendingReservations() > 99 ? 99 : $badgeModel->getPendingReservations();
+        $this->pendingInquiries = $badgeModel->getPendingInquiries() > 99 ? 99 : $badgeModel->getPendingInquiries();
     }
 
     // Sanitize string input to prevent XSS attacks

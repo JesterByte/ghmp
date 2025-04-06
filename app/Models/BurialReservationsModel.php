@@ -29,10 +29,21 @@ class BurialReservationsModel extends Model
         c.first_name AS reservee_first_name,
         c.middle_name AS reservee_middle_name,
         c.last_name AS reservee_last_name,
-        c.suffix_name AS reservee_suffix_name
+        c.suffix_name AS reservee_suffix_name,
+
+        l.latitude_start AS lot_lat_start,
+        l.longitude_start AS lot_lng_start,
+        l.latitude_end AS lot_lat_end,
+        l.longitude_end AS lot_lng_end,
+        e.latitude_start AS estate_lat_start,
+        e.longitude_start AS estate_lng_start,
+        e.latitude_end AS estate_lat_end,
+        e.longitude_end AS estate_lng_end
 
         FROM burial_reservations AS br
         INNER JOIN customers AS c ON br.reservee_id = c.id
+        LEFT JOIN lots AS l ON br.asset_id = l.lot_id
+        LEFT JOIN estates AS e ON br.asset_id = e.estate_id
         WHERE br.status = :status");
         $stmt->execute([':status' => 'Pending']);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

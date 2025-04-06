@@ -12,8 +12,12 @@
                         <select class="form-select" id="estate" name="estate" required>
                             <option selected disabled></option>
                             <?php
-                            for ($i = 0; $i < count($formattedAvailableEstates["available_estate"]); $i++) {
-                                echo "<option value='{$formattedAvailableEstates["estate_id"][$i]}'>{$formattedAvailableEstates["available_estate"][$i]}</option>";
+                            if (!empty($formattedAvailableEstates)) {
+                                for ($i = 0; $i < count($formattedAvailableEstates["available_estate"]); $i++) {
+                                    echo "<option value='{$formattedAvailableEstates["estate_id"][$i]}'>{$formattedAvailableEstates["available_estate"][$i]}</option>";
+                                }
+                            } else {
+                                echo "<option value='' disabled selected>No available estates</option>";
                             }
                             ?>
                         </select>
@@ -23,8 +27,12 @@
                         <select class="form-select" id="customer" name="customer" required>
                             <option selected disabled></option>
                             <?php
-                            for ($i = 0; $i < count($formattedCustomers["customer_id"]); $i++) {
-                                echo "<option value='{$formattedCustomers["customer_id"][$i]}'>{$formattedCustomers["customer"][$i]}</option>";
+                            if (!empty($formattedCustomers)) {
+                                for ($i = 0; $i < count($formattedCustomers["customer_id"]); $i++) {
+                                    echo "<option value='{$formattedCustomers["customer_id"][$i]}'>{$formattedCustomers["customer"][$i]}</option>";
+                                }
+                            } else {
+                                echo "<option value='' disabled selected>No customers available</option>";
                             }
                             ?>
                         </select>
@@ -60,10 +68,18 @@
                         </div>
                     </div>
 
-                    <!-- Payment Receipt Upload (Hidden by Default) -->
-                    <div id="receipt-upload-group" class="mb-3" style="display: none;">
-                        <label for="receipt" class="form-label" id="receipt-label">Upload Receipt</label>
+                    <div id="total-payable-amount-group" class="mb-3" style="display: none;">
+                        <label for="monthly-payment" class="form-label">Payable Amount (Monthly Total)</label>
+                        <div class="input-group">
+                            <span class="input-group-text">₱</span>
+                            <input type="text" class="form-control" id="total-payable-amount" name="total-payable-amount" readonly>
+                        </div>
+                    </div>
+
+                    <!-- Receipt Upload Field (Image Only) -->
+                    <div class="form-floating mb-3">
                         <input type="file" class="form-control" id="receipt" name="receipt" accept=".jpg,.jpeg,.png" required>
+                        <label for="receipt">Upload Receipt (Image Only)</label>
                     </div>
 
                     <p id="payment-note" class="text-muted small" style="display: none;"></p>
@@ -85,12 +101,15 @@
         const paymentOptionSelect = document.getElementById("payment-option");
         const priceField = document.getElementById("price");
         const payableAmountLabel = document.getElementById("payable-amount-label");
+
         const monthlyPaymentGroup = document.getElementById("monthly-payment-group");
         const monthlyPaymentInput = document.getElementById("monthly-payment");
-        const receiptUploadGroup = document.getElementById("receipt-upload-group");
-        const receiptLabel = document.getElementById("receipt-label");
+
         const paymentNote = document.getElementById("payment-note");
         const receiptInput = document.getElementById("receipt");
+
+        const totalPayableAmountGroup = document.getElementById("total-payable-amount-group");
+        const totalPayableAmountField = document.getElementById("total-payable-amount");
 
         function fetchPricing() {
             const estateId = estateSelect.value;
@@ -101,8 +120,9 @@
             if (!estateId || !paymentOption) {
                 priceField.value = "Please select all fields";
                 monthlyPaymentGroup.style.display = "none";
-                receiptUploadGroup.style.display = "none";
                 paymentNote.style.display = "none";
+                totalPayableAmountGroup.style.display = "none";
+                totalPayableAmountField.value = "";
                 return;
             }
 
@@ -120,6 +140,7 @@
                 .then(data => {
                     if (data.success) {
                         const price = parseFloat(data.price);
+                        const monthlyPayment = parseFloat(data.monthly_payment);
                         priceField.value = price.toFixed(2);
 
                         if (paymentOption === "Cash Sale") {
@@ -127,39 +148,44 @@
                             payableAmountLabel.textContent = "Payable Amount";
                             paymentNote.style.display = "block";
                             paymentNote.textContent = "* The customer must pay the full amount before uploading the receipt.";
-                            receiptLabel.textContent = "Upload Full Payment Receipt";
-                            receiptUploadGroup.style.display = "block";
+
+                            totalPayableAmountField.value = price.toFixed(2); // Full payment for Cash Sale
                         } else {
                             const downPayment = (price * 0.2).toFixed(2);
                             const months = paymentOption.includes("6 Months") ? 6 : parseInt(paymentOption.match(/\d+/)[0]) * 12;
-                            const monthlyPayment = ((price - downPayment) / months).toFixed(2);
 
                             monthlyPaymentInput.value = monthlyPayment;
                             monthlyPaymentGroup.style.display = "block";
-                            payableAmountLabel.textContent = "Payable Amount (Down Payment)";
+
+
+                            payableAmountLabel.textContent = "Down Payment";
                             paymentNote.style.display = "block";
-                            receiptLabel.textContent = "Upload Down Payment Receipt";
-                            receiptUploadGroup.style.display = "block";
 
                             if (paymentOption === "6 Months") {
                                 paymentNote.textContent = "* The customer must pay a 20% down payment. The remaining balance will be divided into 6 monthly payments.";
                             } else {
                                 paymentNote.textContent = `* The customer must pay a 20% down payment. The remaining balance will be divided into ${months} monthly payments over ${months / 12} years.`;
                             }
+
+                            // Calculate total payable amount (monthly payments only)
+                            const totalPayableAmount = (monthlyPayment * months).toFixed(2);
+                            totalPayableAmountField.value = totalPayableAmount;
+                            totalPayableAmountGroup.style.display = "block";
+
                         }
                     } else {
                         priceField.value = "No price available";
                         monthlyPaymentGroup.style.display = "none";
-                        receiptUploadGroup.style.display = "none";
                         paymentNote.style.display = "none";
+                        totalPayableAmountField.value = "";
                     }
                 })
                 .catch(error => {
                     console.error("Error fetching pricing:", error);
                     priceField.value = "Error fetching price";
                     monthlyPaymentGroup.style.display = "none";
-                    receiptUploadGroup.style.display = "none";
                     paymentNote.style.display = "none";
+                    totalPayableAmountField.value = "";
                 });
         }
 

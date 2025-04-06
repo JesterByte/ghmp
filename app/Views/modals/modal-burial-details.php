@@ -9,34 +9,34 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <h6 class="fw-bold">Interred Information</h6>
-                        <p><strong>Name:</strong> <span id="interredName"></span></p>
-                        <p><strong>Birth Date:</strong> <span id="interredBirthDate"></span></p>
-                        <p><strong>Death Date:</strong> <span id="interredDeathDate"></span></p>
+                        <h6 class="fw-bold text-body">Interred Information</h6>
+                        <p><strong class="text-body">Name:</strong> <span class="text-secondary" id="interredName"></span></p>
+                        <p><strong class="text-body">Birth Date:</strong> <span class="text-secondary" id="interredBirthDate"></span></p>
+                        <p><strong class="text-body">Death Date:</strong> <span class="text-secondary" id="interredDeathDate"></span></p>
                     </div>
                     <div class="col-md-6">
-                        <h6 class="fw-bold">Reservation Information</h6>
-                        <p><strong>Reserved By:</strong> <span id="reservedBy"></span></p>
-                        <p><strong>Relationship:</strong> <span id="relationship"></span></p>
-                        <p><strong>Reservation Date:</strong> <span id="reservationDate"></span></p>
+                        <h6 class="fw-bold text-body">Reservation Information</h6>
+                        <p><strong class="text-body">Reserved By:</strong> <span class="text-secondary" id="reservedBy"></span></p>
+                        <p><strong class="text-body">Relationship:</strong> <span class="text-secondary" id="relationship"></span></p>
+                        <p><strong class="text-body">Reservation Date:</strong> <span class="text-secondary" id="reservationDate"></span></p>
                     </div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-md-12">
-                        <h6 class="fw-bold">Burial Details</h6>
-                        <p><strong>Burial Type:</strong> <span id="burialType"></span></p>
-                        <p><strong>Burial Date & Time:</strong> <span id="burialDateTime"></span></p>
-                        <p><strong>Asset ID:</strong> <span id="assetId"></span></p>
+                        <h6 class="fw-bold text-body">Burial Details</h6>
+                        <p><strong class="text-body">Burial Type:</strong> <span class="text-secondary" id="burialType"></span></p>
+                        <p><strong class="text-body">Burial Date & Time:</strong> <span class="text-secondary" id="burialDateTime"></span></p>
+                        <p><strong class="text-body">Asset ID:</strong> <span class="text-secondary" id="assetId"></span></p>
                     </div>
                 </div>
 
                 <!-- Receipt Section -->
                 <div class="row mt-3">
                     <div class="col-md-12" id="receiptSection" style="display: none;">
-                        <h6 class="fw-bold">Receipt</h6>
-                        <p><strong>Receipt:</strong></p>
+                        <h6 class="fw-bold text-body">Receipt Information</h6>
+                        <p><strong class="text-body">Receipt:</strong></p>
                         <div class="receipt-container" style="display: flex; justify-content: center;">
-                            <img id="receiptImage" src="" alt="Receipt" class="img-fluid shadow-lg rounded" style="max-width: 100%; max-height: 300px; transition: transform 0.3s ease;"/>
+                            <img id="receiptImage" src="" alt="Receipt" class="img-fluid shadow-lg rounded" style="max-width: 100%; max-height: 300px; transition: transform 0.3s ease;" />
                         </div>
                     </div>
                 </div>
@@ -49,7 +49,39 @@
     </div>
 </div>
 
+<!-- Image Lightbox Modal -->
+<div class="modal fade" id="imageLightboxModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content bg-transparent border-0">
+            <div class="modal-body text-center p-0">
+                <img id="lightboxImage" src="" alt="Enlarged Receipt" class="img-fluid rounded shadow">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const receiptImage = document.getElementById('receiptImage');
+        const lightboxImage = document.getElementById('lightboxImage');
+        const lightboxModal = new bootstrap.Modal(document.getElementById('imageLightboxModal'));
+
+        receiptImage.addEventListener('click', function() {
+            lightboxImage.src = this.src;
+            lightboxModal.show();
+        });
+    });
+</script>
+
 <style>
+    #lightboxImage {
+        max-height: 90vh;
+        max-width: 100%;
+        object-fit: contain;
+        transition: transform 0.3s ease-in-out;
+    }
+
+
     /* Custom Modal Styles */
     .modal-header {
         background-color: #0044cc;
@@ -63,14 +95,12 @@
     }
 
     .modal-body h6 {
-        font-size: 1.1rem;
-        color: #333;
+        color: var(--text-main);
     }
 
+
     .modal-body p {
-        font-size: 1rem;
-        color: #555;
-        line-height: 1.5;
+        color: var(--text-secondary);
     }
 
     /* Hover effect for receipt image */

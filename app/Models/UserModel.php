@@ -28,4 +28,24 @@ class UserModel extends Model {
         $stmt = $this->db->prepare("INSERT INTO users (email, password_hash) VALUES (:email, :password)");
         return $stmt->execute(['email' => $email, 'password' => $password]);
     }
+
+    public function updateUserProfile($data) {
+        $stmt = $this->db->prepare("UPDATE users SET first_name = :first_name, middle_name = :middle_name, last_name = :last_name, suffix_name = :suffix_name, email = :email WHERE id = :id");
+        return $stmt->execute([
+            ':first_name' => $data['first_name'],
+            ':middle_name' => $data['middle_name'],
+            ':last_name' => $data['last_name'],
+            ':suffix_name' => $data['suffix_name'],
+            ':email' => $data['email'],
+            ':id' => $_SESSION["user_id"]
+        ]);
+    }
+
+    public function updateUserPassword($userId, $newPassword) {
+        $stmt = $this->db->prepare("UPDATE users SET password_hash = :password WHERE id = :id");
+        return $stmt->execute([
+            ':password' => password_hash($newPassword, PASSWORD_BCRYPT),
+            ':id' => $userId
+        ]);
+    }
 }

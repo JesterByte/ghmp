@@ -161,5 +161,5 @@ $lotNumber = $lotIdComponents["lot"];
     <b>Lawn:</b> <?= $lawnLetter ?><br>
     <b>Row:</b> <?= $rowNumber ?><br>
     <b>Lot:</b> <?= $lotNumber ?>
-`);
+    `);
 </script>

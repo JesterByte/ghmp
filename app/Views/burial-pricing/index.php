@@ -35,7 +35,9 @@ $firstRow = reset($burialPricingTable);
     <table class="table table-striped table-hover table-bordered" id="table">
         <thead>
             <tr>
-                <th class="text-center">Category</th>
+                <th>Sorter</th>
+                <th class="text-center">Last Update</th>
+                <!-- <th class="text-center">Category</th> -->
                 <th class="text-center">Burial Type</th>
                 <th class="text-center">Price</th>
             </tr>
@@ -44,8 +46,11 @@ $firstRow = reset($burialPricingTable);
             <?php
             foreach ($burialPricingTable as $row) {
                 $row["price"] = Formatter::formatCurrency($row["price"]);
+                $lastUpdate = Formatter::formatDate($row["updated_at"]);
                 TableHelper::startRow();
-                TableHelper::cell($row["category"]);
+                TableHelper::cell($row["updated_at"]);
+                TableHelper::cell($lastUpdate);
+                // TableHelper::cell($row["category"]);
                 TableHelper::cell($row["burial_type"]);
                 TableHelper::cell($row["price"]);
                 TableHelper::endRow();

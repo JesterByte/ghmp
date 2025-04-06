@@ -106,5 +106,5 @@
 </script>
 
 <script>
-    createDataTable("#table", "<?= $fileName ?>");
+    createDataTable("#table", "<?= $fileName ?>", true);
 </script>

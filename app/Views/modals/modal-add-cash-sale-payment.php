@@ -2,7 +2,7 @@
 <div class="modal fade" id="add-cash-sale-payment-modal" tabindex="-1" aria-labelledby="add-cash-sale-payment-modal-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header text-bg-primary">
                 <h1 class="modal-title fs-5" id="add-cash-sale-payment-modal-label">Add New Cash Sale Payment</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>

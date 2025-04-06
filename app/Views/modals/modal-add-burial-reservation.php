@@ -2,7 +2,7 @@
 <div class="modal fade" id="add-burial-reservation-modal" tabindex="-1" aria-labelledby="add-burial-reservation-modal-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header text-bg-primary">
                 <h1 class="modal-title fs-5" id="add-burial-reservation-modal-label">Add New Burial Reservation</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -13,9 +13,13 @@
                     <div class="form-floating mb-3">
                         <select name="customer" id="customer" class="form-select" required>
                             <option value="" selected></option>
+                            <?php if (!empty($formattedOwners)): ?>
                             <?php foreach ($formattedOwners as $row): ?>
                                 <option value="<?= $row["owner_id"] ?>"><?= $row["customer"] ?></option>
                             <?php endforeach; ?>
+                            <?php else: ?>
+                                <option value="" disabled>No customers available</option>
+                            <?php endif; ?>
                         </select>
                         <label for="customer">Customer</label>
                     </div>

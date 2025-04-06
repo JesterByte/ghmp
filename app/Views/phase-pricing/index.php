@@ -58,34 +58,34 @@
         </thead>
         <tbody>
             <?php 
-                foreach ($phasePricingTable as $phasePricingRow) {
-                    $phasePricingRow["lot_price"] = Formatter::formatCurrency($phasePricingRow["lot_price"]);
-                    $phasePricingRow["total_purchase_price"] = Formatter::formatCurrency($phasePricingRow["total_purchase_price"]);
-                    $phasePricingRow["cash_sale"] = Formatter::formatCurrency($phasePricingRow["cash_sale"]);
-                    $phasePricingRow["six_months"] = Formatter::formatCurrency($phasePricingRow["six_months"]);
-                    $phasePricingRow["down_payment"] = Formatter::formatCurrency($phasePricingRow["down_payment"]);
-                    $phasePricingRow["balance"] = Formatter::formatCurrency($phasePricingRow["balance"]);
-                    $phasePricingRow["monthly_amortization_one_year"] = Formatter::formatCurrency($phasePricingRow["monthly_amortization_one_year"]);
-                    $phasePricingRow["monthly_amortization_two_years"] = Formatter::formatCurrency($phasePricingRow["monthly_amortization_two_years"]);
-                    $phasePricingRow["monthly_amortization_three_years"] = Formatter::formatCurrency($phasePricingRow["monthly_amortization_three_years"]);
-                    $phasePricingRow["monthly_amortization_four_years"] = Formatter::formatCurrency($phasePricingRow["monthly_amortization_four_years"]);
-                    $phasePricingRow["monthly_amortization_five_years"] = Formatter::formatCurrency($phasePricingRow["monthly_amortization_five_years"]);
+                foreach ($phasePricingTable as $row) {
+                    $row["lot_price"] = Formatter::formatCurrency($row["lot_price"]);
+                    $row["total_purchase_price"] = Formatter::formatCurrency($row["total_purchase_price"]);
+                    $row["cash_sale"] = Formatter::formatCurrency($row["cash_sale"]);
+                    $row["six_months"] = Formatter::formatCurrency($row["six_months"]);
+                    $row["down_payment"] = Formatter::formatCurrency($row["down_payment"]);
+                    $row["balance"] = Formatter::formatCurrency($row["balance"]);
+                    $row["monthly_amortization_one_year"] = Formatter::formatCurrency($row["monthly_amortization_one_year"]);
+                    $row["monthly_amortization_two_years"] = Formatter::formatCurrency($row["monthly_amortization_two_years"]);
+                    $row["monthly_amortization_three_years"] = Formatter::formatCurrency($row["monthly_amortization_three_years"]);
+                    $row["monthly_amortization_four_years"] = Formatter::formatCurrency($row["monthly_amortization_four_years"]);
+                    $row["monthly_amortization_five_years"] = Formatter::formatCurrency($row["monthly_amortization_five_years"]);
 
                     TableHelper::startRow();
-                    TableHelper::cell($phasePricingRow["phase"]);
-                    TableHelper::cell($phasePricingRow["lot_type"]);
-                    TableHelper::cell($phasePricingRow["number_of_lots"]);
-                    TableHelper::cell($phasePricingRow["lot_price"]);
-                    TableHelper::cell($phasePricingRow["total_purchase_price"]);
-                    TableHelper::cell($phasePricingRow["cash_sale"]);
-                    TableHelper::cell($phasePricingRow["six_months"]);
-                    TableHelper::cell($phasePricingRow["down_payment"]);
-                    TableHelper::cell($phasePricingRow["balance"]);
-                    TableHelper::cell($phasePricingRow["monthly_amortization_one_year"]);
-                    TableHelper::cell($phasePricingRow["monthly_amortization_two_years"]);
-                    TableHelper::cell($phasePricingRow["monthly_amortization_three_years"]);
-                    TableHelper::cell($phasePricingRow["monthly_amortization_four_years"]);
-                    TableHelper::cell($phasePricingRow["monthly_amortization_five_years"]);
+                    TableHelper::cell($row["phase"]);
+                    TableHelper::cell($row["lot_type"]);
+                    TableHelper::cell($row["number_of_lots"]);
+                    TableHelper::cell($row["lot_price"]);
+                    TableHelper::cell($row["total_purchase_price"]);
+                    TableHelper::cell($row["cash_sale"]);
+                    TableHelper::cell($row["six_months"]);
+                    TableHelper::cell($row["down_payment"]);
+                    TableHelper::cell($row["balance"]);
+                    TableHelper::cell($row["monthly_amortization_one_year"]);
+                    TableHelper::cell($row["monthly_amortization_two_years"]);
+                    TableHelper::cell($row["monthly_amortization_three_years"]);
+                    TableHelper::cell($row["monthly_amortization_four_years"]);
+                    TableHelper::cell($row["monthly_amortization_five_years"]);
                     TableHelper::endRow();
                 }
             ?>

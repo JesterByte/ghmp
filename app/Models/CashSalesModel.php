@@ -25,12 +25,12 @@ class CashSalesModel extends Model {
     // }
 
     public function getCashSales() {
-        $stmt = $this->db->prepare("
-            SELECT 
+        $stmt = $this->db->prepare("SELECT 
+                cs.created_at,
                 cs.lot_id AS asset_id, 
                 cs.payment_amount, 
                 cs.receipt_path,
-                cs.updated_at, 
+                cs.payment_date, 
                 c.first_name, 
                 c.middle_name, 
                 c.last_name, 
@@ -43,18 +43,19 @@ class CashSalesModel extends Model {
             UNION ALL
             
             SELECT 
-                ecs.estate_id AS asset_id, 
-                ecs.payment_amount, 
-                ecs.receipt_path,
-                ecs.updated_at, 
+                cs.created_at,
+                cs.estate_id AS asset_id, 
+                cs.payment_amount, 
+                cs.receipt_path,
+                cs.payment_date, 
                 c.first_name, 
                 c.middle_name, 
                 c.last_name, 
                 c.suffix_name
-            FROM estate_cash_sales AS ecs
-            INNER JOIN estate_reservations AS er ON ecs.estate_id = er.estate_id
+            FROM estate_cash_sales AS cs
+            INNER JOIN estate_reservations AS er ON cs.estate_id = er.estate_id
             INNER JOIN customers AS c ON er.reservee_id = c.id
-            WHERE ecs.payment_status = :payment_status
+            WHERE cs.payment_status = :payment_status
         ");
         
         $stmt->execute([":payment_status" => "Paid"]);

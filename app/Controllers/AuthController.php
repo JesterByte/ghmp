@@ -26,6 +26,13 @@ class AuthController extends BaseController {
                 $fullName = $user["first_name"] . $middleName . $user["last_name"] . $suffixName;
 
                 $_SESSION["user_full_name"] = $fullName;
+                $_SESSION["user_email"] = $user["email"];
+                
+                $_SESSION["user_first_name"] = $user["first_name"];
+                $_SESSION["user_middle_name"] = $user["middle_name"];
+                $_SESSION["user_last_name"] = $user["last_name"];
+                $_SESSION["user_suffix_name"] = $user["suffix_name"];
+
 
                 // header("Location: " . BASE_URL . "/dashboard");
                 // exit();

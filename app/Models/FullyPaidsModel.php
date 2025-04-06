@@ -83,6 +83,7 @@ class FullyPaidsModel extends Model
     public function getFullyPaidsSixMonths()
     {
         $stmt = $this->db->prepare("SELECT 
+            lr.updated_at,
             lr.id,
             lr.lot_id AS asset_id, 
             lr.certificate,
@@ -104,6 +105,7 @@ class FullyPaidsModel extends Model
         UNION ALL
 
         SELECT 
+            er.updated_at,
             er.id,
             er.estate_id AS asset_id, 
             er.certificate,

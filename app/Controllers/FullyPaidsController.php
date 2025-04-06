@@ -10,20 +10,6 @@ use App\Utils\Formatter;
 
 class FullyPaidsController extends BaseController
 {
-    // public function index() {
-    //     $fullyPaidsModel = new FullyPaidsModel();
-    //     $fullyPaidsTable = $fullyPaidsModel->getFullyPaids();
-
-    //     $data = [
-    //         "pageTitle" => "Fully Paids",
-    //         "usesDataTables" => true,
-    //         "fullyPaidsTable" => $fullyPaidsTable,
-    //         "view" => "fully-paids/index"
-    //     ];
-
-    //     View::render("templates/layout", $data);
-    // }
-
     public function indexCashSale()
     {
         $this->checkSession();
@@ -43,7 +29,8 @@ class FullyPaidsController extends BaseController
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
             "pendingEstateReservations" => $this->pendingEstateReservations,
-            "pendingReservations" => $this->pendingReservations
+            "pendingReservations" => $this->pendingReservations,
+            "pendingInquiries" => $this->pendingInquiries
         ];
 
         View::render("templates/layout", $data);
@@ -68,7 +55,8 @@ class FullyPaidsController extends BaseController
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
             "pendingEstateReservations" => $this->pendingEstateReservations,
-            "pendingReservations" => $this->pendingReservations
+            "pendingReservations" => $this->pendingReservations,
+            "pendingInquiries" => $this->pendingInquiries
         ];
 
         View::render("templates/layout", $data);
@@ -93,7 +81,8 @@ class FullyPaidsController extends BaseController
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
             "pendingEstateReservations" => $this->pendingEstateReservations,
-            "pendingReservations" => $this->pendingReservations
+            "pendingReservations" => $this->pendingReservations,
+            "pendingInquiries" => $this->pendingInquiries
         ];
 
         View::render("templates/layout", $data);

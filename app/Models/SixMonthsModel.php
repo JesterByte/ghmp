@@ -26,7 +26,6 @@ class SixMonthsModel extends Model
                 smp.payment_amount AS payment_amount, 
                 smp.receipt_path,
                 smp.payment_date, 
-
                 c.first_name, 
                 c.middle_name, 
                 c.last_name, 

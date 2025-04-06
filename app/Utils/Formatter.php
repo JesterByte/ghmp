@@ -193,6 +193,23 @@ class Formatter
         return date("F j, Y", strtotime($date));
     }
 
+    public static function formatRelativeDate($date) {
+        $dateTime = strtotime($date);
+        $today = strtotime('today');
+        $tomorrow = strtotime('tomorrow');
+        $yesterday = strtotime('yesterday');
+        
+        if ($dateTime === $today) {
+            return 'Today';
+        } elseif ($dateTime === $tomorrow) {
+            return 'Tomorrow';
+        } elseif ($dateTime === $yesterday) {
+            return 'Yesterday';
+        } else {
+            return date('M j', $dateTime);
+        }
+    }
+
     // Format file name for database restore
     public static function formatDatabaseVersion($filename)
     {
@@ -229,5 +246,18 @@ class Formatter
         }
         // Return null if neither format matches
         return null;
+    }
+
+    public static function cleanName($name){
+        return strip_tags(trim(ucwords(strtolower($name))));
+    }
+
+    public static function validateSuffix($suffix){
+        $validSuffixes = ['Jr.', 'Sr.', 'I', 'II', 'III', 'IV', 'V'];
+        return in_array($suffix, $validSuffixes) ? $suffix : null;
+    }
+
+    public static function cleanEmail($email){
+        return strip_tags(trim(strtolower($email)));
     }
 }

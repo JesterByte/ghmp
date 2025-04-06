@@ -8,7 +8,7 @@
             </div>
             <div class="modal-body">
                 <!-- Image will be loaded here -->
-                <img id="receipt-image" src="" alt="Receipt Image" class="img-fluid" />
+                <img id="receipt-image" src="" alt="Receipt Image" class="rounded img-fluid" />
             </div>
         </div>
     </div>

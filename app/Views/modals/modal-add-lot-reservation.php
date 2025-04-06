@@ -12,8 +12,12 @@
                         <select class="form-select" id="lot" name="lot" aria-label="Floating label select example" required>
                             <option selected disabled></option>
                             <?php
-                            for ($i = 0; $i < count($formattedAvailableLots["available_lot"]); $i++) {
-                                echo "<option value='{$formattedAvailableLots["lot_id"][$i]}'>{$formattedAvailableLots["available_lot"][$i]}</option>";
+                            if (!empty($formattedAvailableLots)) {
+                                for ($i = 0; $i < count($formattedAvailableLots["lot_id"]); $i++) {
+                                    echo "<option value='{$formattedAvailableLots["lot_id"][$i]}'>{$formattedAvailableLots["available_lot"][$i]}</option>";
+                                }
+                            } else {
+                                echo "<option value='' disabled selected>No available lots</option>";
                             }
                             ?>
                         </select>
@@ -23,8 +27,12 @@
                         <select class="form-select" id="customer" name="customer" aria-label="Floating label select example" required>
                             <option selected disabled></option>
                             <?php
-                            for ($i = 0; $i < count($formattedCustomers["customer_id"]); $i++) {
-                                echo "<option value='{$formattedCustomers["customer_id"][$i]}'>{$formattedCustomers["customer"][$i]}</option>";
+                            if (!empty($formattedCustomers)) {
+                                for ($i = 0; $i < count($formattedCustomers["customer_id"]); $i++) {
+                                    echo "<option value='{$formattedCustomers["customer_id"][$i]}'>{$formattedCustomers["customer"][$i]}</option>";
+                                }
+                            } else {
+                                echo "<option value='' disabled selected>No customers available</option>";
                             }
                             ?>
                         </select>
@@ -69,6 +77,16 @@
                             <input type="text" class="form-control" id="monthly-payment" name="monthly-payment" readonly>
                         </div>
                     </div>
+
+                    <!-- Label & Input Group for Total Monthly Payment (Initially Hidden) -->
+                    <div id="total-payment-group" class="mb-3" style="display: none;">
+                        <label for="total-payment" class="form-label">Payable Amount (Monthly Total)</label>
+                        <div class="input-group">
+                            <span class="input-group-text">₱</span>
+                            <input type="text" class="form-control" id="total-payment" name="total-payment" readonly>
+                        </div>
+                    </div>
+
 
                     <!-- Receipt Upload Field (Image Only) -->
                     <div class="form-floating mb-3">
@@ -127,34 +145,43 @@
                 .then(data => {
                     if (data.success) {
                         const price = parseFloat(data.price);
-                        priceField.value = price.toFixed(2); // Populate payable amount with data.price
+                        priceField.value = price.toFixed(2);
+
+                        const monthlyPayment = parseFloat(data.monthly_payment);
+                        let durationMonths = 0;
 
                         if (paymentOption === "Cash Sale") {
-                            // For Cash Sale, only show the full price
                             monthlyPaymentGroup.style.display = "none";
+                            document.getElementById("total-payment-group").style.display = "none";
                             payableAmountLabel.textContent = "Payable Amount";
                             paymentNote.style.display = "block";
                             paymentNote.textContent = "* The customer must pay the full amount before uploading the receipt.";
                         } else {
-                            // For Installments and 6 Months, show monthly payment as well
-                            const monthlyPayment = parseFloat(data.monthly_payment);
-                            monthlyPaymentInput.value = monthlyPayment.toFixed(2); // Populate monthly payment with data.monthly_payment
-                            monthlyPaymentGroup.style.display = "block";
-                            payableAmountLabel.textContent = "Payable Amount (Down Payment)";
-                            paymentNote.style.display = "block";
-
-                            // Dynamic messages based on payment options
+                            // Determine months
                             if (paymentOption === "6 Months") {
+                                durationMonths = 6;
                                 paymentNote.textContent = "* The customer must pay a 20% down payment. The remaining balance will be divided into 6 monthly payments.";
                             } else {
                                 const years = parseInt(paymentOption.match(/\d+/)[0]);
-                                const months = years * 12;
-                                paymentNote.textContent = `* The customer must pay a 20% down payment. The remaining balance will be divided into ${months} monthly payments over ${years} years.`;
+                                durationMonths = years * 12;
+                                paymentNote.textContent = `* The customer must pay a 20% down payment. The remaining balance will be divided into ${durationMonths} monthly payments over ${years} years.`;
                             }
+
+                            // Show monthly and total fields
+                            monthlyPaymentInput.value = monthlyPayment.toFixed(2);
+                            document.getElementById("total-payment").value = (monthlyPayment * durationMonths).toFixed(2);
+                            monthlyPaymentGroup.style.display = "block";
+                            document.getElementById("total-payment-group").style.display = "block";
+
+                            // Update label for original price field
+                            payableAmountLabel.textContent = "Down Payment";
                         }
+
+                        paymentNote.style.display = "block";
                     } else {
                         priceField.value = "No price available";
                         monthlyPaymentGroup.style.display = "none";
+                        document.getElementById("total-payment-group").style.display = "none";
                         paymentNote.style.display = "none";
                     }
                 })

@@ -50,6 +50,7 @@ foreach ($ongoingInstallments as $ongoingInstallment) {
     <table class="table table-striped table-hover table-bordered" id="table">
         <thead>
             <tr>
+                <th>Sorter</th>
                 <th class="text-center">Payment Date</th>
                 <th class="text-center">Asset</th>
                 <th class="text-center">Payer</th>
@@ -77,6 +78,7 @@ foreach ($ongoingInstallments as $ongoingInstallment) {
                     $receipt = BASE_URL . "/uploads/receipts/" . $row["receipt_path"];
 
                     TableHelper::startRow();
+                    TableHelper::cell($row["payment_date"]);
                     TableHelper::cell($paymentDate);
                     TableHelper::cell($assetId);
                     TableHelper::cell($payer);

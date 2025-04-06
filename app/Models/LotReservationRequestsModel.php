@@ -10,11 +10,26 @@ class LotReservationRequestsModel extends Model
     public function getReservationRequests()
     {
         $stmt = $this->db->prepare("SELECT 
-        lr.lot_id, lr.reservee_id, lr.lot_type, lr.reservation_status, lr.created_at, c.first_name, c.middle_name, c.last_name, c.suffix_name
+        lr.lot_id, 
+        lr.reservee_id, 
+        lr.lot_type, 
+        lr.reservation_status, 
+        lr.created_at, 
+        
+        c.first_name, 
+        c.middle_name, 
+        c.last_name, 
+        c.suffix_name,
+
+        l.latitude_start AS lot_lat_start,
+        l.longitude_start AS lot_lng_start,
+        l.latitude_end AS lot_lat_end,
+        l.longitude_end AS lot_lng_end
+
         FROM lot_reservations AS lr 
         INNER JOIN customers AS c ON lr.reservee_id = c.id
-        INNER JOIN lots AS l ON lr.lot_id = l.lot_id 
-        WHERE lot_type = :lot_type AND reservation_status = :reservation_status");
+        INNER JOIN lots AS l ON l.lot_id = lr.lot_id 
+        WHERE lr.lot_type = :lot_type AND lr.reservation_status = :reservation_status");
         $stmt->execute([':lot_type' => "Pending", ':reservation_status' => 'Pending']);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

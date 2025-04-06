@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Helpers\EmailHelper;
 use App\Models\BadgeModel;
 use App\Models\CustomersModel;
 use App\Models\LotReservationsModel;
@@ -9,6 +10,7 @@ use App\Utils\Formatter;
 use App\Utils\Calculator;
 use App\Core\View;
 use App\Helpers\DisplayHelper;
+use App\Models\CustomerNotificationModel;
 
 class LotReservationsController extends BaseController
 {
@@ -37,7 +39,8 @@ class LotReservationsController extends BaseController
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
             "pendingEstateReservations" => $this->pendingEstateReservations,
-            "pendingReservations" => $this->pendingReservations
+            "pendingReservations" => $this->pendingReservations,
+            "pendingInquiries" => $this->pendingInquiries
         ];
 
         View::render("templates/layout", $data);
@@ -68,7 +71,8 @@ class LotReservationsController extends BaseController
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
             "pendingEstateReservations" => $this->pendingEstateReservations,
-            "pendingReservations" => $this->pendingReservations
+            "pendingReservations" => $this->pendingReservations,
+            "pendingInquiries" => $this->pendingInquiries
         ];
 
         View::render("templates/layout", $data);
@@ -99,7 +103,8 @@ class LotReservationsController extends BaseController
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
             "pendingEstateReservations" => $this->pendingEstateReservations,
-            "pendingReservations" => $this->pendingReservations
+            "pendingReservations" => $this->pendingReservations,
+            "pendingInquiries" => $this->pendingInquiries
         ];
 
         View::render("templates/layout", $data);
@@ -300,6 +305,9 @@ class LotReservationsController extends BaseController
             $reservationId = $lotReservationsModel->setReservation($lotId, $reserveeId, $lotType, $paymentOption);
             $calculator = new Calculator();
             $downPaymentDueDate = $this->setDownPaymentDueDate();
+
+            $customerNotificationModel = new CustomerNotificationModel();
+            $emailHelper = new EmailHelper();
             switch ($paymentOption) {
                 case "Cash Sale":
                     $paymentAmount = $pricing['cash_sale'];
@@ -307,6 +315,21 @@ class LotReservationsController extends BaseController
                     $lotReservationsModel->setCashSaleDueDate($lotId, $cashSaleId);
                     $lotReservationsModel->completeReservation($reservationId);
                     $lotReservationsModel->setLotOwner($lotId, $reservationId);
+
+                    $customerNotificationModel->setNotification($reserveeId, "Congratulations! You have successfully owned Lot #$lotId through Cash Sale.", "my_lots_and_estates");
+
+                    $emailSubject = "Congratulations on Your Lot Ownership!";
+                    $emailBody = '
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+                        <h2 style="color: #28a745; text-align: center;">Cash Sale Confirmation</h2>
+                        <p>Dear <strong>' . htmlspecialchars($customerFullName) . '</strong>,</p>
+                        <p>We are delighted to inform you that you have successfully owned <strong>Lot #' . htmlspecialchars($lotId) . '</strong> through <strong>Cash Sale</strong>.</p>
+                        <p>Thank you for your trust in our services. We’re honored to be part of this meaningful step.</p>
+                        <hr style="border: none; height: 1px; background-color: #ccc;">
+                        <p style="font-size: 12px; color: #666; text-align: center;">This is an automated message. Please do not reply.</p>
+                    </div>';
+                    $emailHelper->sendEmail($customer["email_address"], $emailSubject, $emailBody, true);
+
                     break;
                 case "6 Months":
                     $data = [
@@ -323,6 +346,24 @@ class LotReservationsController extends BaseController
                         "payment_status" => "Ongoing"
                     ];
                     $lotReservationsModel->setSixMonthsPayment($data);
+
+                    $message = "Your reservation for Lot #$lotId is now active under the $paymentOption plan. We have received your down payment.";
+                    $customerNotificationModel->setNotification($reserveeId, $message, "my_lots_and_estates");
+
+                    $emailSubject = "Your Down Payment Has Been Received – Reservation Activated!";
+                    $emailBody = '
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 24px; border: 1px solid #ddd; border-radius: 10px;">
+                        <h2 style="color: #007bff; text-align: center;">Reservation Successfully Activated</h2>
+                        <p>Dear <strong>' . htmlspecialchars($customerFullName) . '</strong>,</p>
+                        <p>We’re pleased to let you know that we’ve successfully received your <strong>down payment</strong> for <strong>Lot #' . htmlspecialchars($lotId) . '</strong>.</p>
+                        <p>Your reservation is now <strong>active</strong> under our <strong>' . htmlspecialchars($paymentOption) . '</strong> payment plan.</p>
+                        <p>You’ll receive regular updates regarding your upcoming payments and schedule.</p>
+                        <p>If you have any questions, feel free to reach out to our support team.</p>
+                        <hr style="border: none; height: 1px; background-color: #ccc; margin: 20px 0;">
+                        <p style="font-size: 12px; color: #666; text-align: center;">This is an automated message. Please do not reply.</p>
+                    </div>';
+                    $emailHelper->sendEmail($customer["email_address"], $emailSubject, $emailBody, true);
+
 
                     // $sixMonthsId = $lotReservationsModel->setSixMonthsPayment($data);
                     // $lotReservationsModel->setSixMonthsDueDate($lotId, $sixMonthsId);
@@ -350,6 +391,24 @@ class LotReservationsController extends BaseController
                     ];
 
                     $lotReservationsModel->setInstallmentPayment($data);
+
+                    $message = "Your reservation for Lot #$lotId is now active under the $paymentOption plan. We have received your down payment.";
+                    $customerNotificationModel->setNotification($reserveeId, $message, "my_lots_and_estates");
+
+                    $emailSubject = "Your Down Payment Has Been Received – Reservation Activated!";
+                    $emailBody = '
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 24px; border: 1px solid #ddd; border-radius: 10px;">
+                        <h2 style="color: #007bff; text-align: center;">Reservation Successfully Activated</h2>
+                        <p>Dear <strong>' . htmlspecialchars($customerFullName) . '</strong>,</p>
+                        <p>We’re pleased to let you know that we’ve successfully received your <strong>down payment</strong> for <strong>Lot #' . htmlspecialchars($lotId) . '</strong>.</p>
+                        <p>Your reservation is now <strong>active</strong> under our <strong>' . htmlspecialchars($paymentOption) . '</strong> payment plan.</p>
+                        <p>You’ll receive regular updates regarding your upcoming payments and schedule.</p>
+                        <p>If you have any questions, feel free to reach out to our support team.</p>
+                        <hr style="border: none; height: 1px; background-color: #ccc; margin: 20px 0;">
+                        <p style="font-size: 12px; color: #666; text-align: center;">This is an automated message. Please do not reply.</p>
+                    </div>';
+                    $emailHelper->sendEmail($customer["email_address"], $emailSubject, $emailBody, true);
+
                     break;
                 case "Installment: 2 Years":
                     $termYears = 2;
@@ -374,6 +433,24 @@ class LotReservationsController extends BaseController
                     ];
 
                     $lotReservationsModel->setInstallmentPayment($data);
+
+                    $message = "Your reservation for Lot #$lotId is now active under the $paymentOption plan. We have received your down payment.";
+                    $customerNotificationModel->setNotification($reserveeId, $message, "my_lots_and_estates");
+
+                    $emailSubject = "Your Down Payment Has Been Received – Reservation Activated!";
+                    $emailBody = '
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 24px; border: 1px solid #ddd; border-radius: 10px;">
+                        <h2 style="color: #007bff; text-align: center;">Reservation Successfully Activated</h2>
+                        <p>Dear <strong>' . htmlspecialchars($customerFullName) . '</strong>,</p>
+                        <p>We’re pleased to let you know that we’ve successfully received your <strong>down payment</strong> for <strong>Lot #' . htmlspecialchars($lotId) . '</strong>.</p>
+                        <p>Your reservation is now <strong>active</strong> under our <strong>' . htmlspecialchars($paymentOption) . '</strong> payment plan.</p>
+                        <p>You’ll receive regular updates regarding your upcoming payments and schedule.</p>
+                        <p>If you have any questions, feel free to reach out to our support team.</p>
+                        <hr style="border: none; height: 1px; background-color: #ccc; margin: 20px 0;">
+                        <p style="font-size: 12px; color: #666; text-align: center;">This is an automated message. Please do not reply.</p>
+                    </div>';
+                    $emailHelper->sendEmail($customer["email_address"], $emailSubject, $emailBody, true);
+
                     break;
                 case "Installment: 3 Years":
                     $termYears = 3;
@@ -398,6 +475,24 @@ class LotReservationsController extends BaseController
                     ];
 
                     $lotReservationsModel->setInstallmentPayment($data);
+
+                    $message = "Your reservation for Lot #$lotId is now active under the $paymentOption plan. We have received your down payment.";
+                    $customerNotificationModel->setNotification($reserveeId, $message, "my_lots_and_estates");
+
+                    $emailSubject = "Your Down Payment Has Been Received – Reservation Activated!";
+                    $emailBody = '
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 24px; border: 1px solid #ddd; border-radius: 10px;">
+                        <h2 style="color: #007bff; text-align: center;">Reservation Successfully Activated</h2>
+                        <p>Dear <strong>' . htmlspecialchars($customerFullName) . '</strong>,</p>
+                        <p>We’re pleased to let you know that we’ve successfully received your <strong>down payment</strong> for <strong>Lot #' . htmlspecialchars($lotId) . '</strong>.</p>
+                        <p>Your reservation is now <strong>active</strong> under our <strong>' . htmlspecialchars($paymentOption) . '</strong> payment plan.</p>
+                        <p>You’ll receive regular updates regarding your upcoming payments and schedule.</p>
+                        <p>If you have any questions, feel free to reach out to our support team.</p>
+                        <hr style="border: none; height: 1px; background-color: #ccc; margin: 20px 0;">
+                        <p style="font-size: 12px; color: #666; text-align: center;">This is an automated message. Please do not reply.</p>
+                    </div>';
+                    $emailHelper->sendEmail($customer["email_address"], $emailSubject, $emailBody, true);
+
                     break;
                 case "Installment: 4 Years":
                     $termYears = 4;
@@ -422,6 +517,24 @@ class LotReservationsController extends BaseController
                     ];
 
                     $lotReservationsModel->setInstallmentPayment($data);
+
+                    $message = "Your reservation for Lot #$lotId is now active under the $paymentOption plan. We have received your down payment.";
+                    $customerNotificationModel->setNotification($reserveeId, $message, "my_lots_and_estates");
+
+                    $emailSubject = "Your Down Payment Has Been Received – Reservation Activated!";
+                    $emailBody = '
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 24px; border: 1px solid #ddd; border-radius: 10px;">
+                        <h2 style="color: #007bff; text-align: center;">Reservation Successfully Activated</h2>
+                        <p>Dear <strong>' . htmlspecialchars($customerFullName) . '</strong>,</p>
+                        <p>We’re pleased to let you know that we’ve successfully received your <strong>down payment</strong> for <strong>Lot #' . htmlspecialchars($lotId) . '</strong>.</p>
+                        <p>Your reservation is now <strong>active</strong> under our <strong>' . htmlspecialchars($paymentOption) . '</strong> payment plan.</p>
+                        <p>You’ll receive regular updates regarding your upcoming payments and schedule.</p>
+                        <p>If you have any questions, feel free to reach out to our support team.</p>
+                        <hr style="border: none; height: 1px; background-color: #ccc; margin: 20px 0;">
+                        <p style="font-size: 12px; color: #666; text-align: center;">This is an automated message. Please do not reply.</p>
+                    </div>';
+                    $emailHelper->sendEmail($customer["email_address"], $emailSubject, $emailBody, true);
+
                     break;
                 case "Installment: 5 Years":
                     $termYears = 5;
@@ -446,6 +559,24 @@ class LotReservationsController extends BaseController
                     ];
 
                     $lotReservationsModel->setInstallmentPayment($data);
+
+                    $message = "Your reservation for Lot #$lotId is now active under the $paymentOption plan. We have received your down payment.";
+                    $customerNotificationModel->setNotification($reserveeId, $message, "my_lots_and_estates");
+
+                    $emailSubject = "Your Down Payment Has Been Received – Reservation Activated!";
+                    $emailBody = '
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 24px; border: 1px solid #ddd; border-radius: 10px;">
+                        <h2 style="color: #007bff; text-align: center;">Reservation Successfully Activated</h2>
+                        <p>Dear <strong>' . htmlspecialchars($customerFullName) . '</strong>,</p>
+                        <p>We’re pleased to let you know that we’ve successfully received your <strong>down payment</strong> for <strong>Lot #' . htmlspecialchars($lotId) . '</strong>.</p>
+                        <p>Your reservation is now <strong>active</strong> under our <strong>' . htmlspecialchars($paymentOption) . '</strong> payment plan.</p>
+                        <p>You’ll receive regular updates regarding your upcoming payments and schedule.</p>
+                        <p>If you have any questions, feel free to reach out to our support team.</p>
+                        <hr style="border: none; height: 1px; background-color: #ccc; margin: 20px 0;">
+                        <p style="font-size: 12px; color: #666; text-align: center;">This is an automated message. Please do not reply.</p>
+                    </div>';
+                    $emailHelper->sendEmail($customer["email_address"], $emailSubject, $emailBody, true);
+                    
                     break;
             }
 

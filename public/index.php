@@ -27,6 +27,14 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute("GET", "/map", ['App\Controllers\MapController', 'index']);
     $r->addRoute("GET", "/fetch-lots", ['App\Controllers\MapController', 'fetchLots']);
 
+    $r->addRoute("GET", "/deceased", ['App\Controllers\DeceasedController', 'index']);
+    
+    $r->addRoute("GET", "/inquiries", ['App\Controllers\InquiriesController', 'index']);
+    $r->addRoute("POST", "/inquiries/reply", ['App\Controllers\InquiriesController', 'reply']);
+
+    
+
+
     $r->addRoute("GET", "/lot-reservation-requests", ['App\Controllers\LotReservationRequestsController', 'index']);
     $r->addRoute("GET", "/verify-lot-type/{lotId:[A-Za-z0-9\+\/=]+}/{reserveeId:[A-Za-z0-9\+\/=]+}", ['App\Controllers\LotReservationRequestsController', 'verifyLotType']);
     $r->addRoute("POST", "/verify-lot-type-submit", ["App\Controllers\LotReservationRequestsController", "setLotType"]);
@@ -87,6 +95,10 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute("GET", "/fully-paids-six-months", ['App\Controllers\FullyPaidsController', 'indexSixMonths']);
     $r->addRoute("GET", "/fully-paids-installment", ['App\Controllers\FullyPaidsController', 'indexInstallment']);
     $r->addRoute("POST", "/issue-certificate", ['App\Controllers\FullyPaidsController', 'issueCertificate']);
+
+    $r->addRoute("GET", "/account-settings", ['App\Controllers\AccountSettingsController', 'index']);
+    $r->addRoute("POST", "/account-settings/update", ['App\Controllers\AccountSettingsController', 'updateProfile']);
+    $r->addRoute("POST", "/account-settings/change-password", ['App\Controllers\AccountSettingsController', 'updatePassword']);
 
     $r->addRoute("GET", "/backup-and-restore", ['App\Controllers\BackupAndRestoreController', 'index']);
     $r->addRoute("GET", "/backup-database", ['App\Controllers\BackupAndRestoreController', 'backupDatabase']);

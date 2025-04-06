@@ -6,7 +6,7 @@ use App\Utils\Formatter;
 <div class="modal fade" id="rates-update-estate-modal" tabindex="-1" aria-labelledby="rates-update-estate-modal-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header text-bg-primary">
             <h1 class="modal-title fs-5" id="rates-update-estate-modal-label">Update Estate Rates</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>

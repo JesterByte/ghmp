@@ -10,20 +10,6 @@ use App\Core\View;
 
 class BurialPricingController extends BaseController
 {
-    // public function index() {
-
-    //     $burialPricingModel = new BurialPricingModel();
-    //     $burialPricingTable = $burialPricingModel->getPricingData();
-    //     $data = [
-    //         "pageTitle" => "Burial Pricing List",
-    //         "usesDataTables" => true,
-    //         "burialPricingTable" => $burialPricingTable,
-    //         "view" => "burial-pricing/index"
-    //     ];
-
-    //     View::render("templates/layout", $data);
-    // }
-
     public function indexLot()
     {
         $this->checkSession();
@@ -49,7 +35,8 @@ class BurialPricingController extends BaseController
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
             "pendingEstateReservations" => $this->pendingEstateReservations,
-            "pendingReservations" => $this->pendingReservations
+            "pendingReservations" => $this->pendingReservations,
+            "pendingInquiries" => $this->pendingInquiries
         ];
 
         View::render("templates/layout", $data);
@@ -79,7 +66,8 @@ class BurialPricingController extends BaseController
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
             "pendingEstateReservations" => $this->pendingEstateReservations,
-            "pendingReservations" => $this->pendingReservations
+            "pendingReservations" => $this->pendingReservations,
+            "pendingInquiries" => $this->pendingInquiries
         ];
 
         View::render("templates/layout", $data);

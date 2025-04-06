@@ -2,7 +2,7 @@
 <div class="modal fade" id="record-monthly-payment-modal" tabindex="-1" aria-labelledby="record-monthly-payment-modal-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header text-bg-primary">
                 <h1 class="modal-title fs-5" id="record-monthly-payment-modal-label">Record New Monthly Payment</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>

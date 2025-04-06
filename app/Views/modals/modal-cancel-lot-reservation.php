@@ -2,7 +2,7 @@
 <div class="modal fade" id="lot-reservation-cancellation" tabindex="-1" aria-labelledby="lot-reservation-cancellation-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header text-bg-primary">
                 <h5 class="modal-title" id="lot-reservation-cancellation-label">Lot Reservation Cancellation</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>

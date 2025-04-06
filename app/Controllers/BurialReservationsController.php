@@ -9,8 +9,11 @@ use App\Utils\Formatter;
 use App\Utils\Calculator;
 use App\Core\View;
 use App\Helpers\DisplayHelper;
+use App\Models\CustomersModel;
 use Exception;
 use Random\BrokenRandomEngineError;
+use App\Helpers\EmailHelper;
+use App\Models\CustomerNotificationModel;
 
 class BurialReservationsController extends BaseController
 {
@@ -42,7 +45,8 @@ class BurialReservationsController extends BaseController
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
             "pendingEstateReservations" => $this->pendingEstateReservations,
-            "pendingReservations" => $this->pendingReservations
+            "pendingReservations" => $this->pendingReservations,
+            "pendingInquiries" => $this->pendingInquiries
         ];
 
         View::render("templates/layout", $data);
@@ -52,11 +56,11 @@ class BurialReservationsController extends BaseController
     {
         $burialReservationsModel = new BurialReservationsModel();
         $assets = $burialReservationsModel->getOwnedAssetsByCustomer($customerId);
-    
+
         // Return the assets or an empty array if no assets are found
         echo json_encode($assets ?: []); // If $assets is empty, an empty array is returned
     }
-    
+
 
     public function getBurialTypes($assetType)
     {
@@ -311,6 +315,7 @@ class BurialReservationsController extends BaseController
 
             $deceasedModel = new DeceasedModel();
             $newDeceased = [
+                "customer_id" => $reservation["reservee_id"],
                 "full_name" => $deceasedFullName,
                 "first_name" => $reservation["first_name"],
                 "middle_name" => $reservation["middle_name"],
@@ -322,9 +327,51 @@ class BurialReservationsController extends BaseController
                 "burial_date" => $reservation["date_time"],
                 "location" => $reservation["asset_id"]
             ];
-            $deceasedModel->setDeceased($newDeceased);
+            $isInserted = $deceasedModel->setDeceased($newDeceased);
 
-            if ($result) {
+            if ($result && $isInserted) {
+                $customerNotificationModel = new CustomerNotificationModel();
+                $customerNotificationModel->setNotification(
+                    $reservation["reservee_id"],
+                    "The administrator has marked your burial reservation for {$deceasedFullName} as completed.",
+                    "my_memorial_services"
+                );
+
+                $customerModel = new CustomersModel();
+                $customer = $customerModel->getCustomerById($reservation["reservee_id"]);
+                $customerEmail = $customer["email_address"];
+
+                $emailBody = '
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+                        <h2 style="color: #333; text-align: center;">Burial Reservation Completed</h2>
+                        <p>Dear <strong>' . htmlspecialchars($customer["first_name"]) . '</strong>,</p>
+
+                        <p>We would like to inform you that the burial reservation for 
+                        <strong style="color: #1d3557;">' . htmlspecialchars($deceasedFullName) . '</strong> 
+                        has been <strong style="color: #28a745;">successfully completed</strong>.</p>
+
+                        <p>We offer our deepest condolences during this time and hope our services have been of help and comfort to you.</p>
+
+                        <p>If you have any questions or need assistance, please feel free to reach out to us.</p>
+
+                        <hr style="border: 0; height: 1px; background: #ddd; margin: 30px 0;">
+
+                        <p style="text-align: center; font-size: 12px; color: #777;">
+                            This is an automated message. Please do not reply directly to this email.<br>
+                            &copy; ' . date("Y") . ' Green Haven Memorial Park. All rights reserved.
+                        </p>
+                    </div>
+                ';
+
+
+                // Send notification to the customer
+                $emailHelper = new EmailHelper();
+                $emailHelper->sendEmail(
+                    $customerEmail,
+                    "Burial Reservation Completed",
+                    $emailBody
+                );
+
                 echo json_encode([
                     "success" => true,
                     "message" => "Reservation marked as completed successfully!",
@@ -332,7 +379,7 @@ class BurialReservationsController extends BaseController
                     "title" => "Operation Successful"
                 ]);
             } else {
-                echo json_encode(["success" => false, "message" => "Failed to update reservation."]);
+                echo json_encode(["success" => false, "message" => "Failed to update reservation.", "debug" => print_r($newDeceased, true)]);
             }
         } catch (Exception $e) {
             echo json_encode(["success" => false, "message" => "An error occurred: " . $e->getMessage()]);

@@ -10,20 +10,25 @@ $timeStamp = DateHelper::getTimestamp();
 $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
 
 $formattedAvailableEstates = [];
-foreach ($availableEstates as $availableEstate) {
-    $formattedAvailableEstates["available_estate"][] = Formatter::formatEstateId($availableEstate["estate_id"]);
-    $formattedAvailableEstates["estate_id"][] = $availableEstate["estate_id"];
+if (!empty($availableEstates)) {
+    foreach ($availableEstates as $availableEstate) {
+        $formattedAvailableEstates["available_estate"][] = Formatter::formatEstateId($availableEstate["estate_id"]);
+        $formattedAvailableEstates["estate_id"][] = $availableEstate["estate_id"];
+    }
 }
 
 $formattedCustomers = [];
-foreach ($customers as $customer) {
-    $formattedCustomers["customer"][] = Formatter::formatFullName($customer["first_name"], $customer["middle_name"], $customer["last_name"], $customer["suffix_name"]);
-    $formattedCustomers["customer_id"][] = $customer["id"];
+if (!empty($customers)) {
+    foreach ($customers as $customer) {
+        $formattedCustomers["customer"][] = Formatter::formatFullName($customer["first_name"], $customer["middle_name"], $customer["last_name"], $customer["suffix_name"]);
+        $formattedCustomers["customer_id"][] = $customer["id"];
+    }
 }
+
 ?>
 <div class="row mb-1">
     <div class="col d-flex justify-content-end">
-        <a href="<?= BASE_URL . "/estate-reservation-requests" ?>" role="button" class="btn btn-primary position-relative"><i class="bi bi-list"></i> Requests
+        <a href="<?= BASE_URL . "/estate-reservation-requests" ?>" role="button" class="btn btn-info position-relative"><i class="bi bi-list"></i> Requests
             <?php if ($estateReservationRequests != 0): ?>
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                     <?= $estateReservationRequests ?>
@@ -59,6 +64,7 @@ foreach ($customers as $customer) {
     <table class="table table-striped table-hover table-bordered" id="table">
         <thead>
             <tr>
+                <th>Created At</th>
                 <th class="text-center">Reservation Date</th>
                 <th class="text-center">Estate</th>
                 <th class="text-center">Reservee</th>
@@ -79,6 +85,7 @@ foreach ($customers as $customer) {
                     $reservationDate = Formatter::formatDateTime($row["created_at"]);
 
                     TableHelper::startRow();
+                    TableHelper::cell($row["created_at"]);
                     TableHelper::cell($reservationDate);
                     TableHelper::cell($estateId);
                     TableHelper::cell($reservee);
