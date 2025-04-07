@@ -193,4 +193,63 @@ class DashboardModel extends Model
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getLatestInquiries() {
+        $sql = "SELECT 
+            c.id,
+            c.email,
+            c.message,
+            c.created_at,
+            c.status
+        FROM contacts AS c
+        WHERE c.status = 'unread'
+        ORDER BY created_at DESC
+        LIMIT 3";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getMonthlyOverviewData() {
+        $sql = "SELECT 
+            DATE_FORMAT(payment_date, '%b') as month,
+            SUM(payment_amount) as revenue,
+            COUNT(*) as services
+        FROM (
+            SELECT payment_date, payment_amount FROM cash_sales 
+            WHERE YEAR(payment_date) = YEAR(CURRENT_DATE)
+            
+            UNION ALL
+            
+            SELECT payment_date, payment_amount FROM estate_cash_sales 
+            WHERE YEAR(payment_date) = YEAR(CURRENT_DATE)
+            
+            UNION ALL
+            
+            SELECT payment_date, payment_amount FROM six_months_payments 
+            WHERE YEAR(payment_date) = YEAR(CURRENT_DATE)
+            
+            UNION ALL
+            
+            SELECT payment_date, payment_amount FROM estate_six_months_payments 
+            WHERE YEAR(payment_date) = YEAR(CURRENT_DATE)
+            
+            UNION ALL
+            
+            SELECT payment_date, payment_amount FROM installment_payments 
+            WHERE YEAR(payment_date) = YEAR(CURRENT_DATE)
+            
+            UNION ALL
+            
+            SELECT payment_date, payment_amount FROM estate_installment_payments 
+            WHERE YEAR(payment_date) = YEAR(CURRENT_DATE)
+        ) payments
+        GROUP BY MONTH(payment_date)
+        ORDER BY MONTH(payment_date)";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

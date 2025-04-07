@@ -34,4 +34,27 @@ class CustomersModel extends Model
         $stmt->execute(["customer_id" => $customerId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getPlotStatusStatistics()
+    {
+        $sql = "SELECT 
+            (SELECT COUNT(*) FROM lots WHERE status = 'Available') +
+            (SELECT COUNT(*) FROM estates WHERE status = 'Available') as available,
+            
+            (SELECT COUNT(*) FROM lots WHERE status = 'Reserved') +
+            (SELECT COUNT(*) FROM estates WHERE status = 'Reserved') as reserved,
+            
+            (SELECT COUNT(*) FROM lots WHERE status = 'Sold') +
+            (SELECT COUNT(*) FROM estates WHERE status = 'Sold') as sold,
+            
+            (SELECT COUNT(*) FROM lots WHERE status = 'Sold and Occupied') +
+            (SELECT COUNT(*) FROM estates WHERE status = 'Sold and Occupied') as occupied,
+            
+            (SELECT COUNT(*) FROM lots) +
+            (SELECT COUNT(*) FROM estates) as total";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }

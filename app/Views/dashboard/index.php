@@ -23,7 +23,7 @@
                     ₱
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title"><?= $monthlyRevenue ?></h5>
+                    <h5 class="card-title"><?= $currentMonthRevenue ?></h5>
                     <p class="card-text small">
                         <?php if ($monthlyRevenueTrend === 'up'): ?>
                             <i class="bi bi-arrow-up-circle text-success"></i>
@@ -100,27 +100,20 @@
                     <a href="<?= BASE_URL ?>/inquiries" class="btn btn-sm btn-outline-primary">View All</a>
                 </div>
                 <div class="list-group list-group-flush">
-                    <div class="list-group-item">
-                        <div class="d-flex w-100 justify-content-between">
-                            <small class="text-muted">From: john@email.com</small>
-                            <small class="text-muted">30 minutes ago</small>
+                    <?php foreach($latestInquiries as $inquiry): ?>
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <small class="text-muted">From: <?= htmlspecialchars($inquiry['email']) ?></small>
+                                <small class="text-muted"><?= Formatter::formatRelativeDate($inquiry['created_at']) ?></small>
+                            </div>
+                            <p class="mb-1"><?= htmlspecialchars(strlen($inquiry['message']) > 100 ? substr($inquiry['message'], 0, 100) . '...' : $inquiry['message']) ?></p>
                         </div>
-                        <p class="mb-1">Inquiry about family estate plots in Section A...</p>
-                    </div>
-                    <div class="list-group-item">
-                        <div class="d-flex w-100 justify-content-between">
-                            <small class="text-muted">From: mary@email.com</small>
-                            <small class="text-muted">2 hours ago</small>
+                    <?php endforeach; ?>
+                    <?php if(empty($latestInquiries)): ?>
+                        <div class="list-group-item">
+                            <p class="mb-1 text-center text-muted">No recent inquiries</p>
                         </div>
-                        <p class="mb-1">Request for information about burial services and pricing...</p>
-                    </div>
-                    <div class="list-group-item">
-                        <div class="d-flex w-100 justify-content-between">
-                            <small class="text-muted">From: peter@email.com</small>
-                            <small class="text-muted">Yesterday</small>
-                        </div>
-                        <p class="mb-1">Questions about memorial service arrangements...</p>
-                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -140,11 +133,15 @@
             <div class="card shadow-sm">
                 <div class="card-header">Plot Status</div>
                 <div class="card-body">
-                    <canvas id="plotChart" height="200"></canvas>
+                    <canvas id="plotStatusChart" height="200"></canvas>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<div class="revenue-display">
+    <?= $currentMonthRevenue ?>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -154,15 +151,15 @@ document.addEventListener('DOMContentLoaded', function() {
     new Chart(document.getElementById('monthlyChart'), {
         type: 'line',
         data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            labels: <?= json_encode($chartLabels) ?>,
             datasets: [{
                 label: 'Revenue (₱)',
-                data: [150000, 180000, 220000, 250000, 200000, 230000],
+                data: <?= json_encode($chartRevenue) ?>,
                 borderColor: '#198754',
                 tension: 0.1
             }, {
                 label: 'Services',
-                data: [10, 12, 15, 14, 16, 15],
+                data: <?= json_encode($chartServices) ?>, // Changed from monthlyServices
                 borderColor: '#0dcaf0',
                 tension: 0.1
             }]
@@ -174,18 +171,38 @@ document.addEventListener('DOMContentLoaded', function() {
                     display: true,
                     text: 'Revenue & Services Trend'
                 }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return '₱' + value.toLocaleString();
+                        }
+                    }
+                }
             }
         }
     });
 
     // Plot Status Chart
-    new Chart(document.getElementById('plotChart'), {
+    new Chart(document.getElementById('plotStatusChart'), {
         type: 'doughnut',
         data: {
-            labels: ['Available', 'Reserved', 'Occupied'],
+            labels: ['Available', 'Reserved', 'Sold', 'Sold & Occupied'],
             datasets: [{
-                data: [150, 30, 820],
-                backgroundColor: ['#198754', '#ffc107', '#dc3545']
+                data: [
+                    <?= $plotStats['available'] ?>, 
+                    <?= $plotStats['reserved'] ?>, 
+                    <?= $plotStats['sold'] ?>,
+                    <?= $plotStats['occupied'] ?>
+                ],
+                backgroundColor: [
+                    '#198754',  // green for available
+                    '#ffc107',  // yellow for reserved
+                    '#dc3545',  // red for sold
+                    '#6c757d'   // gray for sold & occupied
+                ]
             }]
         },
         options: {
@@ -193,6 +210,10 @@ document.addEventListener('DOMContentLoaded', function() {
             plugins: {
                 legend: {
                     position: 'bottom'
+                },
+                title: {
+                    display: true,
+                    text: 'Total Assets: <?= $plotStats['total'] ?>'
                 }
             }
         }
