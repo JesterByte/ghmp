@@ -33,6 +33,16 @@ foreach ($customers as $customer) {
         </a>
     </div>
 </div>
+
+<div class="d-flex justify-content-end">
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#reservationSettingsModal">
+            <i class="bi bi-gear"></i>
+            Reservation Settings
+        </button>
+    </div>
+</div>
+
 <div class="row my-3">
     <div class="col">
         <div class="btn-group">
@@ -101,6 +111,7 @@ foreach ($customers as $customer) {
 <?php include_once VIEW_PATH . "/templates/dataTables-scripts.php" ?>
 <?php include_once VIEW_PATH . "/modals/modal-add-lot-reservation.php" ?>
 <?php include_once VIEW_PATH . "/modals/modal-view-location.php" ?>
+<?php include_once VIEW_PATH . "/modals/modal-reservation-settings.php" ?>
 
 <script src="<?= BASE_URL . "/js/form-validation.js" ?>"></script>
 <script src="<?= BASE_URL . "/js/modal-autofocus.js" ?>"></script>

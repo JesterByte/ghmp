@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\BadgeModel;
 use App\Models\CustomersModel;
 use App\Models\EstateReservationsModel;
+use App\Models\ReservationSettingsModel;
 use App\Utils\Formatter;
 use App\Utils\Calculator;
 use App\Core\View;
@@ -12,6 +13,15 @@ use App\Helpers\DisplayHelper;
 
 class EstateReservationsController extends BaseController
 {
+    protected $reservationSettingsModel;
+    protected $reservationSettings;
+
+    public function __construct() {
+        parent::__construct();
+        $this->reservationSettingsModel = new ReservationSettingsModel();
+        $this->reservationSettings = $this->reservationSettingsModel->getSettings("Estate");
+    }
+
     public function indexCashSale()
     {
         $this->checkSession();
@@ -30,6 +40,7 @@ class EstateReservationsController extends BaseController
             "availableEstates" => $availableEstates,
             "customers" => $customers,
             "estateReservationRequests" => $estateReservationRequests,
+            "reservationSettings" => $this->reservationSettings,
             "view" => "estate-reservations/index",
 
             "userId" => $_SESSION["user_id"],
@@ -62,6 +73,7 @@ class EstateReservationsController extends BaseController
             "availableEstates" => $availableEstates,
             "customers" => $customers,
             "estateReservationRequests" => $estateReservationRequests,
+            "reservationSettings" => $this->reservationSettings,
             "view" => "estate-reservations/index",
 
             "userId" => $_SESSION["user_id"],
@@ -94,6 +106,7 @@ class EstateReservationsController extends BaseController
             "availableEstates" => $availableEstates,
             "customers" => $customers,
             "estateReservationRequests" => $estateReservationRequests,
+            "reservationSettings" => $this->reservationSettings,
             "view" => "estate-reservations/index",
 
             "userId" => $_SESSION["user_id"],
@@ -126,6 +139,7 @@ class EstateReservationsController extends BaseController
             "availableEstates" => $availableEstates,
             "customers" => $customers,
             "estateReservationRequests" => $estateReservationRequests,
+            "reservationSettings" => $this->reservationSettings,
             "view" => "estate-reservations/index",
 
             "userId" => $_SESSION["user_id"],
@@ -133,7 +147,8 @@ class EstateReservationsController extends BaseController
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
             "pendingEstateReservations" => $this->pendingEstateReservations,
-            "pendingReservations" => $this->pendingReservations
+            "pendingReservations" => $this->pendingReservations,
+            "pendingInquiries" => $this->pendingInquiries
         ];
 
         View::render("templates/layout", $data);
@@ -157,6 +172,7 @@ class EstateReservationsController extends BaseController
             "availableEstates" => $availableEstates,
             "customers" => $customers,
             "estateReservationRequests" => $estateReservationRequests,
+            "reservationSettings" => $this->reservationSettings,
             "view" => "estate-reservations/index",
 
             "userId" => $_SESSION["user_id"],
@@ -164,7 +180,8 @@ class EstateReservationsController extends BaseController
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
             "pendingEstateReservations" => $this->pendingEstateReservations,
-            "pendingReservations" => $this->pendingReservations
+            "pendingReservations" => $this->pendingReservations,
+            "pendingInquiries" => $this->pendingInquiries
         ];
 
         View::render("templates/layout", $data);
@@ -372,5 +389,79 @@ class EstateReservationsController extends BaseController
     public function setDownPaymentDueDate()
     {
         return date("Y-m-d", strtotime("+30 days"));
+    }
+
+    public function updateSettings()
+    {
+        if (!isset($_POST['update_settings'])) {
+            $this->redirect(
+                BASE_URL . "/estate-reservations",
+                DisplayHelper::$xIcon,
+                "Invalid form submission",
+                "Operation Failed"
+            );
+            return;
+        }
+
+        // Validate required fields
+        $requiredFields = ['overdue_days_limit', 'notification_days'];
+        foreach ($requiredFields as $field) {
+            if (!isset($_POST[$field])) {
+                $this->redirect(
+                    BASE_URL . "/estate-reservations",
+                    DisplayHelper::$xIcon,
+                    "Missing required field: {$field}",
+                    "Operation Failed"
+                );
+                return;
+            }
+        }
+
+        // Validate overdue_days_limit
+        if (!in_array($_POST['overdue_days_limit'], ['0', '3', '5', '7'])) {
+            $this->redirect(
+                BASE_URL . "/estate-reservations",
+                DisplayHelper::$xIcon,
+                "Invalid overdue days limit value",
+                "Operation Failed"
+            );
+            return;
+        }
+
+        // Validate notification_days
+        if (!in_array($_POST['notification_days'], ['0', '1', '3', '5'])) {
+            $this->redirect(
+                BASE_URL . "/estate-reservations",
+                DisplayHelper::$xIcon,
+                "Invalid notification days value",
+                "Operation Failed"
+            );
+            return;
+        }
+
+        $settings = [
+            'overdue_days_limit' => $_POST['overdue_days_limit'],
+            'notification_days' => $_POST['notification_days'],
+            'enable_reminders' => isset($_POST['enable_reminders']) ? 1 : 0
+        ];
+
+        if ($this->reservationSettingsModel->updateSettings('Estate', $settings)) {
+            // Update the controller's settings cache
+            $this->reservationSettings = $this->reservationSettingsModel->getSettings("Estate");
+
+            $this->redirect(
+                BASE_URL . "/estate-reservations",
+                DisplayHelper::$checkIcon,
+                "Reservation settings updated successfully",
+                "Operation Successful"
+            );
+        } else {
+            $this->redirect(
+                BASE_URL . "/estate-reservations",
+                DisplayHelper::$xIcon,
+                "Failed to update settings",
+                "Operation Failed"
+            );
+        }
     }
 }

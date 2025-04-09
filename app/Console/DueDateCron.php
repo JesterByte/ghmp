@@ -29,8 +29,7 @@ if ($conn->connect_error) {
 }
 
 // Query for lot reservations due dates
-$lotQuery = "
-    SELECT lr.id AS reservation_id, lr.lot_id AS asset_id, lr.reservee_id, c.email_address, 'Lot Reservation' AS reservation_type,
+$lotQuery = "SELECT lr.id AS reservation_id, lr.lot_id AS asset_id, lr.reservee_id, c.email_address, 'Lot Reservation' AS reservation_type,
         csdd.due_date AS cash_sale_due_date, cs.payment_amount AS cash_sale_amount,
         smdd.due_date AS six_month_due_date, sm.payment_amount AS six_month_amount,
         i.down_payment_due_date AS installment_dp_due_date, i.next_due_date AS installment_next_due_date, 
@@ -53,8 +52,7 @@ $lotQuery = "
 
 
 // Query for estate reservations due dates
-$estateQuery = "
-    SELECT er.id AS reservation_id, er.estate_id AS asset_id, er.reservee_id, c.email_address, 'Estate Reservation' AS reservation_type,
+$estateQuery = "SELECT er.id AS reservation_id, er.estate_id AS asset_id, er.reservee_id, c.email_address, 'Estate Reservation' AS reservation_type,
         csdd.due_date AS cash_sale_due_date, cs.payment_amount AS cash_sale_amount,
         smdd.due_date AS six_month_due_date, sm.payment_amount AS six_month_amount,
         i.down_payment_due_date AS installment_dp_due_date, i.next_due_date AS installment_next_due_date, 

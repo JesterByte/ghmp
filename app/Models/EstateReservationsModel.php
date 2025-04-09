@@ -66,15 +66,17 @@ class EstateReservationsModel extends Model
                 AND csdd.due_date < CURDATE() 
                 AND cs.payment_status = 'Pending'
             LEFT JOIN estate_six_months AS sm ON er.id = sm.reservation_id
-            LEFT JOIN estate_six_months_due_dates AS smdd ON sm.id = smdd.six_months_id 
-                AND smdd.due_date < CURDATE() 
-                AND sm.payment_status = 'Pending'
             LEFT JOIN estate_installments AS i ON er.id = i.reservation_id
             WHERE er.reservation_status != :reservation_status
               AND (
-                    csdd.due_date IS NOT NULL OR 
-                    smdd.due_date IS NOT NULL OR
-                    (i.down_payment_due_date IS NOT NULL AND i.down_payment_due_date < CURDATE() AND i.down_payment_status = 'Pending') OR
+                    csdd.due_date IS NOT NULL 
+                    OR 
+                    (sm.down_payment_due_date IS NOT NULL AND sm.down_payment_due_date < CURDATE() AND sm.down_payment_status = 'Pending') 
+                    OR
+                    (sm.next_due_date IS NOT NULL AND sm.next_due_date < CURDATE() AND sm.payment_status = 'Ongoing') 
+                    OR
+                    (i.down_payment_due_date IS NOT NULL AND i.down_payment_due_date < CURDATE() AND i.down_payment_status = 'Pending') 
+                    OR
                     (i.next_due_date IS NOT NULL AND i.next_due_date < CURDATE() AND i.payment_status = 'Ongoing')
                   )
         ");

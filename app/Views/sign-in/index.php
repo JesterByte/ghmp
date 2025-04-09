@@ -12,6 +12,12 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
     <?php unset($_SESSION["error"]) ?>
+    <?php elseif (isset($_SESSION["reset_password_success"])): ?>
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill"></i> <?= $_SESSION["reset_password_success"] ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <?php unset($_SESSION["reset_password_success"]) ?>
     <?php endif; ?>
 
     <div class="form-floating">
@@ -21,11 +27,14 @@
     <div class="form-floating">
       <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
       <label for="password">Password</label>
+      <div class="mt-2 text-end">
+        <a href="<?= BASE_URL ?>/forgot-password" class="text-decoration-none">Forgot password?</a>
+      </div>
     </div>
 
     <div class="form-check text-start my-3">
-      <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
-      <label class="form-check-label" for="flexCheckDefault">
+      <input class="form-check-input" type="checkbox" name="remember-me" id="remember-me">
+      <label class="form-check-label" for="remember-me">
         Remember me
       </label>
     </div>

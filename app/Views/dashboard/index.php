@@ -131,7 +131,7 @@
         </div>
         <div class="col-md-4">
             <div class="card shadow-sm">
-                <div class="card-header">Plot Status</div>
+                <div class="card-header">Asset Status</div>
                 <div class="card-body">
                     <canvas id="plotStatusChart" height="200"></canvas>
                 </div>
@@ -189,7 +189,12 @@ document.addEventListener('DOMContentLoaded', function() {
     new Chart(document.getElementById('plotStatusChart'), {
         type: 'doughnut',
         data: {
-            labels: ['Available', 'Reserved', 'Sold', 'Sold & Occupied'],
+            labels: [
+                'Available (' + <?= $plotStats['available'] ?> + ')', 
+                'Reserved (' + <?= $plotStats['reserved'] ?> + ')', 
+                'Sold (' + <?= $plotStats['sold'] ?> + ')',
+                'Sold & Occupied (' + <?= $plotStats['occupied'] ?> + ')'
+            ],
             datasets: [{
                 data: [
                     <?= $plotStats['available'] ?>, 
@@ -209,7 +214,15 @@ document.addEventListener('DOMContentLoaded', function() {
             responsive: true,
             plugins: {
                 legend: {
-                    position: 'bottom'
+                    position: 'bottom',
+                    labels: {
+                        // Increase padding between legend items
+                        padding: 20,
+                        // Optional: Use a smaller font size if needed
+                        font: {
+                            size: 11
+                        }
+                    }
                 },
                 title: {
                     display: true,

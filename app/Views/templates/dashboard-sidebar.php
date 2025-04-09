@@ -111,6 +111,12 @@ use App\Helpers\DisplayHelper;
                         </ul>
                     </div>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isActivePage($pageTitle, "Collection Report", "active text-bg-primary") ?>" <?= DisplayHelper::isActivePage($pageTitle, "Collection Report", "aria-current='page'") ?> href="<?= BASE_URL ?>/collection-report">
+                        <i class="bi bi-clipboard-data<?= DisplayHelper::isActivePage($pageTitle, "Collection Report", "-fill") ?>"></i>
+                        Collection Report
+                    </a>
+                </li>
             </ul>
             <hr class="my-3">
             <ul class="nav flex-column mb-auto">
@@ -130,7 +136,6 @@ use App\Helpers\DisplayHelper;
                             <li>
                                 <a href="<?= BASE_URL ?>/customers" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isActivePage($pageTitle, "Customers", "-fill text-bg-primary") ?>" <?= DisplayHelper::isActivePage($pageTitle, "Customers", "aria-current='page'") ?>><i class="bi bi-caret-right<?= DisplayHelper::isActivePage($pageTitle, "Customers", "-fill") ?>"></i> Customers</a>
                             </li>
-
                         </ul>
                     </div>
                 </li>

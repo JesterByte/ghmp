@@ -11,9 +11,21 @@ use App\Utils\Calculator;
 use App\Core\View;
 use App\Helpers\DisplayHelper;
 use App\Models\CustomerNotificationModel;
+use App\Models\ReservationSettingsModel;
 
 class LotReservationsController extends BaseController
 {
+    protected $reservationSettingsModel;
+    protected $reservationSettings;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->reservationSettingsModel = new ReservationSettingsModel();
+        $this->reservationSettings = $this->reservationSettingsModel->getSettings("Lot");
+    }
+
     public function indexCashSale()
     {
         $this->checkSession();
@@ -32,6 +44,7 @@ class LotReservationsController extends BaseController
             "availableLots" => $availableLots,
             "customers" => $customers,
             "lotReservationRequests" => $lotReservationRequests,
+            "reservationSettings" => $this->reservationSettings,
             "view" => "lot-reservations/index",
 
             "userId" => $_SESSION["user_id"],
@@ -64,6 +77,7 @@ class LotReservationsController extends BaseController
             "availableLots" => $availableLots,
             "customers" => $customers,
             "lotReservationRequests" => $lotReservationRequests,
+            "reservationSettings" => $this->reservationSettings,
             "view" => "lot-reservations/index",
 
             "userId" => $_SESSION["user_id"],
@@ -96,6 +110,7 @@ class LotReservationsController extends BaseController
             "availableLots" => $availableLots,
             "customers" => $customers,
             "lotReservationRequests" => $lotReservationRequests,
+            "reservationSettings" => $this->reservationSettings,
             "view" => "lot-reservations/index",
 
             "userId" => $_SESSION["user_id"],
@@ -128,6 +143,7 @@ class LotReservationsController extends BaseController
             "availableLots" => $availableLots,
             "customers" => $customers,
             "lotReservationRequests" => $lotReservationRequests,
+            "reservationSettings" => $this->reservationSettings,
             "view" => "lot-reservations/index",
 
             "userId" => $_SESSION["user_id"],
@@ -135,7 +151,8 @@ class LotReservationsController extends BaseController
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
             "pendingEstateReservations" => $this->pendingEstateReservations,
-            "pendingReservations" => $this->pendingReservations
+            "pendingReservations" => $this->pendingReservations,
+            "pendingInquiries" => $this->pendingInquiries
         ];
 
         View::render("templates/layout", $data);
@@ -159,6 +176,7 @@ class LotReservationsController extends BaseController
             "availableLots" => $availableLots,
             "customers" => $customers,
             "lotReservationRequests" => $lotReservationRequests,
+            "reservationSettings" => $this->reservationSettings,
             "view" => "lot-reservations/index",
 
             "userId" => $_SESSION["user_id"],
@@ -166,7 +184,8 @@ class LotReservationsController extends BaseController
             "pendingBurialReservations" => $this->pendingBurialReservations,
             "pendingLotReservations" => $this->pendingLotReservations,
             "pendingEstateReservations" => $this->pendingEstateReservations,
-            "pendingReservations" => $this->pendingReservations
+            "pendingReservations" => $this->pendingReservations,
+            "pendingInquiries" => $this->pendingInquiries
         ];
 
         View::render("templates/layout", $data);
@@ -576,7 +595,7 @@ class LotReservationsController extends BaseController
                         <p style="font-size: 12px; color: #666; text-align: center;">This is an automated message. Please do not reply.</p>
                     </div>';
                     $emailHelper->sendEmail($customer["email_address"], $emailSubject, $emailBody, true);
-                    
+
                     break;
             }
 
@@ -594,5 +613,79 @@ class LotReservationsController extends BaseController
     public function setDownPaymentDueDate()
     {
         return date("Y-m-d", strtotime("+30 days"));
+    }
+
+    public function updateSettings()
+    {
+        if (!isset($_POST['update_settings'])) {
+            $this->redirect(
+                BASE_URL . "/lot-reservations", 
+                DisplayHelper::$xIcon,
+                "Invalid form submission",
+                "Operation Failed"
+            );
+            return;
+        }
+
+        // Validate required fields
+        $requiredFields = ['overdue_days_limit', 'notification_days'];
+        foreach ($requiredFields as $field) {
+            if (!isset($_POST[$field])) {
+                $this->redirect(
+                    BASE_URL . "/lot-reservations",
+                    DisplayHelper::$xIcon,
+                    "Missing required field: {$field}",
+                    "Operation Failed"
+                );
+                return;
+            }
+        }
+
+        // Validate overdue_days_limit
+        if (!in_array($_POST['overdue_days_limit'], ['0', '3', '5', '7'])) {
+            $this->redirect(
+                BASE_URL . "/lot-reservations",
+                DisplayHelper::$xIcon,
+                "Invalid overdue days limit value",
+                "Operation Failed"
+            );
+            return;
+        }
+
+        // Validate notification_days
+        if (!in_array($_POST['notification_days'], ['0', '1', '3', '5'])) {
+            $this->redirect(
+                BASE_URL . "/lot-reservations",
+                DisplayHelper::$xIcon,
+                "Invalid notification days value",
+                "Operation Failed"
+            );
+            return;
+        }
+
+        $settings = [
+            'overdue_days_limit' => $_POST['overdue_days_limit'],
+            'notification_days' => $_POST['notification_days'],
+            'enable_reminders' => isset($_POST['enable_reminders']) ? 1 : 0
+        ];
+
+        if ($this->reservationSettingsModel->updateSettings('Lot', $settings)) {
+            // Update the controller's settings cache
+            $this->reservationSettings = $this->reservationSettingsModel->getSettings("Lot");
+            
+            $this->redirect(
+                BASE_URL . "/lot-reservations",
+                DisplayHelper::$checkIcon,
+                "Reservation settings updated successfully",
+                "Operation Successful"
+            );
+        } else {
+            $this->redirect(
+                BASE_URL . "/lot-reservations",
+                DisplayHelper::$xIcon,
+                "Failed to update settings",
+                "Operation Failed"
+            );
+        }
     }
 }

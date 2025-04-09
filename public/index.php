@@ -6,6 +6,12 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('GET', '/', ['App\Controllers\HomeController', 'index']);
     $r->addRoute('GET', '/sign-in', ['App\Controllers\HomeController', 'index']);
     $r->addRoute('POST', '/sign-in', ['App\Controllers\AuthController', 'signIn']);
+    
+    $r->get('/forgot-password',  ["App\Controllers\ForgotPasswordController", "index"]);
+    $r->post('/forgot-password', ["App\Controllers\ForgotPasswordController", "sendOTP"]);
+    $r->get('/verify-otp', ["App\Controllers\VerifyOTPController", "index"]);
+    $r->post('/verify-otp/verify', ["App\Controllers\VerifyOTPController", "verify"]);
+
     $r->addRoute('POST', '/sign-out', ['App\Controllers\AuthController', 'signOut']);
 
     $r->addRoute('GET', '/dashboard', ['App\Controllers\DashboardController', 'index']);
@@ -24,16 +30,18 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('POST', '/estate-pricing', ['App\Controllers\EstatePricingController', 'setPrice']);
     $r->addRoute('POST', '/estate-rates', ['App\Controllers\EstatePricingController', 'setRates']);
 
+    $r->addRoute('GET', '/collection-report', ['App\Controllers\CollectionReportController', 'index']);
+
+    $r->addRoute('GET', '/collection-report/get-collections', ['App\Controllers\CollectionReportController', 'getCollections']);
+
+
     $r->addRoute("GET", "/map", ['App\Controllers\MapController', 'index']);
     $r->addRoute("GET", "/fetch-lots", ['App\Controllers\MapController', 'fetchLots']);
 
     $r->addRoute("GET", "/deceased", ['App\Controllers\DeceasedController', 'index']);
-    
+
     $r->addRoute("GET", "/inquiries", ['App\Controllers\InquiriesController', 'index']);
     $r->addRoute("POST", "/inquiries/reply", ['App\Controllers\InquiriesController', 'reply']);
-
-    
-
 
     $r->addRoute("GET", "/lot-reservation-requests", ['App\Controllers\LotReservationRequestsController', 'index']);
     $r->addRoute("GET", "/verify-lot-type/{lotId:[A-Za-z0-9\+\/=]+}/{reserveeId:[A-Za-z0-9\+\/=]+}", ['App\Controllers\LotReservationRequestsController', 'verifyLotType']);
@@ -51,6 +59,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute("POST", "/burial-reservation-confirmation", ['App\Controllers\BurialReservationRequestsController', 'submitBurialReservationConfirmation']);
     $r->addRoute("POST", "/burial-reservations/mark-done", ['App\Controllers\BurialReservationsController', 'markDone']);
     $r->addRoute("POST", "/burial-reservations/add-reservation", ['App\Controllers\BurialReservationsController', 'setReservation']);
+    $r->addRoute("POST", "/burial-reservations/update-settings", ['App\Controllers\BurialReservationsController', 'updateSettings']);
 
     $r->addRoute("GET", "/lot-reservations", ['App\Controllers\LotReservationsController', 'indexCashSale']);
     $r->addRoute("GET", "/lot-reservations-cash-sale", ['App\Controllers\LotReservationsController', 'indexCashSale']);
@@ -59,6 +68,8 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute("GET", "/lot-reservations-cancelled", ['App\Controllers\LotReservationsController', 'indexCancelled']);
     $r->addRoute("GET", "/lot-reservations-overdue", ['App\Controllers\LotReservationsController', 'indexOverdue']);
     $r->addRoute("POST", "/lot-reservations/fetch-phase-pricing", ['App\Controllers\LotReservationsController', 'fetchPhasePricing']);
+    $r->addRoute("POST", "/lot-reservations/update-settings", ['App\Controllers\LotReservationsController', 'updateSettings']);
+
 
     $r->addRoute('POST', '/add-reservation', ['App\Controllers\LotReservationsController', 'setReservation']);
 
@@ -69,7 +80,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute("GET", "/estate-reservations-cancelled", ['App\Controllers\EstateReservationsController', 'indexCancelled']);
     $r->addRoute("GET", "/estate-reservations-overdue", ['App\Controllers\EstateReservationsController', 'indexOverdue']);
     $r->addRoute("POST", "/estate-reservations/fetch-estate-pricing", ['App\Controllers\EstateReservationsController', 'fetchEstatePricing']);
-
+    $r->addRoute("POST", "/estate-reservations/update-settings", ['App\Controllers\EstateReservationsController', 'updateSettings']);
 
     $r->addRoute('POST', '/add-reservation-estate', ['App\Controllers\EstateReservationsController', 'setReservation']);
 

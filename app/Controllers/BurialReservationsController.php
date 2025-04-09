@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\BadgeModel;
 use App\Models\BurialReservationsModel;
 use App\Models\DeceasedModel;
+use App\Models\ReservationSettingsModel;
 use App\Utils\Formatter;
 use App\Utils\Calculator;
 use App\Core\View;
@@ -17,6 +18,17 @@ use App\Models\CustomerNotificationModel;
 
 class BurialReservationsController extends BaseController
 {
+    protected $reservationSettingsModel;
+    protected $reservationSettings;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->reservationSettingsModel = new ReservationSettingsModel();
+        $this->reservationSettings = $this->reservationSettingsModel->getSettings("Burial");
+    }
+
     public function index()
     {
         $this->checkSession();
@@ -37,6 +49,7 @@ class BurialReservationsController extends BaseController
         $data = [
             "pageTitle" => "Burial Reservations",
             "burialReservationRequests" => $burialReservationRequests,
+            "reservationSettings" => $this->reservationSettings,
             "view" => "burial-reservations/index",
             "formattedOwners" => $formattedOwners,
 
@@ -383,6 +396,80 @@ class BurialReservationsController extends BaseController
             }
         } catch (Exception $e) {
             echo json_encode(["success" => false, "message" => "An error occurred: " . $e->getMessage()]);
+        }
+    }
+
+    public function updateSettings()
+    {
+        if (!isset($_POST['update_settings'])) {
+            $this->redirect(
+                BASE_URL . "/burial-reservations",
+                DisplayHelper::$xIcon,
+                "Invalid form submission",
+                "Operation Failed"
+            );
+            return;
+        }
+
+        // Validate required fields
+        $requiredFields = ['overdue_days_limit', 'notification_days'];
+        foreach ($requiredFields as $field) {
+            if (!isset($_POST[$field])) {
+                $this->redirect(
+                    BASE_URL . "/burial-reservations",
+                    DisplayHelper::$xIcon,
+                    "Missing required field: {$field}",
+                    "Operation Failed"
+                );
+                return;
+            }
+        }
+
+        // Validate overdue_days_limit
+        if (!in_array($_POST['overdue_days_limit'], ['0', '3', '5', '7'])) {
+            $this->redirect(
+                BASE_URL . "/burial-reservations",
+                DisplayHelper::$xIcon,
+                "Invalid overdue days limit value",
+                "Operation Failed"
+            );
+            return;
+        }
+
+        // Validate notification_days
+        if (!in_array($_POST['notification_days'], ['0', '1', '3', '5'])) {
+            $this->redirect(
+                BASE_URL . "/burial-reservations",
+                DisplayHelper::$xIcon,
+                "Invalid notification days value",
+                "Operation Failed"
+            );
+            return;
+        }
+
+        $settings = [
+            'overdue_days_limit' => $_POST['overdue_days_limit'],
+            'notification_days' => $_POST['notification_days'],
+            'enable_reminders' => isset($_POST['enable_reminders']) ? 1 : 0
+        ];
+
+        if ($this->reservationSettingsModel->updateSettings('Burial', $settings)) {
+            // Update the controller's settings cache
+            $this->reservationSettings = $this->reservationSettingsModel->getSettings("Burial");
+
+            $this->redirect(
+                BASE_URL . "/burial-reservations",
+                DisplayHelper::$checkIcon,
+                "Reservation settings updated successfully",
+                "Operation Successful"
+            );
+        } else {
+            $this->redirect(
+                BASE_URL . "/burial-reservations",
+                DisplayHelper::$xIcon,
+                "Failed to update settings",
+                "Operation Failed"
+            );
         }
     }
 }

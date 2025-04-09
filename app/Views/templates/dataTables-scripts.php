@@ -1,4 +1,7 @@
 <script src="<?= BASE_URL . "/js/jquery.js" ?>"></script>
+
+<script src="<?= BASE_URL . "/js/moment.js" ?>"></script>
+
 <script src="<?= BASE_URL . "/js/dataTables.min.js" ?>"></script>
 <script src="<?= BASE_URL . "/js/dataTables.bootstrap5.min.js" ?>"></script>
 

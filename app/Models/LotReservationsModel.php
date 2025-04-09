@@ -66,10 +66,11 @@ class LotReservationsModel extends Model
             LEFT JOIN cash_sale_due_dates AS csdd ON cs.id = csdd.cash_sale_id 
                 AND csdd.due_date < CURDATE() 
                 AND cs.payment_status = 'Pending'
-            LEFT JOIN six_months AS sm ON lr.id = sm.reservation_id
+            LEFT JOIN six_months AS sm ON lr.id = sm.reservation_id 
             LEFT JOIN installments AS i ON lr.id = i.reservation_id
             WHERE lr.reservation_status != :reservation_status
               AND (
+                    csdd.due_date IS NOT NULL OR 
                     (sm.down_payment_due_date IS NOT NULL AND sm.down_payment_due_date < CURDATE() AND sm.down_payment_status = 'Pending') OR
                     (sm.next_due_date IS NOT NULL AND sm.next_due_date < CURDATE() AND sm.payment_status = 'Ongoing') 
                     OR
