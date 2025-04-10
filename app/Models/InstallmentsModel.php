@@ -9,16 +9,6 @@ use PDO;
 class InstallmentsModel extends Model
 {
     use ReservationOwnershipTrait;
-    // public function getInstallments() {
-    //     $stmt = $this->db->prepare("SELECT i.lot_id, ip.payment_amount, ip.payment_date, c.first_name, c.middle_name, c.last_name, c.suffix_name
-    //     FROM installment_payments AS ip
-    //     INNER JOIN installments AS i ON i.id = ip.installment_id
-    //     INNER JOIN lot_reservations AS lr ON i.lot_id = lr.lot_id
-    //     INNER JOIN customers AS c ON lr.reservee_id = c.id
-    //     WHERE ip.payment_status = :payment_status");
-    //     $stmt->execute([":payment_status" => "Paid"]);
-    //     return $stmt->fetchAll(PDO::FETCH_ASSOC);    
-    // }
 
     public function getInstallments()
     {
@@ -206,20 +196,20 @@ class InstallmentsModel extends Model
         return $stmt->execute();
     }
 
-    public function setNextDueDate($lotId)
-    {
-        $interval = "1 MONTH";
-        $stmt = $this->db->prepare("UPDATE installments SET next_due_date = DATE_ADD(NOW(), INTERVAL $interval) WHERE lot_id = :lot_id");
-        $stmt->bindParam(":lot_id", $lotId);
-        return $stmt->execute();
-    }
-    public function setNextDueDateEstate($estateId)
-    {
-        $interval = "1 MONTH";
-        $stmt = $this->db->prepare("UPDATE estate_installments SET next_due_date = DATE_ADD(NOW(), INTERVAL $interval) WHERE estate_id = :estate_id");
-        $stmt->bindParam(":estate_id", $estateId);
-        return $stmt->execute();
-    }
+    // public function setNextDueDate($lotId)
+    // {
+    //     $interval = "1 MONTH";
+    //     $stmt = $this->db->prepare("UPDATE installments SET next_due_date = DATE_ADD(NOW(), INTERVAL $interval) WHERE lot_id = :lot_id");
+    //     $stmt->bindParam(":lot_id", $lotId);
+    //     return $stmt->execute();
+    // }
+    // public function setNextDueDateEstate($estateId)
+    // {
+    //     $interval = "1 MONTH";
+    //     $stmt = $this->db->prepare("UPDATE estate_installments SET next_due_date = DATE_ADD(NOW(), INTERVAL $interval) WHERE estate_id = :estate_id");
+    //     $stmt->bindParam(":estate_id", $estateId);
+    //     return $stmt->execute();
+    // }
 
     public function setMonthlyPayment($lotId)
     {
@@ -351,6 +341,20 @@ class InstallmentsModel extends Model
         $stmt = $this->db->prepare("INSERT INTO {$data["table"]} (installment_id, payment_amount, receipt_path, next_due_date, payment_status) VALUES (:installment_id, :payment_amount, :receipt_path, :payment_status)");
 
         return $stmt->execute([":installment_id" => $data["installment_id"], ":payment_amount" => $data["payment_amount"], ":receipt_path" => $data["receipt_path"], "next_due_date" => $data["next_due_date"], ":payment_status" => $data["payment_status"]]);
+    }
+
+    public function setNextDueDate($data)
+    {
+        $stmt = $this->db->prepare("
+            UPDATE {$data["installments_table"]} 
+            SET next_due_date = DATE_ADD(next_due_date, INTERVAL 1 MONTH),
+                updated_at = NOW()
+            WHERE id = :id
+        ");
+
+        return $stmt->execute([
+            ":id" => $data["six_months_id"]
+        ]);
     }
 
     public function getPaymentCount($installmentPaymentsTable = "installment_payments", $installmentId)

@@ -172,6 +172,7 @@ class InstallmentsController extends BaseController
 
             $data = [
                 "installment_id" => $installmentId,
+                "installments_table" => $installmentsTable,
                 "table" => $installmentPaymentsTable,
                 "payment_amount" => $monthlyPayment,
                 "receipt_path" => $fileName,
@@ -180,6 +181,7 @@ class InstallmentsController extends BaseController
             ];
 
             $installmentsModel->setPayment($data);
+            $installmentsModel->setNextDueDate($data);
 
             $paymentCount = $installmentsModel->getPaymentCount($installmentPaymentsTable, $installmentId);
             $termYears = $installmentsModel->getTermYears($installmentsTable, $reservationId);

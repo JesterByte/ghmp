@@ -114,7 +114,8 @@ class SixMonthsController extends BaseController
 
             $data = [
                 "six_months_id" => $sixMonthsId,
-                "table" => $sixMonthsPaymentsTable,
+                "six_months_table" => $sixMonthsTable,
+                "payments_table" => $sixMonthsPaymentsTable,
                 "payment_amount" => $monthlyPayment,
                 "receipt_path" => $fileName,
                 "next_due_date" => date("Y-m-d", strtotime("+1 month")),
@@ -122,6 +123,7 @@ class SixMonthsController extends BaseController
             ];
 
             $sixMonthsModel->setPayment($data);
+            $sixMonthsModel->setNextDueDate($data);
 
             $totalPaid = $sixMonthsModel->getTotalPaid($sixMonthsId, $sixMonthsPaymentsTable);
             $payableAmount = $sixMonthsModel->getPayableAmount($reservationId, $sixMonthsTable);
