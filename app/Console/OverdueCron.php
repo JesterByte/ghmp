@@ -29,18 +29,28 @@ if ($conn->connect_error) {
 }
 
 // Query for lot reservations due dates
-$lotQuery = "
-    SELECT lr.id AS reservation_id, lr.lot_id AS asset_id, lr.reservee_id, c.email_address, 'Lot Reservation' AS reservation_type,
-        csdd.due_date AS cash_sale_due_date, cs.payment_amount AS cash_sale_amount,
-        smdd.due_date AS six_month_due_date, sm.payment_amount AS six_month_amount,
-        i.down_payment_due_date AS installment_dp_due_date, i.down_payment AS installment_down_payment,
-        i.next_due_date AS installment_next_due_date, i.monthly_payment AS installment_monthly_payment
+$lotQuery = "SELECT lr.id AS reservation_id, lr.lot_id AS asset_id, lr.reservee_id, c.email_address, 'Lot Reservation' AS reservation_type,
+
+        csdd.due_date AS cash_sale_due_date, 
+        cs.payment_amount AS cash_sale_amount,
+
+        sm.down_payment_due_date AS six_months_dp_due_date, 
+        sm.down_payment AS six_months_down_payment,
+        sm.next_due_date AS six_months_next_due_date, 
+        sm.monthly_payment AS six_months_monthly_payment,
+
+        i.down_payment_due_date AS installment_dp_due_date, 
+        i.down_payment AS installment_down_payment,
+        i.next_due_date AS installment_next_due_date, 
+        i.monthly_payment AS installment_monthly_payment
     FROM lot_reservations AS lr
     LEFT JOIN customers AS c ON lr.reservee_id = c.id
     LEFT JOIN cash_sales AS cs ON lr.id = cs.reservation_id AND cs.payment_status = 'Pending'
     LEFT JOIN cash_sale_due_dates AS csdd ON cs.id = csdd.cash_sale_id AND DATEDIFF(CURDATE(), csdd.due_date) > 0
-    LEFT JOIN six_months AS sm ON lr.id = sm.reservation_id AND sm.payment_status = 'Pending'
-    LEFT JOIN six_months_due_dates AS smdd ON sm.id = smdd.six_months_id AND DATEDIFF(CURDATE(), smdd.due_date) > 0
+    LEFT JOIN six_months AS sm
+        ON lr.id = sm.reservation_id
+        AND sm.payment_status = 'Ongoing'
+        AND sm.down_payment_status = 'Pending'
     LEFT JOIN installments AS i 
         ON lr.id = i.reservation_id 
         AND i.payment_status = 'Ongoing' 
@@ -48,34 +58,48 @@ $lotQuery = "
     WHERE lr.reservation_status = 'Confirmed'
         AND (
             csdd.due_date IS NOT NULL OR 
-            smdd.due_date IS NOT NULL OR
+            sm.down_payment_due_date IS NOT NULL AND DATEDIFF(CURDATE(), sm.down_payment_due_date) > 0 OR
+            sm.next_due_date IS NOT NULL AND DATEDIFF(CURDATE(), sm.next_due_date) > 0 OR
             i.down_payment_due_date IS NOT NULL AND DATEDIFF(CURDATE(), i.down_payment_due_date) > 0 OR
             i.next_due_date IS NOT NULL AND DATEDIFF(CURDATE(), i.next_due_date) > 0
         )
 ";
 
 // Query for estate reservations due dates
-$estateQuery = "
-    SELECT er.id AS reservation_id, er.estate_id AS asset_id, er.reservee_id, c.email_address, 'Estate Reservation' AS reservation_type,
-        csdd.due_date AS cash_sale_due_date, ecs.payment_amount AS cash_sale_amount,
-        smdd.due_date AS six_month_due_date, esm.payment_amount AS six_month_amount,
-        i.down_payment_due_date AS installment_dp_due_date, ei.down_payment AS installment_down_payment,
-        i.next_due_date AS installment_next_due_date, ei.monthly_payment AS installment_monthly_payment
+$estateQuery = "SELECT er.id AS reservation_id, er.estate_id AS asset_id, er.reservee_id, c.email_address, 'Estate Reservation' AS reservation_type,
+        csdd.due_date AS cash_sale_due_date, 
+        cs.payment_amount AS cash_sale_amount,
+
+        sm.down_payment_due_date AS six_months_dp_due_date, 
+        sm.down_payment AS six_months_down_payment,
+        sm.next_due_date AS six_months_next_due_date, 
+        sm.monthly_payment AS six_months_monthly_payment
+,
+        i.down_payment_due_date AS installment_dp_due_date, 
+        i.down_payment AS installment_down_payment,
+        i.next_due_date AS installment_next_due_date, 
+        i.monthly_payment AS installment_monthly_payment
     FROM estate_reservations AS er
     LEFT JOIN customers AS c ON er.reservee_id = c.id
-    LEFT JOIN estate_cash_sales AS ecs ON er.id = ecs.reservation_id AND ecs.payment_status = 'Pending'
-    LEFT JOIN estate_cash_sale_due_dates AS csdd ON ecs.id = csdd.cash_sale_id AND DATEDIFF(CURDATE(), csdd.due_date) > 0
-    LEFT JOIN estate_six_months AS esm ON er.id = esm.reservation_id AND esm.payment_status = 'Pending'
-    LEFT JOIN estate_six_months_due_dates AS smdd ON esm.id = smdd.six_months_id AND DATEDIFF(CURDATE(), smdd.due_date) > 0
-    LEFT JOIN estate_installments AS ei 
-        ON er.id = ei.reservation_id 
-        AND ei.payment_status = 'Ongoing' 
-        AND ei.down_payment_status = 'Pending'
+    LEFT JOIN estate_cash_sales AS cs ON er.id = cs.reservation_id AND cs.payment_status = 'Pending'
+    LEFT JOIN estate_cash_sale_due_dates AS csdd ON cs.id = csdd.cash_sale_id AND DATEDIFF(CURDATE(), csdd.due_date) > 0
+    LEFT JOIN estate_six_months AS sm
+        ON er.id = sm.reservation_id
+        AND sm.payment_status = 'Ongoing'
+        AND sm.down_payment_status = 'Pending'
+    LEFT JOIN estate_installments AS i 
+        ON er.id = i.reservation_id 
+        AND i.payment_status = 'Ongoing' 
+        AND i.down_payment_status = 'Pending'
     WHERE er.reservation_status = 'Confirmed'
         AND (
-            csdd.due_date IS NOT NULL OR 
-            smdd.due_date IS NOT NULL OR
-            i.down_payment_due_date IS NOT NULL AND DATEDIFF(CURDATE(), i.down_payment_due_date) > 0 OR
+            csdd.due_date IS NOT NULL 
+            OR 
+            sm.down_payment_due_date IS NOT NULL AND DATEDIFF(CURDATE(), sm.down_payment_due_date) > 0 OR
+            sm.next_due_date IS NOT NULL AND DATEDIFF(CURDATE(), sm.next_due_date) > 0 
+            OR
+            i.down_payment_due_date IS NOT NULL AND DATEDIFF(CURDATE(), i.down_payment_due_date) > 0 
+            OR
             i.next_due_date IS NOT NULL AND DATEDIFF(CURDATE(), i.next_due_date) > 0
         )
 ";
@@ -89,23 +113,84 @@ if (!$result) {
 }
 
 $updateQueries = [
-    "UPDATE cash_sales cs 
+    // Cash sales updates
+    "UPDATE lot_reservations lr
+    JOIN cash_sales cs ON lr.id = cs.reservation_id
     JOIN cash_sale_due_dates csdd ON cs.id = csdd.cash_sale_id
-    SET cs.payment_status = 'Overdue' 
-    WHERE csdd.due_date < CURDATE() AND cs.payment_status = 'Pending'",
+    SET cs.payment_status = 'Overdue',
+        lr.reservation_status = 'Overdue',
+        lr.updated_at = NOW()
+    WHERE csdd.due_date < CURDATE() 
+    AND cs.payment_status = 'Pending'
+    AND lr.reservation_status = 'Confirmed'",
 
-    "UPDATE six_months sm 
+    "UPDATE estate_reservations er
+    JOIN estate_cash_sales ecs ON er.id = ecs.reservation_id
+    JOIN estate_cash_sale_due_dates ecsdd ON ecs.id = ecsdd.cash_sale_id
+    SET ecs.payment_status = 'Overdue',
+        er.reservation_status = 'Overdue',
+        er.updated_at = NOW()
+    WHERE ecsdd.due_date < CURDATE() 
+    AND ecs.payment_status = 'Pending'
+    AND er.reservation_status = 'Confirmed'",
+
+    // Six months updates
+    "UPDATE lot_reservations lr
+    JOIN six_months sm ON lr.id = sm.reservation_id
     JOIN six_months_due_dates smdd ON sm.id = smdd.six_months_id
-    SET sm.payment_status = 'Overdue' 
-    WHERE smdd.due_date < CURDATE() AND sm.payment_status = 'Pending'",
+    SET sm.payment_status = 'Overdue',
+        lr.reservation_status = 'Overdue',
+        lr.updated_at = NOW()
+    WHERE smdd.due_date < CURDATE() 
+    AND sm.payment_status = 'Pending'
+    AND lr.reservation_status = 'Confirmed'",
 
-    "UPDATE installments i 
-    SET i.down_payment_status = 'Overdue' 
-    WHERE i.down_payment_due_date < CURDATE() AND i.down_payment_status = 'Pending'",
+    "UPDATE estate_reservations er
+    JOIN estate_six_months esm ON er.id = esm.reservation_id
+    JOIN estate_six_months_due_dates esmdd ON esm.id = esmdd.six_months_id
+    SET esm.payment_status = 'Overdue',
+        er.reservation_status = 'Overdue',
+        er.updated_at = NOW()
+    WHERE esmdd.due_date < CURDATE() 
+    AND esm.payment_status = 'Pending'
+    AND er.reservation_status = 'Confirmed'",
 
-    "UPDATE installments i 
-    SET i.payment_status = 'Overdue' 
-    WHERE i.next_due_date < CURDATE() AND i.payment_status = 'Ongoing'"
+    // Installments updates
+    "UPDATE lot_reservations lr
+    JOIN installments i ON lr.id = i.reservation_id
+    SET i.down_payment_status = 'Overdue',
+        lr.reservation_status = 'Overdue',
+        lr.updated_at = NOW()
+    WHERE i.down_payment_due_date < CURDATE() 
+    AND i.down_payment_status = 'Pending'
+    AND lr.reservation_status = 'Confirmed'",
+
+    "UPDATE estate_reservations er
+    JOIN estate_installments ei ON er.id = ei.reservation_id
+    SET ei.down_payment_status = 'Overdue',
+        er.reservation_status = 'Overdue',
+        er.updated_at = NOW()
+    WHERE ei.down_payment_due_date < CURDATE() 
+    AND ei.down_payment_status = 'Pending'
+    AND er.reservation_status = 'Confirmed'",
+
+    "UPDATE lot_reservations lr
+    JOIN installments i ON lr.id = i.reservation_id
+    SET i.payment_status = 'Overdue',
+        lr.reservation_status = 'Overdue',
+        lr.updated_at = NOW()
+    WHERE i.next_due_date < CURDATE() 
+    AND i.payment_status = 'Ongoing'
+    AND lr.reservation_status = 'Confirmed'",
+
+    "UPDATE estate_reservations er
+    JOIN estate_installments ei ON er.id = ei.reservation_id
+    SET ei.payment_status = 'Overdue',
+        er.reservation_status = 'Overdue',
+        er.updated_at = NOW()
+    WHERE ei.next_due_date < CURDATE() 
+    AND ei.payment_status = 'Ongoing'
+    AND er.reservation_status = 'Confirmed'"
 ];
 
 foreach ($updateQueries as $query) {
@@ -141,8 +226,14 @@ if ($result && $result->num_rows > 0) {
             if (!empty($reservation['cash_sale_due_date'])) {
                 $message .= "<tr><td>{$reservation['reservation_type']}</td><td>{$reservation['asset_id']}</td><td>Cash Sale</td><td>{$reservation['cash_sale_due_date']}</td><td>{$reservation['cash_sale_amount']}</td></tr>";
             }
-            if (!empty($reservation['six_month_due_date'])) {
+            if (!empty($reservation['six_month_dp_due_date'])) {
                 $message .= "<tr><td>{$reservation['reservation_type']}</td><td>{$reservation['asset_id']}</td><td>Six Months</td><td>{$reservation['six_month_due_date']}</td><td>{$reservation['six_month_amount']}</td></tr>";
+            }
+            if (!empty($reservation['six_months_dp_due_date'])) {
+                $message .= "<tr><td>{$reservation['reservation_type']}</td><td>{$reservation['asset_id']}</td><td>6 Months DP</td><td>{$reservation['six_months_dp_due_date']}</td><td>{$reservation['six_months_down_payment']}</td></tr>";
+            }
+            if (!empty($reservation['six_months_next_due_date'])) {
+                $message .= "<tr><td>{$reservation['reservation_type']}</td><td>{$reservation['asset_id']}</td><td>6 Months Next</td><td>{$reservation['six_months_next_due_date']}</td><td>{$reservation['six_months_monthly_payment']}</td></tr>";
             }
             if (!empty($reservation['installment_dp_due_date'])) {
                 $message .= "<tr><td>{$reservation['reservation_type']}</td><td>{$reservation['asset_id']}</td><td>Installment DP</td><td>{$reservation['installment_dp_due_date']}</td><td>{$reservation['installment_down_payment']}</td></tr>";
@@ -153,7 +244,7 @@ if ($result && $result->num_rows > 0) {
         }
 
         $message .= "</table><p>Please make your payment at the earliest convenience.</p></div></div>";
-        
+
         $mail = new PHPMailer(true);
         try {
             $mail->isSMTP();
