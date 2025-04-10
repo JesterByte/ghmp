@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 10, 2025 at 03:52 PM
+-- Generation Time: Apr 10, 2025 at 04:34 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -475,7 +475,7 @@ CREATE TABLE `estate_installments` (
   `estate_id` varchar(10) NOT NULL,
   `term_years` int(11) NOT NULL,
   `down_payment` decimal(10,2) NOT NULL,
-  `down_payment_status` enum('Pending','Paid') NOT NULL DEFAULT 'Pending',
+  `down_payment_status` enum('Pending','Paid','Overdue') NOT NULL DEFAULT 'Pending',
   `down_payment_date` timestamp NULL DEFAULT NULL,
   `down_payment_due_date` date NOT NULL,
   `down_receipt_path` varchar(255) DEFAULT NULL,
@@ -485,7 +485,7 @@ CREATE TABLE `estate_installments` (
   `monthly_payment` decimal(10,2) NOT NULL,
   `reference_number` varchar(255) NOT NULL,
   `interest_rate` decimal(5,2) NOT NULL,
-  `payment_status` enum('Pending','Ongoing','Completed') NOT NULL DEFAULT 'Pending',
+  `payment_status` enum('Pending','Ongoing','Completed','Overdue') NOT NULL DEFAULT 'Pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -590,7 +590,7 @@ CREATE TABLE `estate_six_months` (
   `reservation_id` int(11) DEFAULT NULL,
   `estate_id` varchar(255) NOT NULL,
   `down_payment` decimal(10,2) NOT NULL,
-  `down_payment_status` enum('Pending','Paid') NOT NULL DEFAULT 'Pending',
+  `down_payment_status` enum('Pending','Paid','Overdue') NOT NULL DEFAULT 'Pending',
   `down_payment_date` timestamp NULL DEFAULT NULL,
   `down_payment_due_date` date NOT NULL,
   `down_reference_number` varchar(255) NOT NULL,
@@ -599,7 +599,7 @@ CREATE TABLE `estate_six_months` (
   `total_amount` decimal(10,2) NOT NULL,
   `monthly_payment` decimal(10,2) NOT NULL,
   `reference_number` varchar(255) NOT NULL,
-  `payment_status` enum('Pending','Ongoing','Completed') NOT NULL DEFAULT 'Pending',
+  `payment_status` enum('Pending','Ongoing','Completed','Overdue') NOT NULL DEFAULT 'Pending',
   `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -7671,7 +7671,7 @@ CREATE TABLE `six_months` (
   `reservation_id` int(11) DEFAULT NULL,
   `lot_id` varchar(255) NOT NULL,
   `down_payment` decimal(10,2) NOT NULL,
-  `down_payment_status` enum('Pending','Paid') NOT NULL DEFAULT 'Pending',
+  `down_payment_status` enum('Pending','Paid','Overdue') NOT NULL DEFAULT 'Pending',
   `down_payment_date` timestamp NULL DEFAULT NULL,
   `down_payment_due_date` date NOT NULL,
   `down_reference_number` varchar(255) NOT NULL,
@@ -7680,7 +7680,7 @@ CREATE TABLE `six_months` (
   `total_amount` decimal(10,2) NOT NULL,
   `monthly_payment` decimal(10,2) NOT NULL,
   `reference_number` varchar(255) NOT NULL,
-  `payment_status` enum('Pending','Ongoing','Completed') DEFAULT 'Pending',
+  `payment_status` enum('Pending','Ongoing','Completed','Overdue') DEFAULT 'Pending',
   `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
