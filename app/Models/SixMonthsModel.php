@@ -43,7 +43,7 @@ class SixMonthsModel extends Model
             INNER JOIN estate_six_months AS sm ON smp.six_months_id = sm.id
             INNER JOIN estate_reservations AS er ON sm.estate_id = er.estate_id
             INNER JOIN customers AS c ON er.reservee_id = c.id
-            WHERE sm.payment_status = :payment_status
+            WHERE smp.payment_status = :payment_status
         ");
 
         $stmt->execute([":payment_status" => "Paid"]);

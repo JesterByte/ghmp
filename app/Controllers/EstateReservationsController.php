@@ -16,7 +16,8 @@ class EstateReservationsController extends BaseController
     protected $reservationSettingsModel;
     protected $reservationSettings;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->reservationSettingsModel = new ReservationSettingsModel();
         $this->reservationSettings = $this->reservationSettingsModel->getSettings("Estate");
@@ -283,7 +284,7 @@ class EstateReservationsController extends BaseController
                     $newFileName = uniqid() . '.' . $fileExtension;
 
                     // Set the upload directory
-                    $uploadDir = $_SERVER["DOCUMENT_ROOT"] .  BASE_URL . '/uploads/receipts/'; // Adjust BASE_URL if necessary
+                    $uploadDir = $_SERVER["DOCUMENT_ROOT"] . BASE_URL . '/uploads/receipts/'; // Adjust BASE_URL if necessary
                     $uploadFilePath = $uploadDir . $newFileName;
 
                     // Move the uploaded file to the target directory
@@ -314,6 +315,7 @@ class EstateReservationsController extends BaseController
             $reservationId = $estateReservationsModel->setReservation($estateId, $reserveeId, $estateType, $paymentOption);
             $calculator = new Calculator();
             $downPaymentDueDate = $this->setDownPaymentDueDate();
+            $nextDueDate = date("Y-m-d", strtotime("+1 month"));
             switch ($paymentOption) {
                 case "Cash Sale":
                     $paymentAmount = $pricing['cash_sale'];
@@ -331,7 +333,7 @@ class EstateReservationsController extends BaseController
                         "down_payment_date" => date("Y-m-d"),
                         "down_payment_due_date" => date("Y-m-d", strtotime("+7 days")),
                         "down_receipt_path" => $receiptFileName,
-                        "next_due_date" => date("Y-m-d", strtotime("+1 month")),
+                        "next_due_date" => $nextDueDate,
                         "total_amount" => $pricing['six_months_balance'],
                         "monthly_payment" => $pricing["six_months_monthly_amortization"],
                         "payment_status" => "Ongoing"
@@ -340,38 +342,123 @@ class EstateReservationsController extends BaseController
                     break;
                 case "Installment: 1 Year":
                     $termYears = 1;
+                    $interestRate = $pricing["one_year_interest_rate"];
                     $downPayment = $pricing["down_payment"];
                     $totalAmount = $calculator->getFinalBalance($pricing["monthly_amortization_one_year"], $termYears);
                     $paymentAmount = $pricing["monthly_amortization_one_year"];
-                    $estateReservationsModel->setInstallmentPayment($estateId, $reservationId, $termYears, $downPayment, "Pending", $downPaymentDueDate, $totalAmount, $paymentAmount, $pricing["one_year_interest_rate"], "Pending");
+
+                    $data = [
+                        "estate_id" => $estateId,
+                        "reservation_id" => $reservationId,
+                        "term_years" => $termYears,
+                        "down_payment" => $downPayment,
+                        "down_payment_status" => "Paid",
+                        "down_payment_due_date" => $downPaymentDueDate,
+                        "down_payment_receipt_path" => $receiptFileName,
+                        "next_due_date" => $nextDueDate,
+                        "total_amount" => $totalAmount,
+                        "monthly_payment" => $paymentAmount,
+                        "interest_rate" => $interestRate,
+                        "payment_status" => "Ongoing"
+                    ];
+
+                    $estateReservationsModel->setInstallmentPayment($data);
                     break;
                 case "Installment: 2 Years":
                     $termYears = 2;
+                    $interestRate = $pricing["two_years_interest_rate"];
                     $downPayment = $pricing["down_payment"];
                     $totalAmount = $calculator->getFinalBalance($pricing["monthly_amortization_two_years"], $termYears);
                     $paymentAmount = $pricing["monthly_amortization_two_years"];
-                    $estateReservationsModel->setInstallmentPayment($estateId, $reservationId, $termYears, $downPayment, "Pending", $downPaymentDueDate, $totalAmount, $paymentAmount, $pricing["two_years_interest_rate"], "Pending");
+
+                    $data = [
+                        "estate_id" => $estateId,
+                        "reservation_id" => $reservationId,
+                        "term_years" => $termYears,
+                        "down_payment" => $downPayment,
+                        "down_payment_status" => "Paid",
+                        "down_payment_due_date" => $downPaymentDueDate,
+                        "down_payment_receipt_path" => $receiptFileName,
+                        "next_due_date" => $nextDueDate,
+                        "total_amount" => $totalAmount,
+                        "monthly_payment" => $paymentAmount,
+                        "interest_rate" => $interestRate,
+                        "payment_status" => "Ongoing"
+                    ];
+
+                    $estateReservationsModel->setInstallmentPayment($data);
                     break;
                 case "Installment: 3 Years":
                     $termYears = 3;
+                    $interestRate = $pricing["three_years_interest_rate"];
                     $downPayment = $pricing["down_payment"];
-                    $totalAmount = $calculator->getFinalBalance($pricing["monthly_amortization_four_years"], $termYears);
+                    $totalAmount = $calculator->getFinalBalance($pricing["monthly_amortization_three_years"], $termYears);
                     $paymentAmount = $pricing["monthly_amortization_three_years"];
-                    $estateReservationsModel->setInstallmentPayment($estateId, $reservationId, $termYears, $downPayment, "Pending", $downPaymentDueDate, $totalAmount, $paymentAmount, $pricing["three_years_interest_rate"], "Pending");
+
+                    $data = [
+                        "estate_id" => $estateId,
+                        "reservation_id" => $reservationId,
+                        "term_years" => $termYears,
+                        "down_payment" => $downPayment,
+                        "down_payment_status" => "Paid",
+                        "down_payment_due_date" => $downPaymentDueDate,
+                        "down_payment_receipt_path" => $receiptFileName,
+                        "next_due_date" => $nextDueDate,
+                        "total_amount" => $totalAmount,
+                        "monthly_payment" => $paymentAmount,
+                        "interest_rate" => $interestRate,
+                        "payment_status" => "Ongoing"
+                    ];
+
+                    $estateReservationsModel->setInstallmentPayment($data);
                     break;
                 case "Installment: 4 Years":
                     $termYears = 4;
+                    $interestRate = $pricing["four_years_interest_rate"];
                     $downPayment = $pricing["down_payment"];
                     $totalAmount = $calculator->getFinalBalance($pricing["monthly_amortization_four_years"], $termYears);
                     $paymentAmount = $pricing["monthly_amortization_four_years"];
-                    $estateReservationsModel->setInstallmentPayment($estateId, $reservationId, $termYears, $downPayment, "Pending", $downPaymentDueDate, $totalAmount, $paymentAmount, $pricing["four_years_interest_rate"], "Pending");
+
+                    $data = [
+                        "estate_id" => $estateId,
+                        "reservation_id" => $reservationId,
+                        "term_years" => $termYears,
+                        "down_payment" => $downPayment,
+                        "down_payment_status" => "Paid",
+                        "down_payment_due_date" => $downPaymentDueDate,
+                        "down_payment_receipt_path" => $receiptFileName,
+                        "next_due_date" => $nextDueDate,
+                        "total_amount" => $totalAmount,
+                        "monthly_payment" => $paymentAmount,
+                        "interest_rate" => $interestRate,
+                        "payment_status" => "Ongoing"
+                    ];
+
+                    $estateReservationsModel->setInstallmentPayment($data);
                     break;
                 case "Installment: 5 Years":
                     $termYears = 5;
+                    $interestRate = $pricing["five_years_interest_rate"];
                     $downPayment = $pricing["down_payment"];
                     $totalAmount = $calculator->getFinalBalance($pricing["monthly_amortization_five_years"], $termYears);
                     $paymentAmount = $pricing["monthly_amortization_five_years"];
-                    $estateReservationsModel->setInstallmentPayment($estateId, $reservationId, $termYears, $downPayment, "Pending", $downPaymentDueDate, $totalAmount, $paymentAmount, $pricing["five_years_interest_rate"], "Pending");
+
+                    $data = [
+                        "estate_id" => $estateId,
+                        "reservation_id" => $reservationId,
+                        "term_years" => $termYears,
+                        "down_payment" => $downPayment,
+                        "down_payment_status" => "Paid",
+                        "down_payment_due_date" => $downPaymentDueDate,
+                        "down_payment_receipt_path" => $receiptFileName,
+                        "next_due_date" => $nextDueDate,
+                        "total_amount" => $totalAmount,
+                        "monthly_payment" => $paymentAmount,
+                        "interest_rate" => $interestRate,
+                        "payment_status" => "Ongoing"
+                    ];
+
+                    $estateReservationsModel->setInstallmentPayment($data);
                     break;
             }
 

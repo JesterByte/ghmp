@@ -212,23 +212,44 @@ class EstateReservationsModel extends Model
         $stmt->execute();
     }
 
-    public function setInstallmentPayment($estateId, $reservationId, $termYears, $downPayment, $downPaymentStatus = "Pending", $downPaymentDueDate, $totalAmount, $monthlyPayment, $interestRate, $paymentStatus)
+    public function setInstallmentPayment($data)
     {
-        $stmt = $this->db->prepare("INSERT INTO estate_installments (estate_id, reservation_id, term_years, down_payment, down_payment_status, down_payment_due_date, total_amount, monthly_payment, interest_rate, payment_status) 
-                                    VALUES (:estate_id, :term_years, :down_payment, :down_payment_status, :down_payment_due_date, :total_amount, :monthly_payment, :interest_rate, :payment_status)");
-        $stmt->bindParam(':estate_id', $estateId);
-        $stmt->bindParam(':reservation_id', $reservationId);
-        $stmt->bindParam(':term_years', $termYears);
-        $stmt->bindParam(':down_payment', $downPayment);
-        $stmt->bindParam(':down_payment_status', $downPaymentStatus);
-        $stmt->bindParam(':down_payment_due_date', $downPaymentDueDate);
-        $stmt->bindParam(':total_amount', $totalAmount);
-        $stmt->bindParam(':monthly_payment', $monthlyPayment);
-        $stmt->bindParam(':interest_rate', $interestRate);
-        $stmt->bindParam(':payment_status', $paymentStatus);
+        $stmt = $this->db->prepare("INSERT INTO estate_installments (estate_id, reservation_id, term_years, down_payment, down_payment_status, down_payment_date, down_payment_due_date, down_receipt_path, next_due_date, total_amount, monthly_payment, interest_rate, payment_status) 
+        VALUES (:estate_id, :reservation_id, :term_years, :down_payment, :down_payment_status, :down_payment_date, :down_payment_due_date, :down_receipt_path, :next_due_date, :total_amount, :monthly_payment, :interest_rate, :payment_status)");
+        $stmt->bindParam(':estate_id', $data["estate_id"]);
+        $stmt->bindParam(':reservation_id', $data["reservation_id"]);
+        $stmt->bindParam(':term_years', $data["term_years"]);
+        $stmt->bindParam(':down_payment', $data["down_payment"]);
+        $stmt->bindParam(':down_payment_status', $data["down_payment_status"]);
+        $stmt->bindParam(':down_payment_date', $data["down_payment_date"]);
+        $stmt->bindParam(':down_payment_due_date', $data["down_payment_due_date"]);
+        $stmt->bindParam(":down_receipt_path", $data["down_receipt_path"]);
+        $stmt->bindParam(":next_due_date", $data["next_due_date"]);
+        $stmt->bindParam(':total_amount', $data["total_amount"]);
+        $stmt->bindParam(':monthly_payment', $data["monthly_payment"]);
+        $stmt->bindParam(':interest_rate', $data["interest_rate"]);
+        $stmt->bindParam(':payment_status', $data["payment_status"]);
 
         return $stmt->execute();
     }
+
+    // public function setInstallmentPayment($estateId, $reservationId, $termYears, $downPayment, $downPaymentStatus = "Pending", $downPaymentDueDate, $totalAmount, $monthlyPayment, $interestRate, $paymentStatus)
+    // {
+    //     $stmt = $this->db->prepare("INSERT INTO estate_installments (estate_id, reservation_id, term_years, down_payment, down_payment_status, down_payment_due_date, total_amount, monthly_payment, interest_rate, payment_status) 
+    //                                 VALUES (:estate_id, :term_years, :down_payment, :down_payment_status, :down_payment_due_date, :total_amount, :monthly_payment, :interest_rate, :payment_status)");
+    //     $stmt->bindParam(':estate_id', $estateId);
+    //     $stmt->bindParam(':reservation_id', $reservationId);
+    //     $stmt->bindParam(':term_years', $termYears);
+    //     $stmt->bindParam(':down_payment', $downPayment);
+    //     $stmt->bindParam(':down_payment_status', $downPaymentStatus);
+    //     $stmt->bindParam(':down_payment_due_date', $downPaymentDueDate);
+    //     $stmt->bindParam(':total_amount', $totalAmount);
+    //     $stmt->bindParam(':monthly_payment', $monthlyPayment);
+    //     $stmt->bindParam(':interest_rate', $interestRate);
+    //     $stmt->bindParam(':payment_status', $paymentStatus);
+
+    //     return $stmt->execute();
+    // }
 
     public function setReservation($estateId, $reserveeId, $estateType, $paymentOption)
     {

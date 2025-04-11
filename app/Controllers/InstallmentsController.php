@@ -167,7 +167,7 @@ class InstallmentsController extends BaseController
 
             $reserveeId = $installmentsModel->getReserveeId($reservationTable, $assetIdKey, $assetId);
             $reservationId = $installmentsModel->getReservationId($reservationTable, $assetIdKey, $assetId, $reserveeId);
-            $installmentId = $installmentsModel->getInstallmentId($reservationId);
+            $installmentId = $installmentsModel->getInstallmentId($installmentsTable, $reservationId);
             $monthlyPayment = $installmentsModel->getInstallmentMonthlyPayment($installmentsTable, $installmentId);
 
             $data = [

@@ -318,9 +318,9 @@ class InstallmentsModel extends Model
         return $stmt->fetch(PDO::FETCH_ASSOC)["id"];
     }
 
-    public function getInstallmentId($reservationId)
+    public function getInstallmentId($installmentsTable = "installments", $reservationId)
     {
-        $stmt = $this->db->prepare("SELECT id FROM installments WHERE reservation_id = :reservation_id LIMIT 1");
+        $stmt = $this->db->prepare("SELECT id FROM $installmentsTable WHERE reservation_id = :reservation_id LIMIT 1");
         $stmt->bindParam(":reservation_id", $reservationId);
         $stmt->execute();
 
@@ -338,22 +338,21 @@ class InstallmentsModel extends Model
 
     public function setPayment($data)
     {
-        $stmt = $this->db->prepare("INSERT INTO {$data["table"]} (installment_id, payment_amount, receipt_path, next_due_date, payment_status) VALUES (:installment_id, :payment_amount, :receipt_path, :payment_status)");
+        $stmt = $this->db->prepare("INSERT INTO {$data["table"]} (installment_id, payment_amount, receipt_path, payment_status) VALUES (:installment_id, :payment_amount, :receipt_path, :payment_status)");
 
-        return $stmt->execute([":installment_id" => $data["installment_id"], ":payment_amount" => $data["payment_amount"], ":receipt_path" => $data["receipt_path"], "next_due_date" => $data["next_due_date"], ":payment_status" => $data["payment_status"]]);
+        return $stmt->execute([":installment_id" => $data["installment_id"], ":payment_amount" => $data["payment_amount"], ":receipt_path" => $data["receipt_path"], ":payment_status" => $data["payment_status"]]);
     }
 
     public function setNextDueDate($data)
     {
-        $stmt = $this->db->prepare("
-            UPDATE {$data["installments_table"]} 
+        $stmt = $this->db->prepare("UPDATE {$data["installments_table"]} 
             SET next_due_date = DATE_ADD(next_due_date, INTERVAL 1 MONTH),
                 updated_at = NOW()
             WHERE id = :id
         ");
 
         return $stmt->execute([
-            ":id" => $data["six_months_id"]
+            ":id" => $data["installment_id"]
         ]);
     }
 
