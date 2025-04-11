@@ -128,7 +128,8 @@ class SixMonthsController extends BaseController
             $totalPaid = $sixMonthsModel->getTotalPaid($sixMonthsId, $sixMonthsPaymentsTable);
             $payableAmount = $sixMonthsModel->getPayableAmount($reservationId, $sixMonthsTable);
 
-            if ($payableAmount === $totalPaid) {
+
+            if (floor($payableAmount) === floor($totalPaid)) {
                 $sixMonthsModel->completeInstallment($sixMonthsTable, $reservationId, "Completed");
                 $sixMonthsModel->completeReservation($reservationTable, $reservationId, "Completed");
                 $sixMonthsModel->setAssetOwnership($assetTable, $assetIdKey, $reserveeId, $assetId, "Sold");

@@ -62,6 +62,7 @@ class BurialReservationsModel extends Model
             FROM lots AS l
             INNER JOIN customers AS c ON l.owner_id = c.id
             WHERE l.owner_id IS NOT NULL AND l.status = :lot_status
+            GROUP BY l.lot_id, l.owner_id
             
             UNION
             
@@ -76,7 +77,7 @@ class BurialReservationsModel extends Model
             FROM estates AS e
             INNER JOIN customers AS c ON e.owner_id = c.id
             WHERE e.owner_id IS NOT NULL AND e.status = :estate_status
-        ";
+            GROUP BY e.estate_id, e.owner_id";
 
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':lot_status', $status);
