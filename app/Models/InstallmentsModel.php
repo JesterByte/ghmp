@@ -25,7 +25,7 @@ class InstallmentsModel extends Model
         INNER JOIN installments AS i ON i.id = ip.installment_id
         INNER JOIN lot_reservations AS lr ON i.lot_id = lr.lot_id
         INNER JOIN customers AS c ON lr.reservee_id = c.id
-        WHERE ip.payment_status = :payment_status
+        WHERE ip.payment_status = :payment_status AND lr.reservation_status != :reservation_status
         
         UNION ALL
         
@@ -42,8 +42,9 @@ class InstallmentsModel extends Model
         INNER JOIN estate_installments AS ei ON ei.id = ip.installment_id
         INNER JOIN estate_reservations AS er ON ei.estate_id = er.estate_id
         INNER JOIN customers AS c ON er.reservee_id = c.id
-        WHERE ip.payment_status = :payment_status");
-        $stmt->execute([":payment_status" => "Paid"]);
+        WHERE ip.payment_status = :payment_status AND er.reservaion_status != :reservation_status
+        ");
+        $stmt->execute([":payment_status" => "Paid", ":reservation_status" => "Cancelled"]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -61,7 +62,7 @@ class InstallmentsModel extends Model
         FROM installments AS i
         INNER JOIN lot_reservations AS lr ON i.lot_id = lr.lot_id
         INNER JOIN customers AS c ON lr.reservee_id = c.id
-        WHERE i.down_payment_status = :down_payment_status
+        WHERE i.down_payment_status = :down_payment_status AND lr.reservation_status = :reservation_status
         
         UNION ALL
         
@@ -77,8 +78,9 @@ class InstallmentsModel extends Model
         FROM estate_installments AS i
         INNER JOIN estate_reservations AS er ON i.estate_id = er.estate_id
         INNER JOIN customers AS c ON er.reservee_id = c.id
-        WHERE i.down_payment_status = :down_payment_status");
-        $stmt->execute([":down_payment_status" => "Paid"]);
+        WHERE i.down_payment_status = :down_payment_status AND er.reservation_status != :reservation_status
+        ");
+        $stmt->execute([":down_payment_status" => "Paid", ":reservation_status" => "Cancelled"]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 

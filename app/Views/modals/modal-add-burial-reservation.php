@@ -298,7 +298,6 @@
         dateOfBirth.addEventListener("change", function() {
             // Ensure that the birth date cannot be later than the death date
             if (dateOfDeath.value && dateOfBirth.value > dateOfDeath.value) {
-                alert("Date of Birth cannot be later than Date of Death.");
                 dateOfBirth.setCustomValidity("Date of Birth cannot be later than Date of Death.");
             } else {
                 dateOfBirth.setCustomValidity(""); // Clear custom validity if condition is met

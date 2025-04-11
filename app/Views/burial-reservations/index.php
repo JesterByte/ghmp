@@ -303,44 +303,71 @@
 
         // Handle the "Confirm" button click inside the modal
         document.getElementById("markAsDoneSubmit").addEventListener("click", function() {
+            const button = this;
+            const spinner = button.querySelector('.spinner-border');
+            const buttonText = button.querySelector('.button-text');
+            
+            // Disable button and show spinner
+            button.disabled = true;
+            spinner.classList.remove('d-none');
+            buttonText.textContent = 'Processing...';
+            
             var eventId = this.getAttribute("data-event-id");
 
             fetch("<?= BASE_URL . "/burial-reservations/mark-done" ?>", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        event_id: eventId
-                    })
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    event_id: eventId
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        showToast("<i class='bi bi-check-lg text-success'></i>", "Burial marked as done successfully.", "Operation Completed");
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast("<i class='bi bi-check-lg text-success'></i>", 
+                        "Burial marked as done successfully.", 
+                        "Operation Completed"
+                    );
 
-                        // Find event and update status
-                        var event = calendar.getEventById(eventId);
-                        if (event) {
-                            event.remove(); // Remove old event
-                            calendar.refetchEvents(); // Refresh events
-                        }
-
-                        // Hide the confirmation modal
-                        var confirmModal = bootstrap.Modal.getInstance(document.getElementById("confirmDoneModal"));
-                        confirmModal.hide();
-
-                        // Hide the details modal
-                        var eventDetailsModal = bootstrap.Modal.getInstance(document.getElementById("eventDetailsModal"));
-                        eventDetailsModal.hide();
-                    } else {
-                        showToast("<i class='bi bi-x-lg text-danger'></i>", data.message, "Operation Failed");
+                    // Find event and update status
+                    var event = calendar.getEventById(eventId);
+                    if (event) {
+                        event.remove();
+                        calendar.refetchEvents();
                     }
-                })
-                .catch(error => {
-                    console.error("Error marking event as done:", error);
-                    showToast("<i class='bi bi-x-lg text-danger'></i>", "An unexpected error occurred.", "Operation Failed");
-                });
+
+                    // Hide modals
+                    var confirmModal = bootstrap.Modal.getInstance(
+                        document.getElementById("confirmDoneModal")
+                    );
+                    confirmModal.hide();
+
+                    var eventDetailsModal = bootstrap.Modal.getInstance(
+                        document.getElementById("eventDetailsModal")
+                    );
+                    eventDetailsModal.hide();
+                } else {
+                    showToast("<i class='bi bi-x-lg text-danger'></i>", 
+                        data.message, 
+                        "Operation Failed"
+                    );
+                }
+            })
+            .catch(error => {
+                console.error("Error marking event as done:", error);
+                showToast("<i class='bi bi-x-lg text-danger'></i>", 
+                    "An unexpected error occurred.", 
+                    "Operation Failed"
+                );
+            })
+            .finally(() => {
+                // Re-enable button and hide spinner
+                button.disabled = false;
+                spinner.classList.add('d-none');
+                buttonText.textContent = 'Mark as Done';
+            });
         });
 
     });

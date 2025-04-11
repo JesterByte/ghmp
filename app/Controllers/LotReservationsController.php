@@ -540,7 +540,7 @@ class LotReservationsController extends BaseController
                     $message = "Your reservation for Lot #$lotId is now active under the $paymentOption plan. We have received your down payment.";
                     $customerNotificationModel->setNotification($reserveeId, $message, "my_lots_and_estates");
 
-                    $emailSubject = "Your Down Payment Has Been Received – Reservation Activated!";
+                    $emailSubject = "Your Down Payment Has Been Received &ndash; Reservation Activated!";
                     $emailBody = '
                     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 24px; border: 1px solid #ddd; border-radius: 10px;">
                         <h2 style="color: #007bff; text-align: center;">Reservation Successfully Activated</h2>
@@ -619,7 +619,7 @@ class LotReservationsController extends BaseController
     {
         if (!isset($_POST['update_settings'])) {
             $this->redirect(
-                BASE_URL . "/lot-reservations", 
+                BASE_URL . "/lot-reservations",
                 DisplayHelper::$xIcon,
                 "Invalid form submission",
                 "Operation Failed"
@@ -672,7 +672,7 @@ class LotReservationsController extends BaseController
         if ($this->reservationSettingsModel->updateSettings('Lot', $settings)) {
             // Update the controller's settings cache
             $this->reservationSettings = $this->reservationSettingsModel->getSettings("Lot");
-            
+
             $this->redirect(
                 BASE_URL . "/lot-reservations",
                 DisplayHelper::$checkIcon,

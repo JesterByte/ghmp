@@ -8,14 +8,6 @@ use App\Utils\Formatter;
 $snakeCasePageTitle = Formatter::convertToSnakeCase($pageTitle);
 $timeStamp = DateHelper::getTimestamp();
 $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
-
-$formattedReservationsTable = [];
-
-foreach ($reservationsTable as $reservationRow) {
-    $formattedReservationsTable["asset"][] = Formatter::formatLotId(lotId: $reservationRow["asset_id"]);
-    $formattedReservationsTable["asset_id"][] = $reservationRow["asset_id"];
-    $formattedReservationsTable["monthly_payment"][] = Formatter::formatCurrency($reservationRow["monthly_payment"]);
-}
 ?>
 <div class="row my-3">
     <div class="col d-flex justify-content-between">
@@ -49,13 +41,19 @@ foreach ($reservationsTable as $reservationRow) {
         </thead>
         <tbody>
             <?php
-            foreach ($sixMonthsTable as $row) {
+            foreach ($burialsTable as $row) {
                 if (!empty($sixMonthsTable)) {
                     $assetId = Formatter::formatAssetId($row["asset_id"]);
                     $payer = Formatter::formatFullName($row["first_name"], $row["middle_name"], $row["last_name"], $row["suffix_name"]);
                     $paymentAmount = Formatter::formatCurrency($row["payment_amount"]);
                     $paymentDate = Formatter::formatDate($row["payment_date"]);
-                    $receipt = BASE_URL . "/uploads/receipts/" . $row["receipt_path"];
+                    $receiptUrl = BASE_URL . "/uploads/receipts/" . $row["receipt_path"];
+
+                    if ($row["receipt_path"] === NULL) {
+                        $receipt = "Paid via Paymongo";
+                    } else {
+                        $receipth = "<button class='btn btn-info btn-sm' data-bs-toggle='modal' data-bs-target='#view-receipt-modal' data-bs-receipt='{$receiptUrl}'><i class='bi bi-eye-fill'></i> View Receipt</button>";
+                    }
 
                     TableHelper::startRow();
                     TableHelper::cell($row["payment_date"]);
@@ -63,7 +61,7 @@ foreach ($reservationsTable as $reservationRow) {
                     TableHelper::cell($assetId);
                     TableHelper::cell($payer);
                     TableHelper::cell($paymentAmount);
-                    TableHelper::cell("<button class='btn btn-info btn-sm' data-bs-toggle='modal' data-bs-target='#view-receipt-modal' data-bs-receipt='{$receipt}'><i class='bi bi-eye-fill'></i> View Receipt</button>");
+                    TableHelper::cell($receipt);
                     TableHelper::endRow();
                 }
             }

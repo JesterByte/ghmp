@@ -84,6 +84,8 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
 
     $r->addRoute('POST', '/add-reservation-estate', ['App\Controllers\EstateReservationsController', 'setReservation']);
 
+    $r->addRoute("GET", "/burials", ['App\Controllers\BurialsController', 'index']);
+
     $r->addRoute("GET", "/cash-sales", ['App\Controllers\CashSalesController', 'index']);
     $r->addRoute("POST", "/add-cash-sale-payment", ['App\Controllers\CashSalesController', 'setPayment']);
 

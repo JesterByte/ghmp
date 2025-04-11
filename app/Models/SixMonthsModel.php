@@ -14,41 +14,62 @@ class SixMonthsModel extends Model
     {
         $stmt = $this->db->prepare("SELECT 
                 sm.lot_id AS asset_id, 
-                smp.payment_amount AS payment_amount, 
+                'Lot' AS asset_type,
+                smp.payment_amount,
                 smp.receipt_path,
-                smp.payment_date, 
+                smp.payment_date,
+                smp.payment_status, 
                 c.first_name, 
                 c.middle_name, 
                 c.last_name, 
-                c.suffix_name
+                c.suffix_name,
+                lr.reservation_status
             FROM six_months_payments AS smp
-            INNER JOIN six_months AS sm ON smp.six_months_id = sm.id
-            INNER JOIN lot_reservations AS lr ON sm.lot_id = lr.lot_id
-            INNER JOIN customers AS c ON lr.reservee_id = c.id
-            WHERE smp.payment_status = :payment_status
+            INNER JOIN six_months AS sm ON sm.id = smp.six_months_id
+            INNER JOIN lot_reservations AS lr ON lr.id = sm.reservation_id 
+            INNER JOIN customers AS c ON c.id = lr.reservee_id
+            WHERE smp.payment_date IS NOT NULL 
+            AND smp.payment_status = :payment_status 
             
             UNION ALL
             
             SELECT 
-                sm.estate_id AS asset_id, 
-                smp.payment_amount AS payment_amount, 
+                sm.estate_id AS asset_id,
+                'Estate' AS asset_type, 
+                smp.payment_amount,
                 smp.receipt_path,
-                smp.payment_date, 
-
+                smp.payment_date,
+                smp.payment_status,
                 c.first_name, 
                 c.middle_name, 
                 c.last_name, 
-                c.suffix_name
+                c.suffix_name,
+                er.reservation_status
             FROM estate_six_months_payments AS smp
             INNER JOIN estate_six_months AS sm ON smp.six_months_id = sm.id
-            INNER JOIN estate_reservations AS er ON sm.estate_id = er.estate_id
+            INNER JOIN estate_reservations AS er ON sm.reservation_id = er.id
             INNER JOIN customers AS c ON er.reservee_id = c.id
-            WHERE smp.payment_status = :payment_status
+            WHERE smp.payment_date IS NOT NULL 
+            AND smp.payment_status = :payment_status 
+            
+            ORDER BY payment_date DESC
         ");
+        
+        $stmt->execute([
+            ":payment_status" => "Paid"
+        ]);
 
-        $stmt->execute([":payment_status" => "Paid"]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Debug: Print the query and parameters
+        if (empty($result)) {
+            error_log("getSixMonthsPayments query returned no results");
+            error_log("SQL: " . $stmt->queryString);
+            error_log("Params: payment_status = Paid");
+        }
+        
+        return $result;
+    }  
 
     public function getSixMonthsDownPayments()
     {
@@ -65,7 +86,7 @@ class SixMonthsModel extends Model
             FROM six_months AS sm
             INNER JOIN lot_reservations AS lr ON sm.lot_id = lr.lot_id
             INNER JOIN customers AS c ON lr.reservee_id = c.id
-            WHERE sm.down_payment_status = :down_payment_status
+            WHERE sm.down_payment_status = :down_payment_status AND lr.reservation_status != :reservation_status
             
             UNION ALL
             
@@ -82,10 +103,10 @@ class SixMonthsModel extends Model
             FROM estate_six_months AS sm
             INNER JOIN estate_reservations AS er ON sm.estate_id = er.estate_id
             INNER JOIN customers AS c ON er.reservee_id = c.id
-            WHERE sm.down_payment_status = :down_payment_status
+            WHERE sm.down_payment_status = :down_payment_status AND er.reservation_status != :reservation_status
         ");
 
-        $stmt->execute([":down_payment_status" => "Paid"]);
+        $stmt->execute([":down_payment_status" => "Paid", ":reservation_status" => "Cancelled"]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -163,14 +184,15 @@ class SixMonthsModel extends Model
         return $stmt->execute([":six_months_id" => $data["six_months_id"], ":payment_amount" => $data["payment_amount"], ":receipt_path" => $data["receipt_path"], ":payment_status" => $data["payment_status"]]);
     }
 
-    public function setNextDueDate($data) {
+    public function setNextDueDate($data)
+    {
         $stmt = $this->db->prepare("
             UPDATE {$data["six_months_table"]} 
             SET next_due_date = DATE_ADD(next_due_date, INTERVAL 1 MONTH),
                 updated_at = NOW()
             WHERE id = :id
         ");
-        
+
         return $stmt->execute([
             ":id" => $data["six_months_id"]
         ]);

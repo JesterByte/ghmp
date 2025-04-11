@@ -12,7 +12,10 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                <button type="button" class="btn btn-primary" id="markAsDoneSubmit">Yes</button>
+                <button type="button" id="markAsDoneSubmit" class="btn btn-primary">
+                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                    <span class="button-text">Mark as Done</span>
+                </button>
             </div>
         </div>
     </div>
