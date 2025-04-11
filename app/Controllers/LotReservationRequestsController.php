@@ -117,6 +117,7 @@ class LotReservationRequestsController extends BaseController
 
             $lotReservationRequestsModel = new LotReservationRequestsModel();
             $lotReservationRequestsModel->cancelLotReservation($lotId, $reserveeId);
+            $lotReservationRequestsModel->freeLot($lotId, "Available");
 
             // $lotReservationsModel = new LotReservationsModel();
             // $lotReservationsModel->cancelLotReservation($lotId, $reserveeId);

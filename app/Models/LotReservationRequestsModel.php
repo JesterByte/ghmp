@@ -65,12 +65,17 @@ class LotReservationRequestsModel extends Model
 
     public function cancelLotReservation($lotId, $reserveeId)
     {
-        $stmt = $this->db->prepare("UPDATE lot_reservations SET reservation_status = :reservation_status WHERE lot_id = :lot_id AND reservee_id = :reservee_id LIMIT 1");
+        $stmt = $this->db->prepare("UPDATE lot_reservations SET reservation_status = :reservation_status WHERE lot_id = :lot_id AND reservee_id = :reservee_id ORDER BY created_at DESC LIMIT 1");
         $reservationStatus = "Cancelled";
         $stmt->bindParam(":reservation_status", $reservationStatus);
         $stmt->bindParam(":lot_id", $lotId);
         $stmt->bindParam(":reservee_id", $reserveeId);
 
         return $stmt->execute();
+    }
+
+    public function freeLot($lotId, $status = "Available") {
+        $stmt = $this->db->prepare("UPDATE lots SET status = :status WHERE lot_id = :lot_id LIMIT 1");
+        return $stmt->execute([":status" => $status, ":lot_id" => $lotId]);
     }
 }
