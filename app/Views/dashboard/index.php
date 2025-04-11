@@ -45,7 +45,7 @@
                 </div>
                 <div class="card-body">
                     <h5 class="card-title"><?= $totalPendingServices ?></h5>
-                    <p class="card-text small"><a class="text-decoration-none text-dark" href="<?= BASE_URL ?>/burial-reservations">Burials</a>: <?= $pendingBurials ?> | <a class="text-decoration-none text-dark" href="<?= BASE_URL ?>/inquiries">Inquiries</a>: <?= $pendingInquiries ?></p>
+                    <p class="card-text small"><a class="text-decoration-none text-dark" href="<?= BASE_URL ?>/burial-reservations">Burials</a>: <?= $pendingBurialsCard ?> | <a class="text-decoration-none text-dark" href="<?= BASE_URL ?>/inquiries">Inquiries</a>: <?= $pendingInquiriesCard ?></p>
                 </div>
             </div>
         </div>

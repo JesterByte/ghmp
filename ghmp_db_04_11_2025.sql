@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 11, 2025 at 09:05 AM
+-- Generation Time: Apr 11, 2025 at 10:00 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -277,7 +277,7 @@ CREATE TABLE `estates` (
 --
 
 INSERT INTO `estates` (`id`, `estate_id`, `owner_id`, `latitude_start`, `longitude_start`, `latitude_end`, `longitude_end`, `status`, `occupancy`, `capacity`, `created_at`, `updated_at`) VALUES
-(28, 'E-C1', NULL, 14.8715127, 120.9769721, 14.8715487, 120.9770081, 'Available', 0, 6, '2025-01-31 21:45:47', '2025-04-11 06:59:12'),
+(28, 'E-C1', NULL, 14.8715127, 120.9769721, 14.8715487, 120.9770081, 'Reserved', 0, 6, '2025-01-31 21:45:47', '2025-04-11 07:14:13'),
 (29, 'E-B1', NULL, 14.8714647, 120.9769721, 14.8715097, 120.9770036, 'Available', 0, 7, '2025-01-31 21:45:47', '2025-04-11 06:59:09'),
 (30, 'E-A1', NULL, 14.8714167, 120.9769721, 14.8714617, 120.9770081, 'Available', 0, 8, '2025-01-31 21:45:47', '2025-04-11 06:59:17'),
 (79, 'E-A2', NULL, 14.8715517, 120.9769691, 14.8715967, 120.9770051, 'Available', 0, 8, '2025-04-10 11:54:18', '2025-04-10 13:50:01'),
@@ -571,6 +571,13 @@ CREATE TABLE `estate_reservations` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `estate_reservations`
+--
+
+INSERT INTO `estate_reservations` (`id`, `estate_id`, `reservee_id`, `estate_type`, `payment_option`, `reservation_status`, `certificate`, `issued_at`, `reference_number`, `created_at`, `updated_at`) VALUES
+(33, 'E-C1', 49, 'C', '6 Months', 'Confirmed', NULL, NULL, '', '2025-04-11 07:14:13', '2025-04-11 07:14:13');
+
 -- --------------------------------------------------------
 
 --
@@ -596,6 +603,13 @@ CREATE TABLE `estate_six_months` (
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `estate_six_months`
+--
+
+INSERT INTO `estate_six_months` (`id`, `reservation_id`, `estate_id`, `down_payment`, `down_payment_status`, `down_payment_date`, `down_payment_due_date`, `down_reference_number`, `down_receipt_path`, `next_due_date`, `total_amount`, `monthly_payment`, `reference_number`, `payment_status`, `created_at`, `updated_at`) VALUES
+(4, 33, 'E-C1', 88369.66, 'Paid', '2025-04-10 16:00:00', '2025-04-18', '', '67f8c145b576d.jpg', '2025-07-11', 353478.65, 58913.11, '', 'Ongoing', '2025-04-11 15:14:13', '2025-04-11 15:14:35');
+
 -- --------------------------------------------------------
 
 --
@@ -610,6 +624,14 @@ CREATE TABLE `estate_six_months_payments` (
   `payment_date` timestamp NOT NULL DEFAULT current_timestamp(),
   `payment_status` enum('Pending','Paid','Failed') NOT NULL DEFAULT 'Pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `estate_six_months_payments`
+--
+
+INSERT INTO `estate_six_months_payments` (`id`, `six_months_id`, `payment_amount`, `receipt_path`, `payment_date`, `payment_status`) VALUES
+(9, 4, 58913.11, '1744355666_487418648_1412105143493194_7238647795344439205_n.jpg', '2025-04-11 07:14:26', 'Paid'),
+(10, 4, 58913.11, '1744355675_487418648_1412105143493194_7238647795344439205_n.jpg', '2025-04-11 07:14:35', 'Paid');
 
 -- --------------------------------------------------------
 
@@ -679,7 +701,7 @@ CREATE TABLE `lots` (
 
 INSERT INTO `lots` (`id`, `lot_id`, `owner_id`, `latitude_start`, `longitude_start`, `latitude_end`, `longitude_end`, `status`, `created_at`, `updated_at`, `description`) VALUES
 (1, '1C1-1', 49, 14.87158100, 120.97705585, 14.87159000, 120.97706035, 'Sold', '2025-04-10 11:54:18', '2025-04-11 06:10:32', NULL),
-(2, '1C1-2', NULL, 14.87159100, 120.97705585, 14.87160000, 120.97706035, 'Available', '2025-04-10 11:54:18', '2025-04-10 11:54:18', NULL),
+(2, '1C1-2', NULL, 14.87159100, 120.97705585, 14.87160000, 120.97706035, 'Reserved', '2025-04-10 11:54:18', '2025-04-11 07:10:29', NULL),
 (3, '1C1-3', NULL, 14.87160100, 120.97705585, 14.87161000, 120.97706035, 'Available', '2025-04-10 11:54:18', '2025-04-10 11:54:18', NULL),
 (4, '1C1-4', NULL, 14.87161100, 120.97705585, 14.87162000, 120.97706035, 'Available', '2025-04-10 11:54:18', '2025-04-10 13:42:02', NULL),
 (5, '1C1-5', NULL, 14.87162100, 120.97705585, 14.87163000, 120.97706035, 'Available', '2025-04-10 11:54:18', '2025-04-10 13:42:02', NULL),
@@ -7492,6 +7514,13 @@ CREATE TABLE `lot_reservations` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `lot_reservations`
+--
+
+INSERT INTO `lot_reservations` (`id`, `lot_id`, `reservee_id`, `lot_type`, `payment_option`, `reservation_status`, `certificate`, `issued_at`, `reference_number`, `created_at`, `updated_at`) VALUES
+(143, '1C1-2', 49, 'Special', '6 Months', 'Confirmed', NULL, NULL, '', '2025-04-11 07:10:25', '2025-04-11 07:10:25');
+
 -- --------------------------------------------------------
 
 --
@@ -7512,7 +7541,8 @@ CREATE TABLE `notifications` (
 --
 
 INSERT INTO `notifications` (`id`, `customer_id`, `message`, `link`, `is_read`, `created_at`) VALUES
-(132, 49, 'Your reservation for Lot #1C1-1 is now active under the Installment: 1 Year plan. We have received your down payment.', 'my_lots_and_estates', 0, '2025-04-11 06:08:15');
+(132, 49, 'Your reservation for Lot #1C1-1 is now active under the Installment: 1 Year plan. We have received your down payment.', 'my_lots_and_estates', 0, '2025-04-11 06:08:15'),
+(133, 49, 'Your reservation for Lot #1C1-2 is now active under the 6 Months plan. We have received your down payment.', 'my_lots_and_estates', 0, '2025-04-11 07:10:25');
 
 -- --------------------------------------------------------
 
@@ -7676,6 +7706,13 @@ CREATE TABLE `six_months` (
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `six_months`
+--
+
+INSERT INTO `six_months` (`id`, `reservation_id`, `lot_id`, `down_payment`, `down_payment_status`, `down_payment_date`, `down_payment_due_date`, `down_reference_number`, `down_receipt_path`, `next_due_date`, `total_amount`, `monthly_payment`, `reference_number`, `payment_status`, `created_at`, `updated_at`) VALUES
+(11, 143, '1C1-2', 15553.67, 'Paid', '2025-04-10 16:00:00', '2025-04-18', '', '67f8c061d2943.jpg', '2025-12-11', 62214.69, 10369.12, '', 'Ongoing', '2025-04-11 15:10:25', '2025-04-11 15:13:05');
+
 -- --------------------------------------------------------
 
 --
@@ -7690,6 +7727,19 @@ CREATE TABLE `six_months_payments` (
   `payment_date` timestamp NOT NULL DEFAULT current_timestamp(),
   `payment_status` enum('Pending','Paid') DEFAULT 'Pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `six_months_payments`
+--
+
+INSERT INTO `six_months_payments` (`id`, `six_months_id`, `payment_amount`, `receipt_path`, `payment_date`, `payment_status`) VALUES
+(9, 11, 10369.12, '1744355444_487418648_1412105143493194_7238647795344439205_n.jpg', '2025-04-11 07:10:44', 'Paid'),
+(10, 11, 10369.12, '1744355451_487418648_1412105143493194_7238647795344439205_n.jpg', '2025-04-11 07:10:51', 'Paid'),
+(11, 11, 10369.12, '1744355457_487418648_1412105143493194_7238647795344439205_n.jpg', '2025-04-11 07:10:57', 'Paid'),
+(12, 11, 10369.12, '1744355464_487418648_1412105143493194_7238647795344439205_n.jpg', '2025-04-11 07:11:04', 'Paid'),
+(13, 11, 10369.12, '1744355470_487418648_1412105143493194_7238647795344439205_n.jpg', '2025-04-11 07:11:10', 'Paid'),
+(14, 11, 10369.12, '1744355478_487418648_1412105143493194_7238647795344439205_n.jpg', '2025-04-11 07:11:18', 'Paid'),
+(15, 11, 10369.12, '1744355585_487418648_1412105143493194_7238647795344439205_n.jpg', '2025-04-11 07:13:05', 'Paid');
 
 -- --------------------------------------------------------
 
@@ -8058,19 +8108,19 @@ ALTER TABLE `estate_pricing`
 -- AUTO_INCREMENT for table `estate_reservations`
 --
 ALTER TABLE `estate_reservations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `estate_six_months`
 --
 ALTER TABLE `estate_six_months`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `estate_six_months_payments`
 --
 ALTER TABLE `estate_six_months_payments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `installments`
@@ -8094,13 +8144,13 @@ ALTER TABLE `lots`
 -- AUTO_INCREMENT for table `lot_reservations`
 --
 ALTER TABLE `lot_reservations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=143;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=144;
 
 --
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=133;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=134;
 
 --
 -- AUTO_INCREMENT for table `ownership_transfer_requests`
@@ -8136,13 +8186,13 @@ ALTER TABLE `reservation_settings`
 -- AUTO_INCREMENT for table `six_months`
 --
 ALTER TABLE `six_months`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `six_months_payments`
 --
 ALTER TABLE `six_months_payments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `users`

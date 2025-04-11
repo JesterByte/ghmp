@@ -270,13 +270,29 @@
         const datetime = document.getElementById("datetime");
 
         const today = new Date().toISOString().split("T")[0];
-        dateOfBirth.setAttribute("max", today); // Date of birth cannot be in the future
-        dateOfDeath.setAttribute("max", today); // Date of death cannot be in the future
+        dateOfBirth.setAttribute("max", today);
+        dateOfDeath.setAttribute("max", today);
 
-        // Set minimum burial date (3 days from today)
+        // Set minimum and maximum burial date
         let minBurialDate = new Date();
         minBurialDate.setDate(minBurialDate.getDate() + 3);
+        
+        let maxBurialDate = new Date();
+        maxBurialDate.setDate(maxBurialDate.getDate() + 14); // Allow booking up to 14 days ahead
+
         datetime.setAttribute("min", minBurialDate.toISOString().slice(0, 16));
+        datetime.setAttribute("max", maxBurialDate.toISOString().slice(0, 16));
+
+        // Add validation for burial date selection
+        datetime.addEventListener("change", function() {
+            const selectedDate = new Date(this.value);
+            if (selectedDate < minBurialDate || selectedDate > maxBurialDate) {
+                alert("Burial date must be between 3 and 14 days from today");
+                this.setCustomValidity("Invalid burial date");
+            } else {
+                this.setCustomValidity("");
+            }
+        });
 
         // Event listener for validating the relationship between birth and death dates
         dateOfBirth.addEventListener("change", function() {

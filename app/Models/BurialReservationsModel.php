@@ -51,33 +51,37 @@ class BurialReservationsModel extends Model
 
     public function getOwnedAssets($status = "Sold")
     {
-        $query = "SELECT 
-            l.lot_id AS asset_id, 
-            l.owner_id AS owner_id,
-            'lot' AS asset_type,
-            c.first_name AS first_name,
-            c.middle_name AS middle_name,
-            c.last_name AS last_name,
-            c.suffix_name AS suffix
+        $query = "SELECT * FROM (
+            SELECT 
+                l.lot_id AS asset_id, 
+                l.owner_id AS owner_id,
+                'lot' AS asset_type,
+                c.first_name AS first_name,
+                c.middle_name AS middle_name,
+                c.last_name AS last_name,
+                c.suffix_name AS suffix,
+                ROW_NUMBER() OVER (PARTITION BY c.id ORDER BY l.lot_id) as rn
             FROM lots AS l
             INNER JOIN customers AS c ON l.owner_id = c.id
             WHERE l.owner_id IS NOT NULL AND l.status = :lot_status
-            GROUP BY l.lot_id, l.owner_id
             
-            UNION
+            UNION ALL
             
             SELECT 
-            e.estate_id AS asset_id,
-            e.owner_id AS owner_id, 
-            'estate' AS asset_type,
-            c.first_name AS first_name,
-            c.middle_name AS middle_name,
-            c.last_name AS last_name,
-            c.suffix_name AS suffix
+                e.estate_id AS asset_id,
+                e.owner_id AS owner_id, 
+                'estate' AS asset_type,
+                c.first_name AS first_name,
+                c.middle_name AS middle_name,
+                c.last_name AS last_name,
+                c.suffix_name AS suffix,
+                ROW_NUMBER() OVER (PARTITION BY c.id ORDER BY e.estate_id) as rn
             FROM estates AS e
             INNER JOIN customers AS c ON e.owner_id = c.id
             WHERE e.owner_id IS NOT NULL AND e.status = :estate_status
-            GROUP BY e.estate_id, e.owner_id";
+        ) ranked
+        WHERE rn = 1
+        ORDER BY owner_id";
 
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':lot_status', $status);
