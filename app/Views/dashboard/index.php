@@ -11,7 +11,7 @@
                     <i class="bi bi-grid-3x3-gap-fill"></i>
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title"><?= $totalAvailableAssets ?></h5>
+                    <h5 class="card-title"> <a href="<?= BASE_URL ?>/map" class="text-light"><?= $totalAvailableAssets ?></a></h5>
                     <p class="card-text small">Lots: <?= $availableLots ?> | Estates: <?= $availableEstates ?></p>
                 </div>
             </div>
@@ -23,7 +23,7 @@
                     ₱
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title"><?= $currentMonthRevenue ?></h5>
+                    <h5 class="card-title"> <a href="<?= BASE_URL ?>/collection-report" class="text-light"><?= $currentMonthRevenue ?></a></h5>
                     <p class="card-text small">
                         <?php if ($monthlyRevenueTrend === 'up'): ?>
                             <i class="bi bi-arrow-up-circle text-success"></i>
@@ -45,7 +45,7 @@
                 </div>
                 <div class="card-body">
                     <h5 class="card-title"><?= $totalPendingServices ?></h5>
-                    <p class="card-text small"><a class="text-decoration-none text-dark" href="<?= BASE_URL ?>/burial-reservations">Burials</a>: <?= $pendingBurialsCard ?> | <a class="text-decoration-none text-dark" href="<?= BASE_URL ?>/inquiries">Inquiries</a>: <?= $pendingInquiriesCard ?></p>
+                    <p class="card-text small"><a class="text-dark" href="<?= BASE_URL ?>/burial-reservations">Burials</a>: <?= $pendingBurialsCard ?> | <a class="text-dark" href="<?= BASE_URL ?>/inquiries">Inquiries</a>: <?= $pendingInquiriesCard ?></p>
                 </div>
             </div>
         </div>
@@ -56,7 +56,7 @@
                     <i class="bi bi-flower1"></i>
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title"><?= $totalInterments ?></h5>
+                    <h5 class="card-title"> <a href="<?= BASE_URL ?>/deceased" class="text-dark"><?= $totalInterments ?></a></h5>
                     <p class="card-text small">This month: <?= $currentMonthInterments ?></p>
                 </div>
             </div>

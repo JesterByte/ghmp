@@ -55,7 +55,13 @@ foreach ($reservationsTable as $reservationRow) {
                     $payer = Formatter::formatFullName($row["first_name"], $row["middle_name"], $row["last_name"], $row["suffix_name"]);
                     $paymentAmount = Formatter::formatCurrency($row["payment_amount"]);
                     $paymentDate = Formatter::formatDate($row["payment_date"]);
-                    $receipt = BASE_URL . "/uploads/receipts/" . $row["receipt_path"];
+                    $receiptUrl = BASE_URL . "/uploads/receipts/" . $row["receipt_path"];
+
+                    if (empty($row["receipt_path"]) || $row["receipt_path"] === NULL) {
+                        $receipt = "Paid via Paymongo";
+                    } else {
+                        $receipt = "<button class='btn btn-info btn-sm' data-bs-toggle='modal' data-bs-target='#view-receipt-modal' data-bs-receipt='{$receiptUrl}'><i class='bi bi-eye-fill'></i> View Receipt</button>";
+                    }
 
                     TableHelper::startRow();
                     TableHelper::cell($row["payment_date"]);
@@ -63,7 +69,7 @@ foreach ($reservationsTable as $reservationRow) {
                     TableHelper::cell($assetId);
                     TableHelper::cell($payer);
                     TableHelper::cell($paymentAmount);
-                    TableHelper::cell("<button class='btn btn-info btn-sm' data-bs-toggle='modal' data-bs-target='#view-receipt-modal' data-bs-receipt='{$receipt}'><i class='bi bi-eye-fill'></i> View Receipt</button>");
+                    TableHelper::cell($receipt);
                     TableHelper::endRow();
                 }
             }

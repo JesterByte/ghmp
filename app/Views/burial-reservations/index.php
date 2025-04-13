@@ -123,15 +123,6 @@
     </a>
 </div>
 
-<div class="d-flex justify-content-end">
-    <div class="btn-toolbar mb-2 mb-md-0">
-        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#reservationSettingsModal">
-            <i class="bi bi-gear"></i>
-            Reservation Settings
-        </button>
-    </div>
-</div>
-
 <div class="row">
     <div class="col-lg-10">
         <div id="calendar-container">

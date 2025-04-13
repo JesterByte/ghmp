@@ -34,8 +34,11 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
 
     $r->addRoute('GET', '/collection-report/get-collections', ['App\Controllers\CollectionReportController', 'getCollections']);
 
-
     $r->addRoute("GET", "/map", ['App\Controllers\MapController', 'index']);
+    $r->addRoute("GET", "/map-lots-list", ['App\Controllers\MapController', 'indexLotsList']);
+    $r->addRoute("GET", "/map-estates-list", ['App\Controllers\MapController', 'indexEstatesList']);
+    $r->addRoute("POST", "/update-lot-type", ['App\Controllers\MapController', 'updateLotType']);
+    
     $r->addRoute("GET", "/fetch-lots", ['App\Controllers\MapController', 'fetchLots']);
 
     $r->addRoute("GET", "/deceased", ['App\Controllers\DeceasedController', 'index']);

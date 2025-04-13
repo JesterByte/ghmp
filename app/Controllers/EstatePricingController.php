@@ -100,9 +100,9 @@ class EstatePricingController extends BaseController
             $pricingData = $estatePricingModel->getPricingData();
 
             $calculator = new Calculator();
-            foreach ($pricingData as $estate) {
-                $estate = $estate["estate"];
-                $newEstatePrice = $estate["new-estate-price"];
+            foreach ($pricingData as $row) {
+                $estate = $row["estate"];
+                $newEstatePrice = $row["lot_price"];
                 $newTotalPurchasePrice = $calculator->getTotalPurchasePrice($newEstatePrice, $vat, $mcf);
                 $newCashSale = $calculator->getDiscount($newTotalPurchasePrice, $discounts["cash_sale"]);
                 $newSixMonths = $calculator->getDiscount($newTotalPurchasePrice, $discounts["six_months"]);

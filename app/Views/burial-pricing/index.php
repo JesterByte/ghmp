@@ -72,5 +72,5 @@ $firstRow = reset($burialPricingTable);
 </script>
 
 <script>
-    createDataTable("#table", "<?= $fileName ?>", true);
+    createDataTable("#table", "<?= $fileName ?>", false);
 </script>

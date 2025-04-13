@@ -122,7 +122,7 @@ $updateQueries = [
         lr.updated_at = NOW()
     WHERE csdd.due_date < CURDATE() 
     AND cs.payment_status = 'Pending'
-    AND lr.reservation_status = 'Confirmed'",
+    AND (lr.reservation_status IN ('Confirmed', 'Pending'))",
 
     "UPDATE estate_reservations er
     JOIN estate_cash_sales ecs ON er.id = ecs.reservation_id
@@ -132,7 +132,7 @@ $updateQueries = [
         er.updated_at = NOW()
     WHERE ecsdd.due_date < CURDATE() 
     AND ecs.payment_status = 'Pending'
-    AND er.reservation_status = 'Confirmed'",
+    AND (er.reservation_status IN ('Confirmed', 'Pending'))",
 
     // Six months updates
     "UPDATE lot_reservations lr
@@ -143,7 +143,7 @@ $updateQueries = [
         lr.updated_at = NOW()
     WHERE smdd.due_date < CURDATE() 
     AND sm.payment_status = 'Pending'
-    AND lr.reservation_status = 'Confirmed'",
+    AND (lr.reservation_status IN ('Confirmed', 'Pending'))",
 
     "UPDATE estate_reservations er
     JOIN estate_six_months esm ON er.id = esm.reservation_id
@@ -153,7 +153,43 @@ $updateQueries = [
         er.updated_at = NOW()
     WHERE esmdd.due_date < CURDATE() 
     AND esm.payment_status = 'Pending'
-    AND er.reservation_status = 'Confirmed'",
+    AND (er.reservation_status IN ('Confirmed', 'Pending'))",
+
+    "UPDATE lot_reservations lr
+    JOIN six_months sm ON lr.id = sm.reservation_id
+    SET sm.down_payment_status = 'Overdue',
+        lr.reservation_status = 'Overdue',
+        lr.updated_at = NOW()
+    WHERE sm.down_payment_due_date < CURDATE() 
+    AND sm.down_payment_status = 'Pending'
+    AND (lr.reservation_status IN ('Confirmed', 'Pending'))",
+
+    "UPDATE estate_reservations er
+    JOIN estate_six_months esm ON er.id = esm.reservation_id
+    SET esm.down_payment_status = 'Overdue',
+        er.reservation_status = 'Overdue',
+        er.updated_at = NOW()
+    WHERE esm.down_payment_due_date < CURDATE() 
+    AND esm.down_payment_status = 'Pending'
+    AND (er.reservation_status IN ('Confirmed', 'Pending'))",
+
+    "UPDATE lot_reservations lr
+    JOIN six_months sm ON lr.id = sm.reservation_id
+    SET sm.payment_status = 'Overdue',
+        lr.reservation_status = 'Overdue',
+        lr.updated_at = NOW()
+    WHERE sm.next_due_date < CURDATE() 
+    AND sm.payment_status = 'Ongoing'
+    AND (lr.reservation_status IN ('Confirmed', 'Pending'))",
+
+    "UPDATE estate_reservations er
+    JOIN estate_six_months esm ON er.id = esm.reservation_id
+    SET esm.payment_status = 'Overdue',
+        er.reservation_status = 'Overdue',
+        er.updated_at = NOW()
+    WHERE esm.next_due_date < CURDATE() 
+    AND esm.payment_status = 'Ongoing'
+    AND (er.reservation_status IN ('Confirmed', 'Pending'))",
 
     // Installments updates
     "UPDATE lot_reservations lr
@@ -163,7 +199,7 @@ $updateQueries = [
         lr.updated_at = NOW()
     WHERE i.down_payment_due_date < CURDATE() 
     AND i.down_payment_status = 'Pending'
-    AND lr.reservation_status = 'Confirmed'",
+    AND (lr.reservation_status IN ('Confirmed', 'Pending'))",
 
     "UPDATE estate_reservations er
     JOIN estate_installments ei ON er.id = ei.reservation_id
@@ -172,7 +208,7 @@ $updateQueries = [
         er.updated_at = NOW()
     WHERE ei.down_payment_due_date < CURDATE() 
     AND ei.down_payment_status = 'Pending'
-    AND er.reservation_status = 'Confirmed'",
+    AND (er.reservation_status IN ('Confirmed', 'Pending'))",
 
     "UPDATE lot_reservations lr
     JOIN installments i ON lr.id = i.reservation_id
@@ -181,7 +217,7 @@ $updateQueries = [
         lr.updated_at = NOW()
     WHERE i.next_due_date < CURDATE() 
     AND i.payment_status = 'Ongoing'
-    AND lr.reservation_status = 'Confirmed'",
+    AND (lr.reservation_status IN ('Confirmed', 'Pending'))",
 
     "UPDATE estate_reservations er
     JOIN estate_installments ei ON er.id = ei.reservation_id
@@ -190,7 +226,7 @@ $updateQueries = [
         er.updated_at = NOW()
     WHERE ei.next_due_date < CURDATE() 
     AND ei.payment_status = 'Ongoing'
-    AND er.reservation_status = 'Confirmed'"
+    AND (er.reservation_status IN ('Confirmed', 'Pending'))"
 ];
 
 foreach ($updateQueries as $query) {

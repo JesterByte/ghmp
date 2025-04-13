@@ -19,7 +19,7 @@ class BackupAndRestoreModel extends Model
         if ($tempBackupPath != null) {
             $backupFile = STORAGE_PATH . '/backups/temp_backup.sql';
         } else {
-            $backupFile = STORAGE_PATH . '/backups/ghmp_db_backup_' . date('Y-m-d_h-i-s-a') . '.sql';
+            $backupFile = STORAGE_PATH . '/backups/ghmp_db_backup_' . date('Y-m-d_H-i-s') . '.sql';
         }
         // $backupFile = STORAGE_PATH . '/backups/ghmp_db_backup_' . date('Y-m-d_h-i-s-a') . '.sql';
 
@@ -29,8 +29,8 @@ class BackupAndRestoreModel extends Model
         }
 
         // Corrected command (without hanging issue)
-        // $command = "C:/xampp/mysql/bin/mysqldump --default-character-set=utf8mb4 -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
-        $command = "mysqldump --default-character-set=utf8mb4 -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
+        $command = "C:/xampp/mysql/bin/mysqldump --default-character-set=utf8mb4 -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
+        // $command = "mysqldump --default-character-set=utf8mb4 -h $dbHost -u $dbUser --password=$dbPass $dbName > \"$backupFile\"";
 
         exec($command . " 2>&1", $output, $returnVar);
 

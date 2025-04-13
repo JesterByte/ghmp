@@ -28,7 +28,20 @@ class BackupAndRestoreController extends BaseController
                     $backupFiles[] = $file;
                 }
             }
+
+            // Sort backup files by datetime descending (latest first)
+            usort($backupFiles, function ($a, $b) {
+                // Extract datetime from filenames
+                preg_match('/(\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2})/', $a, $matchA);
+                preg_match('/(\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2})/', $b, $matchB);
+
+                $timeA = isset($matchA[1]) ? strtotime(str_replace('-', ':', substr($matchA[1], 11)) . ' ' . substr($matchA[1], 0, 10)) : 0;
+                $timeB = isset($matchB[1]) ? strtotime(str_replace('-', ':', substr($matchB[1], 11)) . ' ' . substr($matchB[1], 0, 10)) : 0;
+
+                return $timeB <=> $timeA; // Descending
+            });
         }
+
 
         $data = [
             "pageTitle" => "Backup & Restore",

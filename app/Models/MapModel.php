@@ -15,4 +15,23 @@ class MapModel extends Model {
         $stmt->execute();
         return $stmt->fetchAll();
     }
+
+    public function getLotsList() {
+        $stmt = $this->db->prepare("SELECT * FROM lots");
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function getEstatesList() {
+        $stmt = $this->db->prepare("SELECT * FROM estates");
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function setLotType($lotId, $lotType) {
+        $stmt = $this->db->prepare("UPDATE lots SET lot_type = :lot_type WHERE lot_id = :lot_id LIMIT 1");
+        $stmt->bindParam(":lot_id", $lotId);
+        $stmt->bindParam(":lot_type", $lotType);
+        return $stmt->execute();
+    }
 }

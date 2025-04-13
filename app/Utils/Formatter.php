@@ -193,12 +193,13 @@ class Formatter
         return date("F j, Y", strtotime($date));
     }
 
-    public static function formatRelativeDate($date) {
+    public static function formatRelativeDate($date)
+    {
         $dateTime = strtotime($date);
         $today = strtotime('today');
         $tomorrow = strtotime('tomorrow');
         $yesterday = strtotime('yesterday');
-        
+
         if ($dateTime === $today) {
             return 'Today';
         } elseif ($dateTime === $tomorrow) {
@@ -213,26 +214,27 @@ class Formatter
     // Format file name for database restore
     public static function formatDatabaseVersion($filename)
     {
-        // Regular expression to extract date and time parts from the filename
-        preg_match('/(\d{4}-\d{2}-\d{2})_(\d{2}-\d{2}-\d{2})-(am|pm)/', $filename, $matches);
+        // Match date and time in 24-hour format: 2025-04-13_16-30-15
+        preg_match('/(\d{4}-\d{2}-\d{2})_(\d{2}-\d{2}-\d{2})/', $filename, $matches);
 
         if ($matches) {
-            // Extract date and time from matches
-            $date = $matches[1]; // 2025-01-29
-            $time = $matches[2]; // 06-54-49
-            $am_pm = $matches[3]; // am or pm
+            $date = $matches[1]; // e.g., 2025-04-13
+            $time = $matches[2]; // e.g., 16-30-15
 
-            // Combine date and time into a single datetime string
-            $datetime_str = $date . ' ' . str_replace('-', ':', $time) . ' ' . $am_pm;
+            // Combine into a proper datetime string
+            $datetime_str = $date . ' ' . str_replace('-', ':', $time);
 
-            // Convert it into a DateTime object
-            $datetime = DateTime::createFromFormat("Y-m-d h:i:s a", $datetime_str);
+            // Parse into DateTime object
+            $datetime = DateTime::createFromFormat("Y-m-d H:i:s", $datetime_str);
 
-            return $datetime->format("Y-m-d, h:i:s a");
+            // Return in sort-friendly format
+            return $datetime->format("Y-m-d H:i:s"); // e.g., 2025-04-13 16:30:15
         } else {
-            echo "Invalid filename format.";
+            return "Invalid filename format.";
         }
     }
+
+
 
     public static function determineIdType($id)
     {
@@ -248,16 +250,19 @@ class Formatter
         return null;
     }
 
-    public static function cleanName($name){
+    public static function cleanName($name)
+    {
         return strip_tags(trim(ucwords(strtolower($name))));
     }
 
-    public static function validateSuffix($suffix){
+    public static function validateSuffix($suffix)
+    {
         $validSuffixes = ['Jr.', 'Sr.', 'I', 'II', 'III', 'IV', 'V'];
         return in_array($suffix, $validSuffixes) ? $suffix : null;
     }
 
-    public static function cleanEmail($email){
+    public static function cleanEmail($email)
+    {
         return strip_tags(trim(strtolower($email)));
     }
 }

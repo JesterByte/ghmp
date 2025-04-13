@@ -42,7 +42,7 @@ class InstallmentsModel extends Model
         INNER JOIN estate_installments AS ei ON ei.id = ip.installment_id
         INNER JOIN estate_reservations AS er ON ei.estate_id = er.estate_id
         INNER JOIN customers AS c ON er.reservee_id = c.id
-        WHERE ip.payment_status = :payment_status AND er.reservaion_status != :reservation_status
+        WHERE ip.payment_status = :payment_status AND er.reservation_status != :reservation_status
         ");
         $stmt->execute([":payment_status" => "Paid", ":reservation_status" => "Cancelled"]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

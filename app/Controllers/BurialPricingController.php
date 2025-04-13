@@ -16,7 +16,7 @@ class BurialPricingController extends BaseController
 
         $burialPricingModel = new BurialPricingModel();
         $burialPricingTable = $burialPricingModel->getLotPricingData();
-        $lotStandardPrice = $burialPricingModel->getPrice("Lot", "Standard")["price"];
+        $lotStandardPrice = $burialPricingModel->getPrice("Lot", "Full Body")["price"];
         $lotCremationPrice = $burialPricingModel->getPrice("Lot", "Columbarium")["price"];
         $lotBoneTransferPrice = $burialPricingModel->getPrice("Lot", "Bone Transfer")["price"];
 

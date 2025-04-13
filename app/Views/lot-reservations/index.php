@@ -34,15 +34,6 @@ foreach ($customers as $customer) {
     </div>
 </div>
 
-<div class="d-flex justify-content-end">
-    <div class="btn-toolbar mb-2 mb-md-0">
-        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#reservationSettingsModal">
-            <i class="bi bi-gear"></i>
-            Reservation Settings
-        </button>
-    </div>
-</div>
-
 <div class="row my-3">
     <div class="col">
         <div class="btn-group">
@@ -115,6 +106,14 @@ foreach ($customers as $customer) {
 
 <script src="<?= BASE_URL . "/js/form-validation.js" ?>"></script>
 <script src="<?= BASE_URL . "/js/modal-autofocus.js" ?>"></script>
+
+<script>
+    autofocusModal("add-lot-reservation-modal", "lot");
+</script>
+
+<script>
+    createDataTable("#table", "<?= $fileName ?>");
+</script>
 
 <script>
     let map; // Variable to hold the map instance
@@ -191,13 +190,4 @@ foreach ($customers as $customer) {
             });
         });
     });
-</script>
-
-
-<script>
-    autofocusModal("add-lot-reservation-modal", "lot");
-</script>
-
-<script>
-    createDataTable("#table", "<?= $fileName ?>");
 </script>

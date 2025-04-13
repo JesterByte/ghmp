@@ -19,7 +19,7 @@ class BurialsModel extends Model {
                 c.last_name, 
                 c.suffix_name
             FROM burial_reservations AS br
-            INNER JOIN customers AS c ON br.reservee_id = c.id
+            LEFT JOIN customers AS c ON br.reservee_id = c.id
             WHERE br.payment_status = :payment_status
         ");
         
