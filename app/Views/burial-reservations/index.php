@@ -1,11 +1,8 @@
-<!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.8/index.global.min.css" rel="stylesheet"> -->
-
 <style>
     #calendar {
-        max-width: 70%;
-        /* max-width: 1100px; */
+        max-width: 100%; /* Change from 70% to 100% */
         margin: 0 auto;
-        padding: 20px;
+        padding: 10px; /* Reduced padding for mobile */
     }
 
     .fc-event[status="Pending"] {
@@ -88,19 +85,17 @@
     }
 
     @media (max-width: 768px) {
-        #calendar-container {
-            display: none;
-            /* Hide the calendar */
+        .fc .fc-toolbar {
+            flex-direction: column;
+            gap: 10px;
         }
-
-        #mobile-message {
-            display: block !important;
-            /* Show the message */
+        
+        .fc .fc-toolbar-title {
+            font-size: 1.2em; /* Smaller title on mobile */
         }
-
-        #calendar-legend {
-            display: none;
-            /* Hide the legend */
+        
+        .fc .fc-button {
+            padding: 0.2em 0.4em; /* Smaller buttons on mobile */
         }
     }
 </style>
@@ -127,9 +122,6 @@
     <div class="col-lg-10">
         <div id="calendar-container">
             <div id="calendar" class="rounded shadow"></div>
-        </div>
-        <div id="mobile-message" class="alert alert-warning text-center d-none">
-            The calendar view is not available on mobile devices.
         </div>
     </div>
     <div class="col-lg-2">
@@ -168,34 +160,18 @@
 <!-- <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script> -->
 
 <script>
-    function toggleCalendar() {
-        const calendarContainer = document.getElementById("calendar-container");
-        const mobileMessage = document.getElementById("mobile-message");
-
-        if (window.innerWidth <= 768) {
-            calendarContainer.style.display = "none";
-            mobileMessage.style.display = "block";
-        } else {
-            calendarContainer.style.display = "block";
-            mobileMessage.style.display = "none";
-        }
-    }
-
-    // Run on page load and when resizing
-    window.addEventListener("load", toggleCalendar);
-    window.addEventListener("resize", toggleCalendar);
-</script>
-
-<script>
     document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
+            initialView: 'dayGridMonth', // Always use month view
             headerToolbar: {
                 left: 'prev,next today',
                 center: 'title',
                 right: 'dayGridMonth,timeGridWeek,timeGridDay'
             },
+            // Add some mobile-friendly settings
+            height: 'auto',
+            contentHeight: 'auto',
             events: "<?= BASE_URL . "/burial-reservations/get-events" ?>", // Use the getEvents method as the events source
             // Use eventDidMount to style events on load
             eventDidMount: function(info) {
@@ -297,68 +273,68 @@
             const button = this;
             const spinner = button.querySelector('.spinner-border');
             const buttonText = button.querySelector('.button-text');
-            
+
             // Disable button and show spinner
             button.disabled = true;
             spinner.classList.remove('d-none');
             buttonText.textContent = 'Processing...';
-            
+
             var eventId = this.getAttribute("data-event-id");
 
             fetch("<?= BASE_URL . "/burial-reservations/mark-done" ?>", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    event_id: eventId
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        event_id: eventId
+                    })
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showToast("<i class='bi bi-check-lg text-success'></i>", 
-                        "Burial marked as done successfully.", 
-                        "Operation Completed"
-                    );
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast("<i class='bi bi-check-lg text-success'></i>",
+                            "Burial marked as done successfully.",
+                            "Operation Completed"
+                        );
 
-                    // Find event and update status
-                    var event = calendar.getEventById(eventId);
-                    if (event) {
-                        event.remove();
-                        calendar.refetchEvents();
+                        // Find event and update status
+                        var event = calendar.getEventById(eventId);
+                        if (event) {
+                            event.remove();
+                            calendar.refetchEvents();
+                        }
+
+                        // Hide modals
+                        var confirmModal = bootstrap.Modal.getInstance(
+                            document.getElementById("confirmDoneModal")
+                        );
+                        confirmModal.hide();
+
+                        var eventDetailsModal = bootstrap.Modal.getInstance(
+                            document.getElementById("eventDetailsModal")
+                        );
+                        eventDetailsModal.hide();
+                    } else {
+                        showToast("<i class='bi bi-x-lg text-danger'></i>",
+                            data.message,
+                            "Operation Failed"
+                        );
                     }
-
-                    // Hide modals
-                    var confirmModal = bootstrap.Modal.getInstance(
-                        document.getElementById("confirmDoneModal")
-                    );
-                    confirmModal.hide();
-
-                    var eventDetailsModal = bootstrap.Modal.getInstance(
-                        document.getElementById("eventDetailsModal")
-                    );
-                    eventDetailsModal.hide();
-                } else {
-                    showToast("<i class='bi bi-x-lg text-danger'></i>", 
-                        data.message, 
+                })
+                .catch(error => {
+                    console.error("Error marking event as done:", error);
+                    showToast("<i class='bi bi-x-lg text-danger'></i>",
+                        "An unexpected error occurred.",
                         "Operation Failed"
                     );
-                }
-            })
-            .catch(error => {
-                console.error("Error marking event as done:", error);
-                showToast("<i class='bi bi-x-lg text-danger'></i>", 
-                    "An unexpected error occurred.", 
-                    "Operation Failed"
-                );
-            })
-            .finally(() => {
-                // Re-enable button and hide spinner
-                button.disabled = false;
-                spinner.classList.add('d-none');
-                buttonText.textContent = 'Mark as Done';
-            });
+                })
+                .finally(() => {
+                    // Re-enable button and hide spinner
+                    button.disabled = false;
+                    spinner.classList.add('d-none');
+                    buttonText.textContent = 'Mark as Done';
+                });
         });
 
     });
@@ -415,3 +391,4 @@
         });
     }
 </script>
+``` 

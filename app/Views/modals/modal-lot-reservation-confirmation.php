@@ -1,15 +1,15 @@
-<!-- Modal for Estate Reservation Confirmation -->
-<div class="modal fade" id="estate-reservation-confirmation" tabindex="-1" aria-labelledby="estate-reservation-confirmation-label" aria-hidden="true">
+<!-- Modal for Lot Reservation Confirmation -->
+<div class="modal fade" id="lot-reservation-confirmation" tabindex="-1" aria-labelledby="lot-reservation-confirmation-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header text-bg-primary">
-                <h5 class="modal-title" id="estate-reservation-confirmation-label">Estate Reservation Confirmation</h5>
+                <h5 class="modal-title" id="lot-reservation-confirmation-label">Lot Reservation Confirmation</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form class="needs-validation" novalidate action="<?= BASE_URL . "/estate-reservation-confirmation" ?>" method="post">
-                    <p id="estate-reservation-confirmation-text"></p>
-                    <input type="hidden" name="estate_id" id="estate-id">
+                <form class="needs-validation" novalidate action="<?= BASE_URL . "/lot-reservation-confirmation" ?>" method="post">
+                    <p id="lot-reservation-confirmation-text"></p>
+                    <input type="hidden" name="lot_id" id="lot-id">
                     <input type="hidden" name="reservee_id" id="reservee-id">
                     <input type="hidden" name="action" id="action">
 

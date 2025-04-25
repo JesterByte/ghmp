@@ -44,12 +44,13 @@ class EstateReservationRequestsModel extends Model
         return $stmt->execute();
     }
 
-    public function cancelEstateReservation($estateId, $reserveeId)
+    public function cancelEstateReservation($estateId, $reserveeId, $cancelReason)
     {
-        $stmt = $this->db->prepare("UPDATE estate_reservations SET reservation_status = :reservation_status WHERE estate_id = :estate_id AND reservee_id = :reservee_id AND reservation_status = :pending_status ORDER BY created_at DESC LIMIT 1");
+        $stmt = $this->db->prepare("UPDATE estate_reservations SET reservation_status = :reservation_status, cancellation_reason = :cancellation_reason WHERE estate_id = :estate_id AND reservee_id = :reservee_id AND reservation_status = :pending_status ORDER BY created_at DESC LIMIT 1");
         $pendingStatus = "Pending";
         $stmt->bindParam(":pending_status", $pendingStatus);
         $stmt->bindParam(":reservation_status", $reservationStatus);
+        $stmt->bindParam(":cancellation_reason", $cancelReason);
         $reservationStatus = "Cancelled";
         $stmt->bindParam(":estate_id", $estateId);
         $stmt->bindParam(":reservee_id", $reserveeId);

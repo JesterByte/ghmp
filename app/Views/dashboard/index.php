@@ -1,5 +1,6 @@
-<?php 
-    use App\Utils\Formatter;
+<?php
+
+use App\Utils\Formatter;
 ?>
 <div class="container">
     <!-- Overview Cards Section -->
@@ -72,16 +73,16 @@
                     <a href="<?= BASE_URL ?>/burial-reservations" class="btn btn-sm btn-outline-primary">View All</a>
                 </div>
                 <div class="list-group list-group-flush">
-                    <?php foreach($latestBurials as $burial): ?>
+                    <?php foreach ($latestBurials as $burial): ?>
                         <div class="list-group-item">
                             <div class="d-flex w-100 justify-content-between">
                                 <h6 class="mb-1 d-flex align-items-center gap-2">
                                     <?= htmlspecialchars($burial['full_name']) ?>
-                                    <?php if($burial['status'] === 'Pending'): ?>
+                                    <?php if ($burial['status'] === 'Pending'): ?>
                                         <span class="badge text-bg-warning">Pending</span>
-                                    <?php elseif($burial['status'] === 'Approved' && $burial['payment_status'] === 'Pending'): ?>
+                                    <?php elseif ($burial['status'] === 'Approved' && $burial['payment_status'] === 'Pending'): ?>
                                         <span class="badge text-bg-primary">For Payment</span>
-                                    <?php elseif($burial['status'] === 'Approved' && $burial['payment_status'] === 'Paid'): ?>
+                                    <?php elseif ($burial['status'] === 'Approved' && $burial['payment_status'] === 'Paid'): ?>
                                         <span class="badge text-bg-success">Ready</span>
                                     <?php endif; ?>
                                 </h6>
@@ -90,6 +91,11 @@
                             <p class="mb-1">Asset: <?= htmlspecialchars($burial['plot_id']) ?> | Time: <?= $burial['burial_time'] ?></p>
                         </div>
                     <?php endforeach; ?>
+                    <?php if (empty($latestBurials)): ?>
+                        <div class="list-group-item">
+                            <p class="mb-1 text-center text-muted">No upcoming burial services</p>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -100,7 +106,7 @@
                     <a href="<?= BASE_URL ?>/inquiries" class="btn btn-sm btn-outline-primary">View All</a>
                 </div>
                 <div class="list-group list-group-flush">
-                    <?php foreach($latestInquiries as $inquiry): ?>
+                    <?php foreach ($latestInquiries as $inquiry): ?>
                         <div class="list-group-item">
                             <div class="d-flex w-100 justify-content-between">
                                 <small class="text-muted">From: <?= htmlspecialchars($inquiry['email']) ?></small>
@@ -109,7 +115,7 @@
                             <p class="mb-1"><?= htmlspecialchars(strlen($inquiry['message']) > 100 ? substr($inquiry['message'], 0, 100) . '...' : $inquiry['message']) ?></p>
                         </div>
                     <?php endforeach; ?>
-                    <?php if(empty($latestInquiries)): ?>
+                    <?php if (empty($latestInquiries)): ?>
                         <div class="list-group-item">
                             <p class="mb-1 text-center text-muted">No recent inquiries</p>
                         </div>
@@ -146,90 +152,90 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Monthly Overview Chart
-    new Chart(document.getElementById('monthlyChart'), {
-        type: 'line',
-        data: {
-            labels: <?= json_encode($chartLabels) ?>,
-            datasets: [{
-                label: 'Revenue (₱)',
-                data: <?= json_encode($chartRevenue) ?>,
-                borderColor: '#198754',
-                tension: 0.1
-            }, {
-                label: 'Services',
-                data: <?= json_encode($chartServices) ?>, // Changed from monthlyServices
-                borderColor: '#0dcaf0',
-                tension: 0.1
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Revenue & Services Trend'
-                }
+    document.addEventListener('DOMContentLoaded', function() {
+        // Monthly Overview Chart
+        new Chart(document.getElementById('monthlyChart'), {
+            type: 'line',
+            data: {
+                labels: <?= json_encode($chartLabels) ?>,
+                datasets: [{
+                    label: 'Revenue (₱)',
+                    data: <?= json_encode($chartRevenue) ?>,
+                    borderColor: '#198754',
+                    tension: 0.1
+                }, {
+                    label: 'Services',
+                    data: <?= json_encode($chartServices) ?>, // Changed from monthlyServices
+                    borderColor: '#0dcaf0',
+                    tension: 0.1
+                }]
             },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        callback: function(value) {
-                            return '₱' + value.toLocaleString();
-                        }
-                    }
-                }
-            }
-        }
-    });
-
-    // Plot Status Chart
-    new Chart(document.getElementById('plotStatusChart'), {
-        type: 'doughnut',
-        data: {
-            labels: [
-                'Available (' + <?= $plotStats['available'] ?> + ')', 
-                'Reserved (' + <?= $plotStats['reserved'] ?> + ')', 
-                'Sold (' + <?= $plotStats['sold'] ?> + ')',
-                'Sold & Occupied (' + <?= $plotStats['occupied'] ?> + ')'
-            ],
-            datasets: [{
-                data: [
-                    <?= $plotStats['available'] ?>, 
-                    <?= $plotStats['reserved'] ?>, 
-                    <?= $plotStats['sold'] ?>,
-                    <?= $plotStats['occupied'] ?>
-                ],
-                backgroundColor: [
-                    '#198754',  // green for available
-                    '#ffc107',  // yellow for reserved
-                    '#dc3545',  // red for sold
-                    '#6c757d'   // gray for sold & occupied
-                ]
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        // Increase padding between legend items
-                        padding: 20,
-                        // Optional: Use a smaller font size if needed
-                        font: {
-                            size: 11
-                        }
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Revenue & Services Trend'
                     }
                 },
-                title: {
-                    display: true,
-                    text: 'Total Assets: <?= $plotStats['total'] ?>'
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '₱' + value.toLocaleString();
+                            }
+                        }
+                    }
                 }
             }
-        }
+        });
+
+        // Plot Status Chart
+        new Chart(document.getElementById('plotStatusChart'), {
+            type: 'doughnut',
+            data: {
+                labels: [
+                    'Available (' + <?= $plotStats['available'] ?> + ')',
+                    'Reserved (' + <?= $plotStats['reserved'] ?> + ')',
+                    'Sold (' + <?= $plotStats['sold'] ?> + ')',
+                    'Sold & Occupied (' + <?= $plotStats['occupied'] ?> + ')'
+                ],
+                datasets: [{
+                    data: [
+                        <?= $plotStats['available'] ?>,
+                        <?= $plotStats['reserved'] ?>,
+                        <?= $plotStats['sold'] ?>,
+                        <?= $plotStats['occupied'] ?>
+                    ],
+                    backgroundColor: [
+                        '#198754', // green for available
+                        '#ffc107', // yellow for reserved
+                        '#dc3545', // red for sold
+                        '#6c757d' // gray for sold & occupied
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            // Increase padding between legend items
+                            padding: 20,
+                            // Optional: Use a smaller font size if needed
+                            font: {
+                                size: 11
+                            }
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Total Assets: <?= $plotStats['total'] ?>'
+                    }
+                }
+            }
+        });
     });
-});
 </script>

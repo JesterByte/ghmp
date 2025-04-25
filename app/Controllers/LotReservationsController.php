@@ -610,6 +610,50 @@ class LotReservationsController extends BaseController
         }
     }
 
+    public function cancelLotReservation()
+    {
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            $lotId = $_POST["lot_id"];
+            $reserveeId = $_POST["reservee_id"];
+            $cancellationReason = "due to overdue payments";
+
+            $lotReservationRequestsModel = new LotReservationsModel();
+            $lotReservationRequestsModel->cancelLotReservation($lotId, $reserveeId, "Admin: $cancellationReason");
+            $lotReservationRequestsModel->freeLot($lotId, "Available");
+
+            // Notification message with reason
+            $notificationMessage = "Your lot reservation for Lot #$lotId has been cancelled by the administrator $cancellationReason.";
+
+            $customerNotificationModel = new CustomerNotificationModel();
+            $customerNotificationModel->setNotification($reserveeId, $notificationMessage, "my_lots_and_estates");
+
+            // Get customer info
+            $customerModel = new CustomersModel();
+            $customer = $customerModel->getCustomerById($reserveeId);
+            $customerEmail = $customer["email_address"];
+            $customerName = $customer["first_name"];
+
+            // Email content
+            $emailSubject = "Your Lot Reservation Has Been Cancelled";
+            $emailBody = '
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+                    <h2 style="color: #333; text-align: center;">Lot Reservation Cancelled</h2>
+                    <p>Dear <strong>' . htmlspecialchars($customerName) . '</strong>,</p>
+                    <p>We regret to inform you that your reservation for Lot #<strong>' . htmlspecialchars($lotId) . '</strong> has been <strong style="color: #dc3545;">cancelled</strong> <strong>' . htmlspecialchars($cancellationReason) . '</strong>.</p>
+                    <p>Please contact our support team if you have any questions or believe this is a mistake.</p>
+                    <hr style="border: 0; height: 1px; background: #ddd;">
+                    <p style="text-align: center; font-size: 12px; color: #777;">This is an automated email. Please do not reply.</p>
+                </div>
+            ';
+
+            $emailHelper = new EmailHelper();
+            $emailHelper->sendEmail($customerEmail, $emailSubject, $emailBody, true);
+
+            // Redirect with success message
+            $this->redirect(BASE_URL . "/lot-reservations", DisplayHelper::$checkIcon, "The lot reservation has been cancelled.", "Operation Successful");
+        }
+    }
+
     public function setDownPaymentDueDate()
     {
         return date("Y-m-d", strtotime("+30 days"));

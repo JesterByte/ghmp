@@ -43,6 +43,7 @@ class EstateReservationRequestsController extends BaseController
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $estateId = $_POST["estate_id"];
             $reserveeId = $_POST["reservee_id"];
+            $cancelReason = isset($_POST["cancel_reason"]) || !empty($_POST["cancel_reason"]) ? strip_tags($_POST["cancel_reason"]) : null;
             $status = $_POST["action"] == "approve" ? "Confirmed" : "Cancelled";
 
             $estateReservationRequestsModel = new EstateReservationRequestsModel();
@@ -74,7 +75,7 @@ class EstateReservationRequestsController extends BaseController
                     break;
 
                 case "Cancelled":
-                    $estateReservationRequestsModel->cancelEstateReservation($estateId, $reserveeId);
+                    $estateReservationRequestsModel->cancelEstateReservation($estateId, $reserveeId, $cancelReason);
                     $estateReservationRequestsModel->setEstateStatus($estateId, "Available");
                     $message = "The estate reservation has been cancelled successfully!";
                     $notificationMessage = "Your estate reservation for Estate #$estateId has been cancelled.";
@@ -84,6 +85,7 @@ class EstateReservationRequestsController extends BaseController
                             <h2 style="color: #333; text-align: center;">Estate Reservation Cancelled</h2>
                             <p>Dear <strong>' . htmlspecialchars($customerName) . '</strong>,</p>
                             <p>We regret to inform you that your reservation for <strong>Estate #' . htmlspecialchars($estateId) . '</strong> has been <strong style="color: #dc3545;">Cancelled</strong>.</p>
+                            <p><strong>Reason:</strong> ' . nl2br(htmlspecialchars($cancelReason)) . '</p>
                             <p>If you believe this is a mistake or have any concerns, please contact us.</p>
                             <hr style="border: 0; height: 1px; background: #ddd;">
                             <p style="text-align: center; font-size: 12px; color: #777;">This is an automated email. Please do not reply.</p>

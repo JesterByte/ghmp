@@ -20,8 +20,8 @@ class LotReservationsModel extends Model
         FROM lot_reservations AS lr 
         INNER JOIN customers AS c ON lr.reservee_id = c.id 
         INNER JOIN cash_sales AS cs ON lr.lot_id = cs.lot_id
-        WHERE lr.reservation_status != :reservation_status");
-        $stmt->execute([':reservation_status' => 'Pending']);
+        WHERE lr.reservation_status = :reservation_status");
+        $stmt->execute([':reservation_status' => 'Confirmed']);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -31,8 +31,8 @@ class LotReservationsModel extends Model
         FROM lot_reservations AS lr 
         INNER JOIN customers AS c ON lr.reservee_id = c.id 
         INNER JOIN six_months AS sm ON lr.lot_id = sm.lot_id
-        WHERE lr.reservation_status != :reservation_status");
-        $stmt->execute([':reservation_status' => 'Pending']);
+        WHERE lr.reservation_status = :reservation_status");
+        $stmt->execute([':reservation_status' => 'Confirmed']);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -42,8 +42,8 @@ class LotReservationsModel extends Model
         FROM lot_reservations AS lr 
         INNER JOIN customers AS c ON lr.reservee_id = c.id 
         INNER JOIN installments AS i ON lr.lot_id = i.lot_id
-        WHERE lr.reservation_status != :reservation_status");
-        $stmt->execute([':reservation_status' => 'Pending']);
+        WHERE lr.reservation_status = :reservation_status");
+        $stmt->execute([':reservation_status' => 'Confirmed']);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -59,7 +59,7 @@ class LotReservationsModel extends Model
 
     public function getOverdueLotReservations()
     {
-        $stmt = $this->db->prepare("SELECT lr.lot_id, lr.created_at, lr.updated_at, c.first_name, c.middle_name, c.last_name, c.suffix_name
+        $stmt = $this->db->prepare("SELECT lr.lot_id, lr.reservee_id, lr.created_at, lr.updated_at, c.first_name, c.middle_name, c.last_name, c.suffix_name
             FROM lot_reservations AS lr
             INNER JOIN customers AS c ON lr.reservee_id = c.id
             LEFT JOIN cash_sales AS cs ON lr.id = cs.reservation_id
@@ -283,13 +283,24 @@ class LotReservationsModel extends Model
         return $stmt->execute();
     }
 
-    public function cancelLotReservation($lotId, $reserveeId, $status = "Cancelled")
+    public function cancelLotReservation($lotId, $reserveeId, $reason)
     {
-        $stmt = $this->db->prepare("UPDATE lot_reservations SET reservation_status = :reservation_status WHERE lot_id = :lot_id AND reservee_id = :reservee_id AND reservation_status = 'Pending'");
-        $stmt->bindParam(':reservation_status', $status);
-        $stmt->bindParam(':reservee_id', $reserveeId);
-        $stmt->bindParam(':lot_id', $lotId);
+        $stmt = $this->db->prepare("UPDATE lot_reservations SET reservation_status = :reservation_status, cancellation_reason = :cancellation_reason WHERE lot_id = :lot_id AND reservee_id = :reservee_id AND reservation_status = :confirmed_status ORDER BY created_at DESC LIMIT 1");
+        $confirmedStatus = "Confirmed";
+        $stmt->bindParam(":confirmed_status", $confirmedStatus);
+        $reservationStatus = "Cancelled";
+        $stmt->bindParam(":reservation_status", $reservationStatus);
+        $stmt->bindParam(":cancellation_reason", $reason);
+        $stmt->bindParam(":lot_id", $lotId);
+        $stmt->bindParam(":reservee_id", $reserveeId);
+
         return $stmt->execute();
+    }
+    
+    public function freeLot($lotId, $status = "Available")
+    {
+        $stmt = $this->db->prepare("UPDATE lots SET status = :status WHERE lot_id = :lot_id LIMIT 1");
+        return $stmt->execute([":status" => $status, ":lot_id" => $lotId]);
     }
 
     public function getLotReservation($lotId, $lotType, $status = "Pending")

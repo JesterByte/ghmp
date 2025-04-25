@@ -89,20 +89,37 @@ use App\Helpers\DateHelper;
     </script>
 
     <script>
-        createDataTable("#table", "<?= $fileName ?>", true);
+        document.addEventListener("click", function(event) {
+            const button = event.target.closest(".update-lot-type-btn");
+            if (button) {
+                const lotId = button.getAttribute("data-bs-lot-id");
+                const lotIdHidden = document.getElementById("lot-id");
+                if (lotIdHidden) {
+                    lotIdHidden.value = lotId;
+                }
+            }
+        });
     </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const updateLotTypeBtn = document.querySelectorAll(".update-lot-type-btn");
-            const lotIdHidden = document.getElementById("lot-id");
+            const table = new DataTable("#table");
 
-            updateLotTypeBtn.forEach(button => {
-                button.addEventListener("click", function() {
-                    const lotId = this.getAttribute("data-bs-lot-id");
-                    lotIdHidden.value = lotId;
-                });
+            // Example: capture current page before form submits
+            const form = document.getElementById("update-lot-type-form"); // Replace with your form's ID
+            form.addEventListener("submit", function() {
+                const pageInput = document.getElementById("datatable-page");
+                const currentPage = table.page.info().page + 1; // DataTables uses 0-based index
+                pageInput.value = currentPage;
             });
         });
+    </script>
+
+    <script>
+        const pageParam = new URLSearchParams(window.location.search).get("page");
+        if (pageParam && !isNaN(pageParam)) {
+            const table = $('#table').DataTable();
+            table.page(parseInt(pageParam) - 1).draw('page');
+        }
     </script>
 <?php endif; ?>

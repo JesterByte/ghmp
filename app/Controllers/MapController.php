@@ -93,10 +93,11 @@ class MapController extends BaseController
     public function updateLotType() {
         $lotId = $_POST["lot_id"];
         $lotType = $_POST["lot_type"];
+        $lastPage = $_POST["datatable_page"];
 
         $this->mapModel->setLotType($lotId, $lotType);
 
-        return $this->redirect(BASE_URL . "/map-lots-list", DisplayHelper::$checkIcon, "Lot type has been changed successfully", "Operation Successful");
+        return $this->redirect(BASE_URL . "/map-lots-list?page={$lastPage}", DisplayHelper::$checkIcon, "Lot type has been changed successfully", "Operation Successful");
     }
 
     public function fetchLots()

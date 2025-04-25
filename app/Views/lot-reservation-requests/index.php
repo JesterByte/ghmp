@@ -57,27 +57,36 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
                     $reserveeId = $row["reservee_id"];
                     $requestDate = Formatter::formatDateTime($row["created_at"]);
 
+                    $action = '
+                    <div class="d-flex justify-content-center gap-2">
+                        <button type="button" class="btn btn-success btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#lot-reservation-confirmation"
+                            data-bs-lot-id="' . $lotId . '"
+                            data-bs-reservee-id="' . $reserveeId . '"
+                            data-bs-action="approve"
+                            title="Approve Reservation">
+                            <i class="bi bi-check-circle-fill"></i> Approve
+                        </button>
+                        <button type="button" class="btn btn-danger btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#lot-reservation-confirmation"
+                            data-bs-lot-id="' . $lotId . '"
+                            data-bs-reservee-id="' . $reserveeId . '"
+                            data-bs-action="cancel"
+                            title="Cancel Reservation">
+                            <i class="bi bi-x-circle-fill"></i> Cancel
+                        </button>
+                    </div>';
+
+
                     TableHelper::startRow();
                     TableHelper::cell($row["created_at"]);
                     TableHelper::cell($requestDate);
                     TableHelper::cell($formattedLotId);
                     TableHelper::cell($reservee);
                     TableHelper::cell($row["lot_type"]);
-                    TableHelper::cell('<div class="btn-group" role="group" aria-label="Basic example">
-                        <a role="button" href="verify-lot-type/' . Encryption::encrypt($row["lot_id"], $secretKey) . '/' . Encryption::encrypt($reserveeId, $secretKey) . '" class="btn btn-success">
-                        <i class="bi bi-check"></i>
-                        Verify Lot Type
-                        </a>
-                        
-                        <button type="button" class="cancel-btn btn btn-danger"
-                        data-bs-lot-id="' . $lotId . '"
-                        data-bs-reservee-id="' . $reserveeId . '"
-                        data-bs-toggle="modal"
-                        data-bs-target="#lot-reservation-cancellation">
-                        <i class="bi bi-x"></i> 
-                        Decline
-                        </button>
-                        </div>');
+                    TableHelper::cell($action);
                     TableHelper::endRow();
                 }
             }
@@ -87,7 +96,9 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
 </div>
 
 <?php include_once VIEW_PATH . "/templates/dataTables-scripts.php" ?>
-<?php include_once VIEW_PATH . "/modals/modal-cancel-lot-reservation.php" ?>
+<?php // include_once VIEW_PATH . "/modals/modal-cancel-lot-reservation.php" 
+?>
+<?php include_once VIEW_PATH . "/modals/modal-lot-reservation-confirmation.php" ?>
 <?php include_once VIEW_PATH . "/modals/modal-view-location.php" ?>
 
 <script src="<?= BASE_URL . "/js/jquery.js" ?>"></script>
@@ -177,6 +188,39 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        var lotReservationConfirmationModal = document.getElementById("lot-reservation-confirmation");
+
+        lotReservationConfirmationModal.addEventListener("show.bs.modal", function(event) {
+            var button = event.relatedTarget;
+            var lotId = button.getAttribute("data-bs-lot-id");
+            var reserveeId = button.getAttribute("data-bs-reservee-id");
+            var action = button.getAttribute("data-bs-action");
+
+            var lotReservationConfirmationText = document.getElementById("lot-reservation-confirmation-text");
+            lotReservationConfirmationText.textContent = "Are you sure you want to " + action + " this reservation?";
+
+            document.getElementById("lot-id").value = lotId;
+            document.getElementById("reservee-id").value = reserveeId;
+            document.getElementById("action").value = action;
+
+            // Show/hide reason input depending on action
+            var reasonGroup = document.getElementById("cancel-reason-group");
+            var reasonInput = document.getElementById("cancel-reason");
+
+            if (action === "cancel") {
+                reasonGroup.classList.remove("d-none");
+                reasonInput.required = true;
+            } else {
+                reasonGroup.classList.add("d-none");
+                reasonInput.value = "";
+                reasonInput.required = false;
+            }
+        });
+    });
+</script>
+
+<!-- <script>
+    document.addEventListener("DOMContentLoaded", function() {
         const cancelModal = document.getElementById("lot-reservation-cancellation");
         const lotIdHidden = document.getElementById("lot-id");
         const reserveeIdHidden = document.getElementById("reservee-id");
@@ -191,4 +235,4 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
             reserveeIdHidden.value = reserveeId;
         });
     });
-</script>
+</script> -->

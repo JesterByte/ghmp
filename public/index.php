@@ -6,7 +6,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('GET', '/', ['App\Controllers\HomeController', 'index']);
     $r->addRoute('GET', '/sign-in', ['App\Controllers\HomeController', 'index']);
     $r->addRoute('POST', '/sign-in', ['App\Controllers\AuthController', 'signIn']);
-    
+
     $r->get('/forgot-password',  ["App\Controllers\ForgotPasswordController", "index"]);
     $r->post('/forgot-password', ["App\Controllers\ForgotPasswordController", "sendOTP"]);
     $r->get('/verify-otp', ["App\Controllers\VerifyOTPController", "index"]);
@@ -38,7 +38,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute("GET", "/map-lots-list", ['App\Controllers\MapController', 'indexLotsList']);
     $r->addRoute("GET", "/map-estates-list", ['App\Controllers\MapController', 'indexEstatesList']);
     $r->addRoute("POST", "/update-lot-type", ['App\Controllers\MapController', 'updateLotType']);
-    
+
     $r->addRoute("GET", "/fetch-lots", ['App\Controllers\MapController', 'fetchLots']);
 
     $r->addRoute("GET", "/deceased", ['App\Controllers\DeceasedController', 'index']);
@@ -46,10 +46,15 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute("GET", "/inquiries", ['App\Controllers\InquiriesController', 'index']);
     $r->addRoute("POST", "/inquiries/reply", ['App\Controllers\InquiriesController', 'reply']);
 
+    $r->addRoute("GET", "/restructure-requests", ['App\Controllers\RestructureRequestsController', 'index']);
+    $r->addRoute("GET", "/restructure-requests/get-remaining-balance", ['App\Controllers\RestructureRequestsController', 'getRemainingBalance']);
+    $r->addRoute("POST", "/restructure-request-confirmation", ['App\Controllers\RestructureRequestsController', 'requestAction']);
+
     $r->addRoute("GET", "/lot-reservation-requests", ['App\Controllers\LotReservationRequestsController', 'index']);
-    $r->addRoute("GET", "/verify-lot-type/{lotId:[A-Za-z0-9\+\/=]+}/{reserveeId:[A-Za-z0-9\+\/=]+}", ['App\Controllers\LotReservationRequestsController', 'verifyLotType']);
-    $r->addRoute("POST", "/verify-lot-type-submit", ["App\Controllers\LotReservationRequestsController", "setLotType"]);
-    $r->addRoute("POST", "/lot-reservation-cancellation", ["App\Controllers\LotReservationRequestsController", "cancelLotReservation"]);
+    $r->addRoute("POST", "/lot-reservation-confirmation", ['App\Controllers\LotReservationRequestsController', 'submitLotReservationConfirmation']);
+    // $r->addRoute("GET", "/verify-lot-type/{lotId:[A-Za-z0-9\+\/=]+}/{reserveeId:[A-Za-z0-9\+\/=]+}", ['App\Controllers\LotReservationRequestsController', 'verifyLotType']);
+    // $r->addRoute("POST", "/verify-lot-type-submit", ["App\Controllers\LotReservationRequestsController", "setLotType"]);
+    // $r->addRoute("POST", "/lot-reservation-cancellation", ["App\Controllers\LotReservationRequestsController", "cancelLotReservation"]);
 
     $r->addRoute("GET", "/estate-reservation-requests", ['App\Controllers\EstateReservationRequestsController', 'index']);
     $r->addRoute("POST", "/estate-reservation-confirmation", ['App\Controllers\EstateReservationRequestsController', 'submitEstateReservationConfirmation']);
@@ -72,6 +77,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute("GET", "/lot-reservations-overdue", ['App\Controllers\LotReservationsController', 'indexOverdue']);
     $r->addRoute("POST", "/lot-reservations/fetch-phase-pricing", ['App\Controllers\LotReservationsController', 'fetchPhasePricing']);
     $r->addRoute("POST", "/lot-reservations/update-settings", ['App\Controllers\LotReservationsController', 'updateSettings']);
+    $r->addRoute("POST", "/lot-reservation-cancellation", ["App\Controllers\LotReservationsController", "cancelLotReservation"]);
 
 
     $r->addRoute('POST', '/add-reservation', ['App\Controllers\LotReservationsController', 'setReservation']);

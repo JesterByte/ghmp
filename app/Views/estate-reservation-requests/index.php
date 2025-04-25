@@ -57,10 +57,27 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
                     $reservee = Formatter::formatFullName($row["first_name"], $row["middle_name"], $row["last_name"], $row["suffix_name"]);
                     $requestDate = Formatter::formatDateTime($row["created_at"]);
 
-                    $action = '<div class="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#estate-reservation-confirmation" data-bs-estate-id="' . $estateId . '" data-bs-reservee-id="' . $reserveeId . '" data-bs-action="approve"><i class="bi bi-check"></i> Approve</button>
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#estate-reservation-confirmation" data-bs-estate-id="' . $estateId . '" data-bs-reservee-id="' . $reserveeId . '" data-bs-action="cancel"><i class="bi bi-x"></i> Cancel</button>
-                        </div>';
+                    $action = '
+                    <div class="d-flex justify-content-center gap-2">
+                        <button type="button" class="btn btn-success btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#estate-reservation-confirmation"
+                            data-bs-estate-id="' . $estateId . '"
+                            data-bs-reservee-id="' . $reserveeId . '"
+                            data-bs-action="approve"
+                            title="Approve Reservation">
+                            <i class="bi bi-check-circle-fill"></i> Approve
+                        </button>
+                        <button type="button" class="btn btn-danger btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#estate-reservation-confirmation"
+                            data-bs-estate-id="' . $estateId . '"
+                            data-bs-reservee-id="' . $reserveeId . '"
+                            data-bs-action="cancel"
+                            title="Cancel Reservation">
+                            <i class="bi bi-x-circle-fill"></i> Cancel
+                        </button>
+                    </div>';
 
                     TableHelper::startRow();
                     TableHelper::cell($row["created_at"]);
@@ -166,16 +183,16 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        var burialModal = document.getElementById("estate-reservation-confirmation");
+        var estateReservationConfirmationModal = document.getElementById("estate-reservation-confirmation");
 
-        burialModal.addEventListener("show.bs.modal", function(event) {
+        estateReservationConfirmationModal.addEventListener("show.bs.modal", function(event) {
             var button = event.relatedTarget;
             var estateId = button.getAttribute("data-bs-estate-id");
             var reserveeId = button.getAttribute("data-bs-reservee-id");
             var action = button.getAttribute("data-bs-action");
 
-            var burialReservationConfirmationText = document.getElementById("estate-reservation-confirmation-text");
-            burialReservationConfirmationText.textContent = "Are you sure you want to " + action + " this reservation?";
+            var estateReservationConfirmationText = document.getElementById("estate-reservation-confirmation-text");
+            estateReservationConfirmationText.textContent = "Are you sure you want to " + action + " this reservation?";
 
             var inputEstateId = document.getElementById("estate-id");
             inputEstateId.value = estateId;
@@ -183,9 +200,21 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
             var inputReserveeId = document.getElementById("reservee-id");
             inputReserveeId.value = reserveeId;
 
-
             var inputAction = document.getElementById("action");
             inputAction.value = action;
+
+            // Show/hide reason input depending on action
+            var reasonGroup = document.getElementById("cancel-reason-group");
+            var reasonInput = document.getElementById("cancel-reason");
+
+            if (action === "cancel") {
+                reasonGroup.classList.remove("d-none");
+                reasonInput.required = true;
+            } else {
+                reasonGroup.classList.add("d-none");
+                reasonInput.value = "";
+                reasonInput.required = false;
+            }
         });
     });
 </script>

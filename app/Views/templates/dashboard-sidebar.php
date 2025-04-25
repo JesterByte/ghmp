@@ -38,6 +38,12 @@ use App\Helpers\DisplayHelper;
                         <?php endif; ?>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isActivePage($pageTitle, "Restructure Requests", "active text-bg-primary") ?>" <?= DisplayHelper::isActivePage($pageTitle, "Restructure Requests", "aria-current='page'") ?> href="<?= BASE_URL ?>/restructure-requests">
+                        <i class="bi bi-arrow-repeat"></i>
+                        Restructure Requests
+                    </a>
+                </li>
                 <?php $reservationsList = ["Burial Reservations", "Burial Reservation Requests", "Lot Reservations", "Lot Reservation Requests", "Verify Lot Type", "Estate Reservations", "Estate Reservation Requests"]; ?>
                 <li class="nav-item">
                     <a class="nav-link d-flex align-items-center gap-2" data-bs-toggle="collapse" href="#reservationsSubmenu" role="button" aria-expanded="<?= DisplayHelper::isPageInList($pageTitle, $reservationsList, "true", "false") ?>" aria-controls="reservationsSubmenu">

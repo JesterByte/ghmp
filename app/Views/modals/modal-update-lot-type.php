@@ -7,9 +7,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="<?= BASE_URL ?>/update-lot-type" method="post">
+                <form id="update-lot-type-form" action="<?= BASE_URL ?>/update-lot-type" method="post">
                     <input type="hidden" name="lot_id" id="lot-id">
-
+                    <input type="hidden" name="datatable_page" id="datatable-page">
                     <div class="form-floating mb-3">
                         <select name="lot_type" id="lot-type" class="form-select" required>
                             <option value="Supreme">Supreme</option>

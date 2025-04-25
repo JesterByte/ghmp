@@ -69,16 +69,43 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
                     $reservationDate = Formatter::formatDateTime($row["created_at"]);
                     $burialDateTime = Formatter::formatDateTime($row["date_time"]);
 
-                    $action = '<div class="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#eventDetailsModal" 
-                            data-bs-interred="' . $interred . '" data-bs-reservee="' . $reservee . '" data-bs-asset-id="' . $row["asset_id"] . '"
-                            data-bs-burial-type="' . $row["burial_type"] . '" data-bs-relationship="' . $row["relationship"] . '"
-                            data-bs-date-of-birth="' . $birthDate . '" data-bs-date-of-death="' . $deathDate . '"
-                            data-bs-obituary="' . $row["obituary"] . '" data-bs-reservation-date="' . $reservationDate . '" data-bs-burial-date-time="' . $burialDateTime . '">
-                            <i class="bi bi-eye-fill"></i> View Details</button>                        
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#burial-reservation-confirmation" data-bs-burial-reservation-id="' . $row["id"] . '" data-bs-action="approve"><i class="bi bi-check"></i> Approve</button>
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#burial-reservation-confirmation" data-bs-burial-reservation-id="' . $row["id"] . '" data-bs-action="cancel"><i class="bi bi-x"></i> Cancel</button>
-                        </div>';
+                    $action = '
+                    <div class="d-flex justify-content-center gap-2 flex-wrap">
+                        <button type="button" class="btn btn-info btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#eventDetailsModal"
+                            data-bs-interred="' . $interred . '"
+                            data-bs-reservee="' . $reservee . '"
+                            data-bs-asset-id="' . $row["asset_id"] . '"
+                            data-bs-burial-type="' . $row["burial_type"] . '"
+                            data-bs-relationship="' . $row["relationship"] . '"
+                            data-bs-date-of-birth="' . $birthDate . '"
+                            data-bs-date-of-death="' . $deathDate . '"
+                            data-bs-obituary="' . $row["obituary"] . '"
+                            data-bs-reservation-date="' . $reservationDate . '"
+                            data-bs-burial-date-time="' . $burialDateTime . '"
+                            title="View Reservation Details">
+                            <i class="bi bi-eye-fill"></i> View
+                        </button>
+                
+                        <button type="button" class="btn btn-success btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#burial-reservation-confirmation"
+                            data-bs-burial-reservation-id="' . $row["id"] . '"
+                            data-bs-action="approve"
+                            title="Approve Reservation">
+                            <i class="bi bi-check-circle-fill"></i> Approve
+                        </button>
+                
+                        <button type="button" class="btn btn-danger btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#burial-reservation-confirmation"
+                            data-bs-burial-reservation-id="' . $row["id"] . '"
+                            data-bs-action="cancel"
+                            title="Cancel Reservation">
+                            <i class="bi bi-x-circle-fill"></i> Cancel
+                        </button>
+                    </div>';
 
                     TableHelper::startRow();
                     TableHelper::cell($row["date_time"]);
