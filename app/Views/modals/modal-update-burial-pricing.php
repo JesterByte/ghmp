@@ -12,8 +12,8 @@
                     <div class="form-floating mb-3">
                         <select class="form-select" id="burial-type" name="burial-type" aria-label="Floating label select example" required>
                             <option selected disabled></option>
-                            <option value="Standard">Standard</option>
                             <?php if ($category == "Lot"): ?>
+                                <option value="Full Body">Full Body</option>
                                 <option value="Cremation">Cremation</option>
                             <?php elseif ($category == "Estate"): ?>
                                 <option value="Mausoleum">Mausoleum</option>
@@ -44,7 +44,7 @@
 
         // Predefined prices from PHP
         const prices = {
-            Standard: <?= (float) ($standardPrice ?? 0) ?>,
+            "Full Body": <?= (float) ($standardPrice ?? 0) ?>,
             Cremation: <?= (float) ($cremationPrice ?? 0) ?>,
             Mausoleum: <?= (float) ($mausoleumPrice ?? 0) ?>,
             "Bone Transfer": <?= (float) ($boneTransferPrice ?? 0) ?>

@@ -51,36 +51,42 @@ class InstallmentsModel extends Model
     public function getDownPayments()
     {
         $stmt = $this->db->prepare("SELECT 
-        i.lot_id AS asset_id, 
-        i.down_payment AS payment_amount, 
-        i.down_payment_date AS payment_date, 
-        i.down_receipt_path AS receipt_path,
-        c.first_name, 
-        c.middle_name, 
-        c.last_name, 
-        c.suffix_name
+            i.lot_id AS asset_id, 
+            i.down_payment AS payment_amount, 
+            i.down_payment_date AS payment_date, 
+            i.down_receipt_path AS receipt_path,
+            c.first_name, 
+            c.middle_name, 
+            c.last_name, 
+            c.suffix_name
         FROM installments AS i
         INNER JOIN lot_reservations AS lr ON i.lot_id = lr.lot_id
         INNER JOIN customers AS c ON lr.reservee_id = c.id
-        WHERE i.down_payment_status = :down_payment_status AND lr.reservation_status = :reservation_status
+        WHERE i.down_payment_status = :down_status1 AND lr.reservation_status != :res_status1
         
         UNION ALL
         
         SELECT 
-        i.estate_id AS asset_id, 
-        i.down_payment AS payment_amount, 
-        i.down_payment_date AS payment_date, 
-        i.down_receipt_path AS receipt_path,
-        c.first_name, 
-        c.middle_name, 
-        c.last_name, 
-        c.suffix_name
+            i.estate_id AS asset_id, 
+            i.down_payment AS payment_amount, 
+            i.down_payment_date AS payment_date, 
+            i.down_receipt_path AS receipt_path,
+            c.first_name, 
+            c.middle_name, 
+            c.last_name, 
+            c.suffix_name
         FROM estate_installments AS i
         INNER JOIN estate_reservations AS er ON i.estate_id = er.estate_id
         INNER JOIN customers AS c ON er.reservee_id = c.id
-        WHERE i.down_payment_status = :down_payment_status AND er.reservation_status != :reservation_status
+        WHERE i.down_payment_status = :down_status2 AND er.reservation_status != :res_status2
         ");
-        $stmt->execute([":down_payment_status" => "Paid", ":reservation_status" => "Cancelled"]);
+
+            $stmt->execute([
+                ":down_status1" => "Paid",
+                ":res_status1" => "Cancelled",
+                ":down_status2" => "Paid",
+                ":res_status2" => "Cancelled"
+            ]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 

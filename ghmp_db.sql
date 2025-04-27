@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 25, 2025 at 03:50 PM
+-- Generation Time: Apr 27, 2025 at 05:57 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -52,7 +52,9 @@ INSERT INTO `admin_notifications` (`id`, `admin_id`, `message`, `link`, `is_read
 (10, NULL, 'Eugine Jester Jose has chosen Installment: 1 Year as their payment option for Asset: 1C1-2.', 'installments', 0, '2025-04-18 10:10:29'),
 (11, NULL, 'A new lot reservation has been made for Lot: 1C1-1.', 'lot-reservation-requests', 0, '2025-04-18 10:26:06'),
 (12, NULL, 'A new estate reservation has been made for Estate: E-A1.', 'estate-reservation-requests', 0, '2025-04-18 12:09:36'),
-(13, NULL, 'A new lot reservation has been made for Lot: 1C1-1.', 'lot-reservation-requests', 0, '2025-04-19 04:51:32');
+(13, NULL, 'A new lot reservation has been made for Lot: 1C1-1.', 'lot-reservation-requests', 0, '2025-04-19 04:51:32'),
+(14, NULL, 'A new lot reservation has been made for Lot: 1A1-1.', 'lot-reservation-requests', 0, '2025-04-25 14:41:06'),
+(15, NULL, 'Eugine Jester Jose has chosen Installment: 1 Year as their payment option for Asset: 1A1-1.', 'installments', 0, '2025-04-26 05:01:27');
 
 -- --------------------------------------------------------
 
@@ -122,7 +124,7 @@ CREATE TABLE `burial_pricing` (
 --
 
 INSERT INTO `burial_pricing` (`id`, `category`, `burial_type`, `price`, `created_at`, `updated_at`) VALUES
-(1, 'Lot', 'Full Body', 50000.00, '2025-02-26 16:17:52', '2025-04-13 03:47:52'),
+(1, 'Lot', 'Full Body', 40000.00, '2025-02-26 16:17:52', '2025-04-27 02:17:52'),
 (2, 'Lot', 'Columbarium', 30000.00, '2025-02-26 16:17:52', '2025-03-30 05:39:01'),
 (3, 'Lot', 'Bone Transfer', 20000.00, '2025-02-26 16:17:52', '2025-02-26 16:17:52'),
 (5, 'Estate', 'Mausoleum', 200000.00, '2025-02-26 16:17:52', '2025-02-26 16:17:52'),
@@ -683,7 +685,8 @@ CREATE TABLE `installments` (
 --
 
 INSERT INTO `installments` (`id`, `reservation_id`, `lot_id`, `term_years`, `down_payment`, `down_payment_status`, `down_payment_date`, `down_payment_due_date`, `down_receipt_path`, `down_reference_number`, `next_due_date`, `total_amount`, `restructure_id`, `monthly_payment`, `reference_number`, `interest_rate`, `payment_status`, `created_at`, `updated_at`) VALUES
-(3, 5, '1C1-2', 0, 15440.00, 'Paid', '2025-04-18 10:17:05', '2025-05-18', NULL, 'GKAo4kn', NULL, 61760.04, 1, 5146.67, 'rZPgXuy', 0.00, 'Pending', '2025-04-18 10:10:29', '2025-04-22 20:17:34');
+(3, 5, '1C1-2', 0, 15440.00, 'Paid', '2025-04-18 10:17:05', '2025-05-18', NULL, 'GKAo4kn', NULL, 61760.04, 1, 5146.67, 'hBejAdz', 0.00, 'Pending', '2025-04-18 10:10:29', '2025-04-27 02:24:08'),
+(4, 8, '1A1-1', 0, 15440.00, 'Pending', NULL, '2025-05-26', NULL, 'oMgu4iF', NULL, 61760.04, NULL, 5146.67, '', 0.00, 'Pending', '2025-04-26 05:01:27', '2025-04-27 02:24:09');
 
 -- --------------------------------------------------------
 
@@ -1870,7 +1873,7 @@ INSERT INTO `lots` (`id`, `lot_id`, `lot_type`, `owner_id`, `latitude_start`, `l
 (1139, '1D17-35', NULL, NULL, 14.87173550, 120.97773985, 14.87174450, 120.97774435, 'Available', '2025-04-10 11:54:18', '2025-04-10 11:54:18', NULL),
 (1140, '1D17-36', NULL, NULL, 14.87174550, 120.97773985, 14.87175450, 120.97774435, 'Available', '2025-04-10 11:54:18', '2025-04-10 13:42:02', NULL),
 (1141, '1D17-37', NULL, NULL, 14.87175550, 120.97773985, 14.87176450, 120.97774435, 'Available', '2025-04-10 11:54:18', '2025-04-10 13:42:02', NULL),
-(1142, '1A1-1', 'Supreme', NULL, 14.87106550, 120.97705585, 14.87107450, 120.97706035, 'Available', '2025-04-10 11:54:18', '2025-04-13 12:47:57', NULL),
+(1142, '1A1-1', 'Supreme', NULL, 14.87106550, 120.97705585, 14.87107450, 120.97706035, 'Reserved', '2025-04-10 11:54:18', '2025-04-25 14:41:06', NULL),
 (1143, '1A1-2', 'Supreme', NULL, 14.87107550, 120.97705585, 14.87108450, 120.97706035, 'Available', '2025-04-10 11:54:18', '2025-04-13 13:33:05', NULL),
 (1144, '1A1-3', 'Supreme', NULL, 14.87108550, 120.97705585, 14.87109450, 120.97706035, 'Available', '2025-04-10 11:54:18', '2025-04-13 13:34:28', NULL),
 (1145, '1A1-4', 'Supreme', NULL, 14.87109550, 120.97705585, 14.87110450, 120.97706035, 'Available', '2025-04-10 11:54:18', '2025-04-13 13:34:39', NULL),
@@ -7549,9 +7552,10 @@ CREATE TABLE `lot_reservations` (
 INSERT INTO `lot_reservations` (`id`, `lot_id`, `reservee_id`, `lot_type`, `payment_option`, `reservation_status`, `cancellation_reason`, `certificate`, `issued_at`, `reference_number`, `created_at`, `updated_at`) VALUES
 (2, '1C1-1', 49, 'Supreme', 'Cash Sale', 'Cancelled', 'due to overdue payments', NULL, NULL, 'eYSFB2c', '2025-04-17 01:29:28', '2025-04-17 09:22:01'),
 (4, '1C1-1', 49, 'Supreme', 'Pending', 'Cancelled', 'Too expensive', NULL, NULL, '', '2025-04-17 09:34:39', '2025-04-17 11:11:05'),
-(5, '1C1-2', 49, 'Supreme', 'Installment: 1 Year', 'Confirmed', NULL, NULL, NULL, 'rZPgXuy', '2025-04-17 11:11:33', '2025-04-22 20:17:34'),
+(5, '1C1-2', 49, 'Supreme', 'Installment: 1 Year', 'Confirmed', NULL, NULL, NULL, 'hBejAdz', '2025-04-17 11:11:33', '2025-04-27 02:24:08'),
 (6, '1C1-1', 49, 'Supreme', 'Pending', 'Cancelled', 'Not available', NULL, NULL, '', '2025-04-18 10:26:06', '2025-04-18 11:18:02'),
-(7, '1C1-1', 49, 'Supreme', 'Pending', 'Pending', NULL, NULL, NULL, '', '2025-04-19 04:51:32', '2025-04-19 04:51:32');
+(7, '1C1-1', 49, 'Supreme', 'Pending', 'Pending', NULL, NULL, NULL, '', '2025-04-19 04:51:32', '2025-04-19 04:51:32'),
+(8, '1A1-1', 49, 'Supreme', 'Installment: 1 Year', 'Confirmed', NULL, NULL, NULL, 'oMgu4iF', '2025-04-25 14:41:06', '2025-04-27 02:24:09');
 
 -- --------------------------------------------------------
 
@@ -7578,7 +7582,8 @@ INSERT INTO `notifications` (`id`, `customer_id`, `message`, `link`, `is_read`, 
 (3, 49, 'Your lot reservation for Lot #1C1-1 has been cancelled by the administrator due to overdue payments.', 'my_lots_and_estates', 0, '2025-04-17 09:22:01'),
 (4, 49, 'Your lot reservation for Lot #1C1-2 has been approved.', 'my_lots_and_estates', 0, '2025-04-17 11:12:06'),
 (5, 49, 'Your lot reservation for Lot #1C1-1 has been cancelled.', 'my_lots_and_estates', 0, '2025-04-18 11:18:02'),
-(6, 49, 'Your estate reservation for Estate #E-A1 has been cancelled.', 'my_lots_and_estates', 0, '2025-04-18 12:11:23');
+(6, 49, 'Your estate reservation for Estate #E-A1 has been cancelled.', 'my_lots_and_estates', 0, '2025-04-18 12:11:23'),
+(7, 49, 'Your lot reservation for Lot #1A1-1 has been approved.', 'my_lots_and_estates', 0, '2025-04-25 14:41:30');
 
 -- --------------------------------------------------------
 
@@ -7676,6 +7681,32 @@ INSERT INTO `phase_pricing` (`id`, `phase`, `lot_type`, `number_of_lots`, `lot_p
 (9, 'Phase 4', 'Supreme', 1, 63491.00, 0.12, 10000.00, 81109.92, 72998.93, 0.10, 77054.42, 0.05, 15410.88, 61643.54, 10273.92, 16221.98, 0.20, 64887.94, 5407.33, 0.00, 2994.25, 0.10, 2249.36, 0.15, 1974.56, 0.20, 1904.55, 0.25, '2025-04-13 03:56:57'),
 (10, 'Phase 4', 'Special', 1, 61372.00, 0.12, 10000.00, 78736.64, 70862.98, 0.10, 74799.81, 0.05, 14959.96, 59839.85, 9973.31, 15747.33, 0.20, 62989.31, 5249.11, 0.00, 2906.64, 0.10, 2183.55, 0.15, 1916.79, 0.20, 1848.82, 0.25, '2025-04-13 03:56:57'),
 (11, 'Phase 4', 'Standard', 1, 59256.00, 0.12, 10000.00, 76366.72, 68730.05, 0.10, 72548.38, 0.05, 14509.68, 58038.71, 9673.12, 15273.34, 0.20, 61093.38, 5091.11, 0.00, 2819.15, 0.10, 2117.82, 0.15, 1859.09, 0.20, 1793.17, 0.25, '2025-04-13 03:56:57');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `preset_custom_payment_plans`
+--
+
+CREATE TABLE `preset_custom_payment_plans` (
+  `id` int(11) NOT NULL,
+  `plan_name` varchar(150) NOT NULL,
+  `estate` varchar(100) DEFAULT NULL,
+  `phase` varchar(100) DEFAULT NULL,
+  `lot_type` varchar(100) DEFAULT NULL,
+  `term_years` int(11) NOT NULL,
+  `total_purchase_price` decimal(12,2) NOT NULL,
+  `down_payment` decimal(12,2) DEFAULT 0.00,
+  `down_payment_rate` decimal(5,2) DEFAULT 0.00,
+  `down_payment_deadline` varchar(50) DEFAULT '7 days',
+  `monthly_payment` decimal(12,2) NOT NULL,
+  `interest_rate` decimal(5,2) DEFAULT 0.00,
+  `grace_period_days` int(11) DEFAULT 0,
+  `is_active` tinyint(1) DEFAULT 1,
+  `notes` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -8011,6 +8042,12 @@ ALTER TABLE `phase_pricing`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `preset_custom_payment_plans`
+--
+ALTER TABLE `preset_custom_payment_plans`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `remember_tokens`
 --
 ALTER TABLE `remember_tokens`
@@ -8062,7 +8099,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `admin_notifications`
 --
 ALTER TABLE `admin_notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `backup_settings`
@@ -8176,7 +8213,7 @@ ALTER TABLE `estate_six_months_payments`
 -- AUTO_INCREMENT for table `installments`
 --
 ALTER TABLE `installments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `installment_payments`
@@ -8194,13 +8231,13 @@ ALTER TABLE `lots`
 -- AUTO_INCREMENT for table `lot_reservations`
 --
 ALTER TABLE `lot_reservations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `ownership_transfer_requests`
@@ -8219,6 +8256,12 @@ ALTER TABLE `password_resets`
 --
 ALTER TABLE `phase_pricing`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `preset_custom_payment_plans`
+--
+ALTER TABLE `preset_custom_payment_plans`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `remember_tokens`

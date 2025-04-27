@@ -105,7 +105,7 @@ use App\Helpers\DisplayHelper;
                         </ul>
                     </div>
                 </li>
-                <?php $lotPricingList = ["Burial Pricing List", "Phase Pricing List", "Estate Pricing List"]; ?>
+                <?php $lotPricingList = ["Burial Pricing List", "Phase Pricing List", "Estate Pricing List", "Custom Payment Plans"]; ?>
                 <li class="nav-item">
                     <a class="nav-link d-flex align-items-center gap-2" data-bs-toggle="collapse" href="#lotPricingSubmenu" role="button" aria-expanded="<?= DisplayHelper::isPageInList($pageTitle, $lotPricingList, "true", "false") ?>" aria-controls="lotPricingSubmenu">
                         <i class="bi bi-tag<?= DisplayHelper::isPageInList($pageTitle, $lotPricingList, "-fill") ?>"></i> Pricing <i class="bi bi-caret-down<?= DisplayHelper::isPageInList($pageTitle, $lotPricingList, "-fill") ?>"></i>
@@ -115,6 +115,7 @@ use App\Helpers\DisplayHelper;
                             <li><a href="<?= BASE_URL ?>/burial-pricing" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isActivePage($pageTitle, "Burial Pricing List", "-fill text-bg-primary") ?>" <?= DisplayHelper::isActivePage($pageTitle, "Burial Pricing List", "aria-current='page'") ?>><i class="bi bi-caret-right<?= DisplayHelper::isActivePage($pageTitle, "Burial Pricing List", "-fill") ?>"></i> Burial Pricing List</a></li>
                             <li><a href="<?= BASE_URL ?>/phase-pricing" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isActivePage($pageTitle, "Phase Pricing List", "-fill text-bg-primary") ?>" <?= DisplayHelper::isActivePage($pageTitle, "Phase Pricing List", "aria-current='page'") ?>><i class="bi bi-caret-right<?= DisplayHelper::isActivePage($pageTitle, "Phase Pricing List", "-fill") ?>"></i> Phase Pricing List</a></li>
                             <li><a href="<?= BASE_URL ?>/estate-pricing" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isActivePage($pageTitle, "Estate Pricing List", "-fill text-bg-primary") ?>" <?= DisplayHelper::isActivePage($pageTitle, "Estate Pricing List", "aria-current='page'") ?>><i class="bi bi-caret-right<?= DisplayHelper::isActivePage($pageTitle, "Estate Pricing List", "-fill") ?>"></i> Estate Pricing List</a></li>
+                            <li><a href="<?= BASE_URL ?>/custom-payment-plans" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isActivePage($pageTitle, "Custom Payment Plans", "-fill text-bg-primary") ?>" <?= DisplayHelper::isActivePage($pageTitle, "Custom Payment Plans", "aria-current='page'") ?>><i class="bi bi-caret-right<?= DisplayHelper::isActivePage($pageTitle, "Custom Payment Plans", "-fill") ?>"></i> Custom Payment Plans</a></li>
                         </ul>
                     </div>
                 </li>
@@ -137,9 +138,9 @@ use App\Helpers\DisplayHelper;
                             <li>
                                 <a href="<?= BASE_URL ?>/account-settings" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isActivePage($pageTitle, "Account Settings", "-fill text-bg-primary") ?>" <?= DisplayHelper::isActivePage($pageTitle, "Account Settings", "aria-current='page'") ?>><i class="bi bi-caret-right<?= DisplayHelper::isActivePage($pageTitle, "Account Settings", "-fill") ?>"></i> Account Settings</a>
                             </li>
-                            <li>
+                            <!-- <li>
                                 <a href="<?= BASE_URL ?>/backup-and-restore" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isActivePage($pageTitle, "Backup & Restore", "-fill text-bg-primary") ?>" <?= DisplayHelper::isActivePage($pageTitle, "Backup & Restore", "aria-current='page'") ?>><i class="bi bi-caret-right<?= DisplayHelper::isActivePage($pageTitle, "Backup & Restore", "-fill") ?>"></i> Backup & Restore</a>
-                            </li>
+                            </li> -->
                             <li>
                                 <a href="<?= BASE_URL ?>/customers" class="nav-link d-flex align-items-center gap-2 <?= DisplayHelper::isActivePage($pageTitle, "Customers", "-fill text-bg-primary") ?>" <?= DisplayHelper::isActivePage($pageTitle, "Customers", "aria-current='page'") ?>><i class="bi bi-caret-right<?= DisplayHelper::isActivePage($pageTitle, "Customers", "-fill") ?>"></i> Customers</a>
                             </li>
