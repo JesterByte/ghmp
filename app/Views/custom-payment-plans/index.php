@@ -14,8 +14,8 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
 <div class="row mb-3">
     <div class="d-flex justify-content-between">
         <div class="btn-group">
-            <a href="#" class="btn btn-primary active" aria-current="page">Lot</a>
-            <a href="#" class="btn btn-primary">Estate</a>
+            <a href="<?= BASE_URL . "/custom-payment-plans-lot" ?>" class="btn btn-primary <?= $currentPage === "Lot" ? "active" : "" ?>" <?= $currentPage === "Lot" ? 'aria-current="page"' : "" ?>>Lot</a>
+            <a href="<?= BASE_URL . "/custom-payment-plans-estate" ?>" class="btn btn-primary <?= $currentPage === "Estate" ? "active" : "" ?>" <?= $currentPage === "Estate" ? 'aria-current="page"' : "" ?>>Estate</a>
         </div>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-custom-payment-plan-modal">+ Custom Plan</button>
     </div>
@@ -28,8 +28,12 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
             <tr>
                 <th>Created At</th>
                 <th class="text-center">Plan Name</th>
+                <?php if ($currentPage === "Lot"): ?>
                 <th class="text-center">Phase</th>
                 <th class="text-center">Lot Type</th>
+                <?php elseif ($currentPage === "Estate"): ?>
+                <th class="text-center">Estate</th>
+                <?php endif; ?>
                 <th class="text-center">Down Payment</th>
                 <th class="text-center">Monthly Payment</th>
                 <th class="text-center">Interest Rate</th>
@@ -51,7 +55,8 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
 <script src="<?= BASE_URL . "/js/modal-autofocus.js" ?>"></script>
 
 <script>
-    // autofocusModal("add-lot-reservation-modal", "lot");
+    autofocusModal("add-custom-payment-plan-modal", "phase");
+    autofocusModal("add-custom-payment-plan-modal", "estate");
 </script>
 
 <script>

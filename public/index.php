@@ -30,7 +30,14 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('POST', '/estate-pricing', ['App\Controllers\EstatePricingController', 'setPrice']);
     $r->addRoute('POST', '/estate-rates', ['App\Controllers\EstatePricingController', 'setRates']);
 
-    $r->addRoute('GET', '/custom-payment-plans', ['App\Controllers\CustomPaymentPlansController', 'index']);
+    $r->addRoute('GET', '/custom-payment-plans-lot', ['App\Controllers\CustomPaymentPlansController', 'indexLot']);
+    $r->addRoute('POST', '/custom-payment-plans-lot/get-phase-price', ['App\Controllers\CustomPaymentPlansController', 'getPhasePrice']);
+
+    $r->addRoute('GET', '/custom-payment-plans-estate', ['App\Controllers\CustomPaymentPlansController', 'indexEstate']);
+    $r->addRoute('POST', '/custom-payment-plans-estate/get-estate-price', ['App\Controllers\CustomPaymentPlansController', 'getEstatePrice']);
+
+    
+
 
     $r->addRoute('GET', '/collection-report', ['App\Controllers\CollectionReportController', 'index']);
 
