@@ -55,8 +55,11 @@ $fileName = "export_{$snakeCasePageTitle}_{$timeStamp}";
 <script src="<?= BASE_URL . "/js/modal-autofocus.js" ?>"></script>
 
 <script>
+    <?php if ($currentPage === "Lot"): ?>
     autofocusModal("add-custom-payment-plan-modal", "phase");
+    <?php elseif ($currentPage === "Estate"): ?>
     autofocusModal("add-custom-payment-plan-modal", "estate");
+    <?php endif; ?>
 </script>
 
 <script>

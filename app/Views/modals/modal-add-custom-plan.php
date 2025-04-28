@@ -45,7 +45,8 @@
                     <label for="new-lot-price" class="form-label">Total Purchase Price</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text">₱</span>
-                        <input type="number" class="form-control" id="new-lot-price" name="new-lot-price" aria-label="Amount (to the nearest peso)" placeholder="0.00" required>
+                        <input type="number" class="form-control" id="new-lot-price" name="new-lot-price" 
+                               aria-label="Amount (to the nearest peso)" placeholder="0.00" readonly required>
                     </div>
 
                     <label for="interest-rate" class="form-label">Interest Rate</label>
@@ -68,13 +69,15 @@
                     <label for="down-payment" class="form-label">Down Payment</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text">₱</span>
-                        <input type="number" class="form-control" id="down-payment" name="down-payment" aria-label="Amount (to the nearest peso)" placeholder="0.00" required>
+                        <input type="number" class="form-control" id="down-payment" name="down-payment" 
+                               aria-label="Amount (to the nearest peso)" placeholder="0.00" readonly required>
                     </div>
 
                     <label for="motnhly-payment" class="form-label">Monthly Payment</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text">₱</span>
-                        <input type="number" class="form-control" id="motnhly-payment" name="motnhly-payment" aria-label="Amount (to the nearest peso)" placeholder="0.00" required>
+                        <input type="number" class="form-control" id="motnhly-payment" name="motnhly-payment" 
+                               aria-label="Amount (to the nearest peso)" placeholder="0.00" readonly required>
                     </div>
 
                 </form>
@@ -88,51 +91,89 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const phaseSelect = document.getElementById('phase');
-        const lotTypeSelect = document.getElementById('lot-type');
-        const lotPriceInput = document.getElementById('new-lot-price');
+document.addEventListener('DOMContentLoaded', function() {
+    // Get all form elements
+    const form = document.getElementById('add-custom-payment-plan-form');
+    const lotPriceInput = document.getElementById('new-lot-price');
+    const interestRateInput = document.getElementById('interest-rate');
+    const termInput = document.getElementById('term');
+    const downPaymentRateInput = document.getElementById('down-payment-rate');
+    const downPaymentInput = document.getElementById('down-payment');
+    const monthlyPaymentInput = document.getElementById('motnhly-payment');
 
+    // Function to calculate payments
+    function calculatePayments() {
+        const totalPrice = parseFloat(lotPriceInput.value) || 0;
+        const interestRate = parseFloat(interestRateInput.value) || 0;
+        const term = parseFloat(termInput.value) || 0;
+        const downPaymentRate = parseFloat(downPaymentRateInput.value) || 0;
+
+        if (totalPrice && interestRate && term && downPaymentRate) {
+            // Calculate down payment
+            const downPayment = totalPrice * (downPaymentRate / 100);
+            downPaymentInput.value = downPayment.toFixed(2);
+
+            // Calculate remaining balance
+            const principal = totalPrice - downPayment;
+            
+            // Calculate total interest
+            const totalInterest = principal * (interestRate / 100) * term;
+            
+            // Calculate total amount to be paid in installments
+            const totalInstallmentAmount = principal + totalInterest;
+            
+            // Calculate monthly payment
+            const numberOfMonths = term * 12;
+            const monthlyPayment = totalInstallmentAmount / numberOfMonths;
+            
+            monthlyPaymentInput.value = monthlyPayment.toFixed(2);
+        }
+    }
+
+    // Add event listeners for automatic calculation
+    [interestRateInput, termInput, downPaymentRateInput].forEach(input => {
+        input.addEventListener('input', calculatePayments);
+    });
+
+    // Lot price fetch logic
+    const phaseSelect = document.getElementById('phase');
+    const lotTypeSelect = document.getElementById('lot-type');
+    const estateTypeSelect = document.getElementById('estate');
+
+    <?php if ($currentPage === "Lot"): ?>
         function updateLotPrice() {
             if (phaseSelect.value && lotTypeSelect.value) {
                 fetch(`<?= BASE_URL ?>/custom-payment-plans-lot/get-phase-price`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            phase: phaseSelect.value,
-                            lot_type: lotTypeSelect.value
-                        })
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        phase: phaseSelect.value,
+                        lot_type: lotTypeSelect.value
                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.price) {
-                            lotPriceInput.value = data.price;
-                            // Trigger calculation of down payment and monthly if needed
-                            // calculatePayments();
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.price) {
+                        lotPriceInput.value = data.price;
+                        calculatePayments();
+                    }
+                })
+                .catch(error => console.error('Error:', error));
             }
         }
 
         phaseSelect.addEventListener('change', updateLotPrice);
         lotTypeSelect.addEventListener('change', updateLotPrice);
-    });
-</script>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const estateTypeSelect = document.getElementById("estate");
-        const estatePriceInput = document.getElementById("new-lot-price");
-
+    <?php elseif ($currentPage === "Estate"): ?>
         function updateEstatePrice() {
             if (estateTypeSelect.value) {
                 fetch(`<?= BASE_URL ?>/custom-payment-plans-estate/get-estate-price`, {
-                    method: "POST",
+                    method: 'POST',
                     headers: {
-                        "Content-Type": "application/json"
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         estate: estateTypeSelect.value
@@ -141,13 +182,21 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.price) {
-                        estatePriceInput.value = data.price;
+                        lotPriceInput.value = data.price;
+                        calculatePayments();
+                    } else {
+                        console.error('No price data received');
                     }
                 })
-                .catch(error => console.error("Error:", error));
+                .catch(error => {
+                    console.error('Error fetching estate price:', error);
+                    lotPriceInput.value = '0.00';
+                    calculatePayments();
+                });
             }
         }
 
-        estateTypeSelect.addEventListener("change", updateEstatePrice);
-    });
+        estateTypeSelect.addEventListener('change', updateEstatePrice);
+    <?php endif; ?>
+});
 </script>
